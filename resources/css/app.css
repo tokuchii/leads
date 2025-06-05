@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url(https://db.onlinewebfonts.com/c/66e796dac9aff5a6967ebdd5e021db01?family=HelveticaNeueLTStd-Roman);
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -9,3 +10,73 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Theme Colors */
+:root {
+    --primary-green: #2E7D32;
+    --primary-green-light: #4CAF50;
+    --primary-green-dark: #1B5E20;
+    --text-dark: #1b1b18;
+    --text-light: #706f6c;
+    --background-light: #ffffff;
+    --background-dark: #f5f5f5;
+}
+
+/* Global font styles */
+body {
+    font-family: 'Helvetica Neue LT Std', sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+}
+
+/* Common text styles */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Helvetica Neue LT Std', sans-serif;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+p, span, li {
+    font-family: 'Helvetica Neue LT Std', sans-serif;
+    color: var(--text-light);
+}
+
+/* Navigation and Link styles */
+a {
+    font-family: 'Helvetica Neue LT Std', sans-serif;
+    color: var(--primary-green);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--primary-green-dark);
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: var(--primary-green);
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-green-dark);
+}
+
+.btn-outline {
+    border: 2px solid var(--primary-green);
+    color: var(--primary-green);
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background-color: var(--primary-green);
+    color: white;
+}
+
+/* Icon colors */
+.icon {
+    color: var(--primary-green);
+}
+
+/* Remove the font import from individual components */
