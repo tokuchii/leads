@@ -15,8 +15,20 @@
             </div>
             
             <!-- Left Icons Container -->
-            <div class="left-icons absolute left-8 top-1/2 transform -translate-y-1/2 z-10">
-                <!-- Space for future icons -->
+            <div class="left-icons absolute left-30 top-1/2 transform -translate-y-1/2 z-10">
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <div class="connector-line"></div>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <div class="connector-line"></div>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
             </div>
 
             <!-- Center Logo -->
@@ -64,6 +76,15 @@ export default {
         Products,
         News,
         Careers
+    },
+    mounted() {
+        // Add Font Awesome CDN
+        if (!document.querySelector('link[href*="font-awesome"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css';
+            document.head.appendChild(link);
+        }
     }
 }
 </script>
@@ -78,6 +99,7 @@ export default {
     height: 100vh;
     position: relative;
     background: transparent;
+    overflow: hidden;
 }
 
 .video-container {
@@ -87,6 +109,17 @@ export default {
     width: 100%;
     height: 100vh;
     overflow: hidden;
+}
+
+.video-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 2;
 }
 
 .hero-video {
@@ -103,17 +136,43 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    z-index: 3;
+}
+
+.social-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.social-icon {
+    color: #4CAF50;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #45a049;
+    transform: scale(1.1);
+}
+
+.connector-line {
+    width: 2px;
+    height: 30px;
+    background: #4CAF50;
 }
 
 .center-logo {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 3;
 }
 
 .logo-image {
     width: auto;
-    height: 200px; /* Adjust this value based on your needs */
+    height: 600px; /* Increased from 200px to 300px */
     object-fit: contain;
     filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
@@ -133,11 +192,24 @@ export default {
     z-index: 2;
 }
 
-.nav-link {
+/* Navigation Link Styles */
+:deep(.nav-link) {
     position: relative;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+                 0 0 20px rgba(255, 255, 255, 0.3),
+                 0 0 30px rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
 }
 
-.nav-link::after {
+:deep(.nav-link:hover) {
+    color: #4CAF50;
+    text-shadow: 0 0 15px rgba(76, 175, 80, 0.5),
+                 0 0 25px rgba(76, 175, 80, 0.3),
+                 0 0 35px rgba(76, 175, 80, 0.2);
+}
+
+:deep(.nav-link::after) {
     content: '...';
     position: absolute;
     bottom: -4px;
@@ -146,9 +218,10 @@ export default {
     font-size: 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-.nav-link:hover::after {
+:deep(.nav-link:hover::after) {
     opacity: 1;
 }
 
