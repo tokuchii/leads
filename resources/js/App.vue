@@ -204,20 +204,20 @@
 
 
             <!-- News Section -->
-            <section id="news" class="bg-gradient-to-b from-white to-green-50 py-36">
-                <div class="container mx-auto px-6">
+            <section id="news" class="bg-white py-10">
+                <div class="container mx-auto px-12 mt-20">
                     <h2 class="text-4xl sm:text-5xl font-extrabold mb-20 text-center text-[#2E7D32]" style="letter-spacing: 2px;">LATEST NEWS</h2>
-                    <div class="grid md:grid-cols-3 gap-8">
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                         <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="relative">
                                 <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
                                      alt="News 1" 
-                                     class="w-full h-48 object-cover">
+                                     class="w-full h-48 object-cover rounded-t-2xl">
                                 <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
                                     Technology
                                 </div>
                             </div>
-                            <div class="p-6">
+                            <div class="p-4">
                                 <h3 class="text-xl font-semibold mb-3 text-green-700">New Smart Irrigation System Launch</h3>
                                 <p class="text-gray-600 mb-4">
                                     Introducing our latest smart irrigation system with advanced AI capabilities for optimal water management.
@@ -233,12 +233,12 @@
                             <div class="relative">
                                 <img src="https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
                                      alt="News 2" 
-                                     class="w-full h-48 object-cover">
+                                     class="w-full h-48 object-cover rounded-t-2xl">
                                 <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
                                     Innovation
                                 </div>
                             </div>
-                            <div class="p-6">
+                            <div class="p-4">
                                 <h3 class="text-xl font-semibold mb-3 text-green-700">Sustainable Farming Practices</h3>
                                 <p class="text-gray-600 mb-4">
                                     Discover how our new sustainable farming practices are helping farmers reduce environmental impact.
@@ -254,12 +254,12 @@
                             <div class="relative">
                                 <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
                                      alt="News 3" 
-                                     class="w-full h-48 object-cover">
+                                     class="w-full h-48 object-cover rounded-t-2xl">
                                 <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
                                     Research
                                 </div>
                             </div>
-                            <div class="p-6">
+                            <div class="p-4">
                                 <h3 class="text-xl font-semibold mb-3 text-green-700">AI in Agriculture</h3>
                                 <p class="text-gray-600 mb-4">
                                     Exploring the impact of artificial intelligence on modern agricultural practices and future trends.
@@ -274,25 +274,23 @@
                 </div>
             </section>
 
-            <section id="contact" class="relative">
+            <section id="contact" class="relative py-12">
               <!-- pandoy.png as absolute overlay for screens < 1280px -->
               <div class="absolute inset-0 flex xl:hidden justify-start items-end z-0">
-                <img src="/public/images/pandoy.png" alt="Pandoy" class="max-w-full max-h-full h-auto object-contain opacity-40" />
+                <img src="/public/images/pandoy.png" alt="Pandoy" class="max-w-[100%] max-h-[110%] h-auto object-contain opacity-30" />
               </div>
 
               <div class="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center justify-center gap-12">
                 <!-- Image Section - Visible on xl and up, on the left (not overlay) -->
                 <div class="hidden xl:flex lg:w-1/2 justify-center">
-                  <img src="/public/images/pandoy.png" alt="Pandoy" class="max-w-full h-auto" />
+                  <img src="/public/images/pandoy.png" alt="Pandoy" class="max-w-[100%] max-h-[120%]" />
                 </div>
 
                 <!-- Contact Form Section -->
                 <div class="w-full lg:w-1/2">
-                  <h2 class="text-4xl sm:text-5xl font-extrabold mt-12 mb-4 text-[#2E7D32]">SEND US AN INQUIRY</h2>
+                  <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-8 sm:mt-10 md:mt-12 mb-2 text-[#2E7D32] tracking-wider">SEND US AN INQUIRY</h2>
                   <p class="text-gray-600 text-sm mb-8 leading-relaxed">
-                    Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here
-                    Text here Text here Text here Text here Text here Text here Text here Text here Text here
-                    Text here Text here Text here Text here Text here Text here
+                    Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here
                   </p>
                   <form class="flex flex-col gap-4">
                     <div>
