@@ -205,7 +205,7 @@
 
             <!-- News Section -->
             <section id="news" class="bg-white py-10">
-                <div class="container mx-auto px-12 mt-20">
+                <div class="container mx-auto px-12 mt-22">
                     <h2 class="text-4xl sm:text-5xl font-extrabold mb-20 text-center text-[#2E7D32]" style="letter-spacing: 2px;">LATEST NEWS</h2>
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                         <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
@@ -274,7 +274,7 @@
                 </div>
             </section>
 
-            <section id="contact" class="relative py-12">
+            <section id="contact" class="relative">
               <!-- pandoy.png as absolute overlay for screens < 1280px -->
               <div class="absolute inset-0 flex xl:hidden justify-start items-end z-0">
                 <img src="/public/images/pandoy.png" alt="Pandoy" class="max-w-[100%] max-h-[110%] h-auto object-contain opacity-30" />
