@@ -91,10 +91,13 @@ export default {
         // Function to close menu
         function closeMenu() {
             mobileMenu.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Enable scrolling when menu is closed
         }
 
         mobileMenuButton.addEventListener('click', () => {
+            const isMenuActive = mobileMenu.classList.contains('active');
             mobileMenu.classList.toggle('active');
+            document.body.style.overflow = isMenuActive ? 'auto' : 'hidden'; // Toggle overflow based on menu state
         });
 
         closeMenuButton.addEventListener('click', closeMenu);
@@ -238,6 +241,7 @@ export default {
                 const mobileMenu = document.getElementById('mobile-menu');
                 if (mobileMenu.classList.contains('active')) {
                     mobileMenu.classList.remove('active');
+                    document.body.style.overflow = 'auto'; // Enable scrolling when menu is closed
                 }
 
                 // Get the section's position relative to the viewport
