@@ -834,6 +834,11 @@ button {
 
 @media (max-width: 480px) {
     .product-container {
-        min-height: 840px;
+        min-height: 60vh;
+        scroll-margin-top: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 }

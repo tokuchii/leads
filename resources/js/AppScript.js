@@ -244,8 +244,16 @@ export default {
                     document.body.style.overflow = 'auto'; // Enable scrolling when menu is closed
                 }
 
+                // Add offset for PRODUCTS section only on small mobile screens
+                let offset = 0;
+                if (sectionId === 'products') {
+                    if (window.innerWidth <= 480) {
+                        offset = 100; // Only apply offset on mobile <= 480px
+                    }
+                }
+
                 // Get the section's position relative to the viewport
-                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset;
+                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
                 
                 // Get current scroll position
                 const startPosition = window.pageYOffset;
