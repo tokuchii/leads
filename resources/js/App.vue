@@ -6,7 +6,7 @@
         <!-- Navigation -->
         <div class="fixed top-0 left-0 right-0 z-50">
             <!-- White fade gradient effect -->
-            <div class="h-40 bg-gradient-to-b from-white via-white/50 to-transparent"></div>
+            <div class="h-30 bg-gradient-to-b from-white via-white/50 to-transparent"></div>
             <!-- Navigation content -->
             <nav class="container mx-auto px-6 py-12 absolute top-0 left-0 right-0">
                 <!-- Search Container -->
@@ -167,7 +167,9 @@
 
 <!-- Products Section (Directly Below About Section) -->
 <section id="products" class="product-container flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-  <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-16 sm:mb-24 lg:mb-30 text-white tracking-wide" style="letter-spacing: 2px;">FARMING SOLUTIONS</h2>
+  <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-16 sm:mb-24 lg:mb-30 mt-22 sm:mt-20 text-white tracking-wide w-full" style="letter-spacing: 4px;">
+    FARMING <br class="block md:hidden" /> SOLUTIONS
+  </h2>
   <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-8 md:gap-14 lg:gap-24 w-full max-w-6xl mx-auto">
     <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36">
       <div class="flex items-center justify-center">
@@ -290,7 +292,7 @@
                 <div class="w-full lg:w-1/2">
                   <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-8 sm:mt-10 md:mt-12 mb-2 text-[#2E7D32] tracking-wider">SEND US AN INQUIRY</h2>
                   <p class="text-gray-600 text-sm mb-8 leading-relaxed">
-                    Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here
+                    Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here
                   </p>
                   <form class="flex flex-col gap-4">
                     <div>

@@ -818,3 +818,22 @@ button {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
+
+/* Add responsive height adjustments */
+@media (max-width: 1024px) {
+    .product-container {
+        min-height: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-container {
+        min-height: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-container {
+        min-height: 600px;
+    }
+}
