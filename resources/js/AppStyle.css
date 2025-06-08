@@ -313,7 +313,7 @@
     background-position: top;
     background-repeat: no-repeat;
     width: 100%;
-    min-height: 1000px;
+    min-height: 920px;
     margin: 0;
     padding: 0;
     transition: all 0.5s ease-in-out;
@@ -822,18 +822,18 @@ button {
 /* Add responsive height adjustments */
 @media (max-width: 1024px) {
     .product-container {
-        min-height: 800px;
+        min-height: 840px;
     }
 }
 
 @media (max-width: 768px) {
     .product-container {
-        min-height: 600px;
+        min-height: 840px;
     }
 }
 
 @media (max-width: 480px) {
     .product-container {
-        min-height: 600px;
+        min-height: 840px;
     }
 }

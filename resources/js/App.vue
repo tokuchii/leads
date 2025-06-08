@@ -167,39 +167,39 @@
 
 <!-- Products Section (Directly Below About Section) -->
 <section id="products" class="product-container flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
-  <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-16 sm:mb-24 lg:mb-30 mt-22 sm:mt-20 text-white tracking-wide w-full" style="letter-spacing: 4px;">
+  <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-16 sm:mb-24 lg:mb-30 mt-4 sm:mt-20 text-white tracking-wide w-full flex items-center justify-center flex-col" style="letter-spacing: 4px;">
     FARMING <br class="block md:hidden" /> SOLUTIONS
   </h2>
   <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-8 md:gap-14 lg:gap-24 w-full max-w-6xl mx-auto">
-    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36">
-      <div class="flex items-center justify-center">
-        <img src="/public/images/Rice.png" alt="Rice" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3" />
+    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 text-center">
+      <div class="flex items-center justify-center w-full h-full">
+        <img src="/public/images/Rice.png" alt="Rice" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3 mx-auto" />
       </div>
-      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center">RICE</span>
+      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center w-full">RICE</span>
     </div>
-    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36">
-      <div class="flex items-center justify-center">
-        <img src="/public/images/Mango.png" alt="Mango" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3" />
+    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 text-center">
+      <div class="flex items-center justify-center w-full h-full">
+        <img src="/public/images/Mango.png" alt="Mango" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3 mx-auto" />
       </div>
-      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center">MANGO</span>
+      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center w-full">MANGO</span>
     </div>
-    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36">
-      <div class="flex items-center justify-center">
-        <img src="/public/images/Vegetables.png" alt="Vegetables" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3" />
+    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 text-center">
+      <div class="flex items-center justify-center w-full h-full">
+        <img src="/public/images/Vegetables.png" alt="Vegetables" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3 mx-auto" />
       </div>
-      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center">VEGETABLES</span>
+      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center w-full">VEGETABLES</span>
     </div>
-    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36">
-      <div class="flex items-center justify-center">
-        <img src="/public/images/Sugarcane.png" alt="Sugarcane" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3" />
+    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 text-center">
+      <div class="flex items-center justify-center w-full h-full">
+        <img src="/public/images/Sugarcane.png" alt="Sugarcane" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3 mx-auto" />
       </div>
-      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center">SUGARCANE</span>
+      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center w-full">SUGARCANE</span>
     </div>
-    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36">
-      <div class="flex items-center justify-center">
-        <img src="/public/images/Othercrops.png" alt="Other Crops" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3" />
+    <div class="flex flex-col items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 text-center">
+      <div class="flex items-center justify-center w-full h-full">
+        <img src="/public/images/Othercrops.png" alt="Other Crops" class="h-18 w-18 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 object-contain white-icon mb-2 sm:mb-3 mx-auto" />
       </div>
-      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center">OTHER CROPS</span>
+      <span class="text-white text-xs sm:text-sm font-semibold tracking-widest text-center w-full">OTHER CROPS</span>
     </div>
   </div>
 </section>
