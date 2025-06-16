@@ -2,7 +2,7 @@
     <div class="min-h-screen">
         <!-- Scroll Progress Indicator -->
         <div class="scroll-progress"></div>
-        
+
         <!-- Navigation -->
         <div class="fixed top-0 left-0 right-0 z-50">
             <!-- White fade gradient effect -->
@@ -103,17 +103,17 @@
             <!-- Hero Section -->
             <section id="home" class="hero-section relative">
                 <div class="video-container">
-                    <video 
+                    <video
                         class="hero-video"
-                        autoplay 
-                        loop 
-                        muted 
+                        autoplay
+                        loop
+                        muted
                         playsinline
                     >
                         <source :src="'/videos/vid.mp4'" type="video/mp4">
                     </video>
                 </div>
-                
+
                 <!-- Left Icons Container -->
                 <div class="left-icons absolute left-50 top-1/2 transform -translate-y-1/2 z-10">
                     <div class="social-icons">
@@ -133,9 +133,9 @@
 
                 <!-- Center Logo -->
                 <div class="center-logo absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                    <img 
-                        :src="'/images/masaganalogo.png'" 
-                        alt="Masagana Logo" 
+                    <img
+                        :src="'/images/masaganalogo.png'"
+                        alt="Masagana Logo"
                         class="logo-image"
                     >
                 </div>
@@ -212,8 +212,8 @@
                     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                         <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                                     alt="News 1" 
+                                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                                     alt="News 1"
                                      class="w-full h-48 object-cover rounded-t-2xl">
                                 <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
                                     Technology
@@ -233,8 +233,8 @@
 
                         <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                                     alt="News 2" 
+                                <img src="https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                                     alt="News 2"
                                      class="w-full h-48 object-cover rounded-t-2xl">
                                 <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
                                     Innovation
@@ -254,8 +254,8 @@
 
                         <div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                             <div class="relative">
-                                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                                     alt="News 3" 
+                                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                                     alt="News 3"
                                      class="w-full h-48 object-cover rounded-t-2xl">
                                 <div class="absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm">
                                     Research
@@ -277,55 +277,148 @@
             </section>
 
             <section id="contact" class="relative">
-              <!-- pandoy.png as absolute overlay for screens < 1280px -->
-              <div class="absolute inset-0 flex xl:hidden justify-start items-end z-0">
-                <img src="/public/images/pandoy.png" alt="Pandoy" class="max-w-[100%] max-h-[110%] h-auto object-contain opacity-30" />
-              </div>
-
-              <div class="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center justify-center gap-12">
-                <!-- Image Section - Visible on xl and up, on the left (not overlay) -->
-                <div class="hidden xl:flex lg:w-1/2 justify-center">
-                  <img src="/public/images/pandoy.png" alt="Pandoy" class="max-w-[100%] max-h-[120%]" />
+                <!-- pandoy.png as absolute overlay for screens < 1280px -->
+                <div
+                    class="absolute inset-0 flex xl:hidden justify-start items-end z-0"
+                >
+                    <img
+                        src="/public/images/pandoy.png"
+                        alt="Pandoy"
+                        class="max-w-[100%] max-h-[110%] h-auto object-contain opacity-30"
+                    />
                 </div>
 
-                <!-- Contact Form Section -->
-                <div class="w-full lg:w-1/2">
-                  <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-8 sm:mt-10 md:mt-12 mb-2 text-[#2E7D32] tracking-wider">SEND US AN INQUIRY</h2>
-                  <p class="text-gray-600 text-sm mb-8 leading-relaxed">
-                    Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here
-                  </p>
-                  <form class="flex flex-col gap-4">
-                    <div>
-                      <label for="full-name" class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2">Full Name</label>
-                      <input type="text" id="full-name" name="full-name" class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400" />
+                <div
+                    class="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center justify-center gap-12"
+                >
+                    <!-- Image Section - Visible on xl and up, on the left (not overlay) -->
+                    <div class="hidden xl:flex lg:w-1/2 justify-center">
+                        <img
+                            src="/public/images/pandoy.png"
+                            alt="Pandoy"
+                            class="max-w-[100%] max-h-[120%]"
+                        />
                     </div>
-                    <div>
-                      <label for="contact-number" class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2">Contact Number</label>
-                      <div class="flex gap-2 relative">
-                        <select class="custom-select bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400">
-                          <option value="+1">+1 (USA)</option>
-                          <option value="+44">+44 (UK)</option>
-                          <option value="+63" selected>+63 (PH)</option>
-                          <option value="+91">+91 (IN)</option>
-                          <option value="+81">+81 (JP)</option>
-                          <option value="+61">+61 (AU)</option>
-                          <option value="+86">+86 (CN)</option>
-                        </select>
-                        <input type="text" id="contact-number" name="contact-number" class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400" />
-                      </div>
+
+                    <!-- Contact Form Section -->
+                    <div class="w-full lg:w-1/2">
+                        <h2
+                            class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-8 sm:mt-10 md:mt-12 mb-2 text-[#2E7D32] tracking-wider"
+                        >
+                            SEND US AN INQUIRY
+                        </h2>
+                        <p class="text-gray-600 text-sm mb-8 leading-relaxed">
+                            Text here Text here Text here Text here Text here
+                            Text here Text here Text here Text here Text here
+                            Text here Text here Text here Text here Text here
+                        </p>
+                        <form class="flex flex-col gap-4" @submit.prevent="submitInquiry">
+                            <div>
+                                <label
+                                    for="full-name"
+                                    class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
+                                    >Full Name</label
+                                >
+                                <input
+                                    type="text"
+                                    id="full_name"
+                                    v-model="formData.full_name"
+                                    name="full_name"
+                                    class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                    :class="{'border-red-500': errorMessage && errorMessage.includes('full_name')}"
+                                    required
+                                />
+                                <p v-if="errorMessage && errorMessage.includes('full_name')" class="text-red-500 text-sm mt-1">
+                                    {{ errorMessage }}
+                                </p>
+                            </div>
+                            <div>
+                                <label
+                                    for="contact-number"
+                                    class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
+                                    >Contact Number</label
+                                >
+                                <div class="flex gap-2 relative">
+                                    <select
+                                        v-model="formData.country_code"
+                                        class="custom-select bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                        :class="{'border-red-500': errorMessage && errorMessage.includes('country_code')}"
+                                        required
+                                    >
+                                        <option value="+1">+1 (USA)</option>
+                                        <option value="+44">+44 (UK)</option>
+                                        <option value="+63" selected>
+                                            +63 (PH)
+                                        </option>
+                                        <option value="+91">+91 (IN)</option>
+                                        <option value="+81">+81 (JP)</option>
+                                        <option value="+61">+61 (AU)</option>
+                                        <option value="+86">+86 (CN)</option>
+                                    </select>
+                                    <input
+                                        type="tel"
+                                        id="contact_number"
+                                        v-model="formData.contact_number"
+                                        name="contact_number"
+                                        class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                        :class="{'border-red-500': errorMessage && errorMessage.includes('contact_number')}"
+                                        required
+                                    />
+                                    <p v-if="errorMessage && errorMessage.includes('contact_number')" class="text-red-500 text-sm mt-1">
+                                        {{ errorMessage }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <label
+                                    for="email"
+                                    class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
+                                    >Email</label
+                                >
+                                <input
+                                    type="email"
+                                    id="email"
+                                    v-model="formData.email"
+                                    name="email"
+                                    class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                    :class="{'border-red-500': errorMessage && errorMessage.includes('email')}"
+                                    required
+                                />
+                                <p v-if="errorMessage && errorMessage.includes('email')" class="text-red-500 text-sm mt-1">
+                                    {{ errorMessage }}
+                                </p>
+                            </div>
+                            <div>
+                                <label
+                                    for="tell-us-more"
+                                    class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
+                                    >Tell us more</label
+                                >
+                                <textarea
+                                    id="message"
+                                    v-model="formData.message"
+                                    name="message"
+                                    rows="7"
+                                    class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
+                                    :class="{'border-red-500': errorMessage && errorMessage.includes('message')}"
+                                ></textarea>
+                                <p v-if="errorMessage && errorMessage.includes('message')" class="text-red-500 text-sm mt-1">
+                                    {{ errorMessage }}
+                                </p>
+                            </div>
+                            <div v-if="errorMessage" class="text-red-500 text-sm mb-4">
+                                {{ errorMessage }}
+                            </div>
+                            <button
+                                type="submit"
+                                class="bg-[#2E7D32] hover:bg-[#1B5E20] text-[#FFF8B9] font-bold py-3 px-8 rounded-lg transition-colors self-end mb-20"
+                                :disabled="isSubmitting"
+                            >
+                                {{ isSubmitting ? 'SUBMITTING...' : 'SUBMIT' }}
+                            </button>
+                        </form>
                     </div>
-                    <div>
-                      <label for="email" class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2">Email</label>
-                      <input type="email" id="email" name="email" class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400" />
-                    </div>
-                    <div>
-                      <label for="tell-us-more" class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2">Tell us more</label>
-                      <textarea id="tell-us-more" name="tell-us-more" rows="7" class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"></textarea>
-                    </div>
-                    <button type="submit" class="bg-[#2E7D32] hover:bg-[#1B5E20] text-[#FFF8B9] font-bold py-3 px-8 rounded-lg transition-colors self-end mb-20">SUBMIT</button>
-                  </form>
                 </div>
-              </div>
             </section>
 
 
@@ -359,4 +452,4 @@
 
 <script src="/resources/js/AppScript.js"></script>
 
-<style src="/resources/js/AppStyle.css"></style> 
+<style src="/resources/js/AppStyle.css"></style>

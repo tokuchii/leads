@@ -1,9 +1,19 @@
 // Paste the content of the <script> block from App.vue here, as a JS module export for Vue SFC.
+import Swal from 'sweetalert2';
 export default {
     name: 'App',
     data() {
         return {
-            activeSection: 'home'
+            activeSection: 'home',
+            formData: {
+                full_name: '',
+                country_code: '+63',
+                contact_number: '',
+                email: '',
+                message: ''
+            },
+            isSubmitting: false,
+            errorMessage: null
         }
     },
     mounted() {
@@ -47,8 +57,8 @@ export default {
 
         // Close mobile search when clicking outside
         document.addEventListener('click', (e) => {
-            if (!mobileSearchContainer.classList.contains('hidden') && 
-                !mobileSearchContainer.contains(e.target) && 
+            if (!mobileSearchContainer.classList.contains('hidden') &&
+                !mobileSearchContainer.contains(e.target) &&
                 !mobileSearchIcon.contains(e.target)) {
                 toggleMobileSearch();
             }
@@ -104,8 +114,8 @@ export default {
 
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (mobileMenu.classList.contains('active') && 
-                !mobileMenu.contains(e.target) && 
+            if (mobileMenu.classList.contains('active') &&
+                !mobileMenu.contains(e.target) &&
                 !mobileMenuButton.contains(e.target)) {
                 closeMenu();
             }
@@ -149,7 +159,7 @@ export default {
                     const sectionId = entry.target.id;
                     const currentIndex = sectionOrder.indexOf(sectionId);
                     const lastIndex = sectionOrder.indexOf(this.activeSection);
-                    
+
                     // Special handling for products, news, and contact sections
                     if (sectionId === 'products' || sectionId === 'news' || sectionId === 'contact') {
                         if (entry.intersectionRatio > 0.2) {
@@ -225,7 +235,7 @@ export default {
                 });
                 if (mostVisibleSection && maxVisibility > 0.3) {
                     const currentIndex = sectionOrder.indexOf(this.activeSection);
-                    if (mostVisibleSection.index > currentIndex || 
+                    if (mostVisibleSection.index > currentIndex ||
                         (scrollDirection === 'up' && mostVisibleSection.index === currentIndex - 1)) {
                         this.activeSection = mostVisibleSection.id;
                     }
@@ -234,6 +244,67 @@ export default {
         });
     },
     methods: {
+        async submitInquiry() {
+            try {
+                this.isSubmitting = true;
+                this.errorMessage = null;
+
+                // Custom validation for contact_number (numbers only)
+                if (!/^[0-9]+$/.test(this.formData.contact_number)) {
+                    this.errorMessage = 'Contact number must contain numbers only.';
+                    this.isSubmitting = false;
+                    return;
+                }
+
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+                if (!csrfToken) {
+                    throw new Error('CSRF token not found. Please refresh the page and try again.');
+                }
+
+                const response = await fetch('/inquiry', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify(this.formData)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Failed to submit inquiry');
+                }
+
+                // Success SweetAlert
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Thank You!',
+                    text: 'Inquiry submitted successfully!',
+                    background: '#f0fff0',
+                });
+
+                // Reset form
+                this.formData = {
+                    full_name: '',
+                    country_code: '+63',
+                    contact_number: '',
+                    email: '',
+                    message: ''
+                };
+            } catch (error) {
+                console.error('Error:', error);
+                this.errorMessage = error.message || 'There was an error submitting your inquiry. Please try again.';
+                // Error SweetAlert
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: this.errorMessage,
+                });
+            } finally {
+                this.isSubmitting = false;
+            }
+        },
         scrollToSection(sectionId) {
             const section = document.getElementById(sectionId);
             if (section) {
@@ -254,45 +325,45 @@ export default {
 
                 // Get the section's position relative to the viewport
                 const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                
+
                 // Get current scroll position
                 const startPosition = window.pageYOffset;
-                
+
                 // Calculate the distance to scroll
                 const distance = sectionTop - startPosition;
-                
+
                 // Animation duration in milliseconds
                 const duration = 1000;
-                
+
                 // Start time
                 let start = null;
-                
+
                 // Animation function
                 function animation(currentTime) {
                     if (start === null) start = currentTime;
                     const timeElapsed = currentTime - start;
                     const progress = Math.min(timeElapsed / duration, 1);
-                    
+
                     // Easing function for smooth animation
                     const easeInOutCubic = progress => {
                         return progress < 0.5
                             ? 4 * progress * progress * progress
                             : 1 - Math.pow(-2 * progress + 2, 3) / 2;
                     };
-                    
+
                     // Calculate new position
                     const newPosition = startPosition + (distance * easeInOutCubic(progress));
                     window.scrollTo(0, newPosition);
-                    
+
                     // Continue animation if not complete
                     if (timeElapsed < duration) {
                         requestAnimationFrame(animation);
                     }
                 }
-                
+
                 // Start animation
                 requestAnimationFrame(animation);
             }
         }
     }
-} 
+}
