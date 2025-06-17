@@ -326,35 +326,55 @@
                                     name="full_name"
                                     class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
                                     :class="{'border-red-500': errorMessage && errorMessage.includes('full_name')}"
+                                    @input="handleFullNameInput"
                                     required
                                 />
                                 <p v-if="errorMessage && errorMessage.includes('full_name')" class="text-red-500 text-sm mt-1">
                                     {{ errorMessage }}
                                 </p>
                             </div>
-                            <div>
+<div>
                                 <label
                                     for="contact-number"
                                     class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
                                     >Contact Number</label
                                 >
                                 <div class="flex gap-2 relative">
-                                    <select
-                                        v-model="formData.country_code"
-                                        class="custom-select bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
-                                        :class="{'border-red-500': errorMessage && errorMessage.includes('country_code')}"
-                                        required
-                                    >
-                                        <option value="+1">+1 (USA)</option>
-                                        <option value="+44">+44 (UK)</option>
-                                        <option value="+63" selected>
-                                            +63 (PH)
-                                        </option>
-                                        <option value="+91">+91 (IN)</option>
-                                        <option value="+81">+81 (JP)</option>
-                                        <option value="+61">+61 (AU)</option>
-                                        <option value="+86">+86 (CN)</option>
-                                    </select>
+                                    <div class="relative">
+                                        <button
+                                            type="button"
+                                            @click="toggleCountryDropdown"
+                                            class="custom-select bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 w-full text-left flex items-center justify-between"
+                                            :class="{'border-red-500': errorMessage && errorMessage.includes('country_code')}"
+                                            >
+                                            <span v-if="selectedCountry" class="flex items-center gap-2">
+                                                <span>{{ selectedCountry.code }}</span>
+                                                <span>({{ selectedCountry.iso2 }})</span>
+                                                <img
+                                                :src="`https://flagcdn.com/w20/${selectedCountry.iso2.toLowerCase()}.png`"
+                                                :alt="selectedCountry.name"
+                                                class="inline-block w-4 h-3"
+                                                style="vertical-align: middle;"
+                                                />
+                                            </span>
+                                            <span v-else>Select Country</span>
+                                            <i class="text-gray-500 ml-2"></i>
+                                        </button>
+
+                                        <!-- Country Dropdown -->
+                                        <div v-if="showCountryDropdown"
+                                             class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                            <div v-for="country in countries"
+                                                 :key="country.code"
+                                                 @click="selectCountry(country)"
+                                                 class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center">
+                                                <span class="flex-1">{{ country.code }} ({{ country.iso2 }})</span>
+                                                <img :src="`https://flagcdn.com/w20/${country.iso2.toLowerCase()}.png`"
+                                                     :alt="country.name"
+                                                     class="w-4 h-3 ml-2">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <input
                                         type="tel"
                                         id="contact_number"
@@ -362,6 +382,8 @@
                                         name="contact_number"
                                         class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
                                         :class="{'border-red-500': errorMessage && errorMessage.includes('contact_number')}"
+                                        :maxlength="getPhoneLength(formData.country_code)"
+                                        :placeholder="`Enter ${getPhoneLength(formData.country_code)} digits`"
                                         required
                                     />
                                     <p v-if="errorMessage && errorMessage.includes('contact_number')" class="text-red-500 text-sm mt-1">
@@ -401,6 +423,7 @@
                                     rows="7"
                                     class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
                                     :class="{'border-red-500': errorMessage && errorMessage.includes('message')}"
+                                    @input="handleMessageInput"
                                 ></textarea>
                                 <p v-if="errorMessage && errorMessage.includes('message')" class="text-red-500 text-sm mt-1">
                                     {{ errorMessage }}

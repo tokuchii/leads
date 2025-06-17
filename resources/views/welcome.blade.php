@@ -387,6 +387,74 @@
             box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
+        /* FAQ buttons styles - moved to footer area */
+        .faq-section {
+            background-color: #f1f0f0;
+            padding: 15px 20px;
+        }
+
+        .faq-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 0;
+        }
+
+        .faq-button {
+            background-color: #2E7D32;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .faq-button:hover {
+            background-color: #388E3C;
+        }
+
+        .faq-button:active {
+            transform: scale(0.95);
+        }
+
+        .faq-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .faq-section {
+                padding: 12px 15px;
+            }
+
+            .faq-buttons {
+                gap: 6px;
+            }
+
+            .faq-button {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .faq-section {
+                padding: 10px;
+            }
+
+            .faq-buttons {
+                gap: 4px;
+            }
+
+            .faq-button {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+        }
+
         .chat-modal-footer {
             padding: 15px 20px;
             border-top: 1px solid #ddd;
@@ -424,10 +492,6 @@
                 padding: 8px 12px;
                 font-size: 13px;
             }
-
-            .chat-modal-footer .image-upload-button {
-                padding: 8px 12px;
-            }
         }
 
         .chat-modal-footer button {
@@ -438,7 +502,6 @@
             border-radius: 20px; /* Pill shape */
             cursor: pointer;
             font-size: 14px;
-            /* margin-left: 10px; Removed, gap handles spacing */
             transition: background-color 0.3s ease;
             display: flex;
             align-items: center;
@@ -446,17 +509,6 @@
         }
 
         .chat-modal-footer button:hover {
-            background-color: #388E3C;
-        }
-
-        .chat-modal-footer .image-upload-button {
-            background-color: #2E7D32;
-            /* margin-left: 10px; Removed, gap handles spacing */
-            padding: 10px 15px;
-            border-radius: 20px;
-        }
-
-        .chat-modal-footer .image-upload-button:hover {
             background-color: #388E3C;
         }
 
@@ -513,12 +565,19 @@
             <!-- Chat messages will go here -->
             <p class="message received">Hello! How can I help you today?</p>
         </div>
+        
+        <!-- FAQ Section - positioned above input -->
+        <div class="faq-section">
+            <div class="faq-buttons">
+                <button class="faq-button" data-question="services">Services?</button>
+                <button class="faq-button" data-question="contact">Contact Info?</button>
+                <button class="faq-button" data-question="shipping">Shipping?</button>
+                <button class="faq-button" data-question="payment">Payment Methods?</button>
+            </div>
+        </div>
+        
         <div class="chat-modal-footer">
             <input type="text" placeholder="Type your message...">
-            <input type="file" id="image-input" accept="image/*" style="display: none;">
-            <button id="image-button" class="image-upload-button">
-                <i class="fas fa-camera"></i>
-            </button>
             <button id="send-button"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
@@ -530,15 +589,26 @@
             const closeModalButton = document.querySelector('.chat-modal-close');
             const chatInput = chatModal.querySelector('input[type="text"]');
             const sendButton = document.getElementById('send-button');
-            const chatBody = chatModal.querySelector('.chat-modal-body');
-            const imageInput = document.getElementById('image-input');
-            const imageButton = document.getElementById('image-button');
+            const chatBody = document.querySelector('.chat-modal-body');
+            const faqButtons = document.querySelectorAll('.faq-button');
+
+            // FAQ data mapping
+            const faqData = {
+                'services': 'What services do you offer?',
+                'products': 'What products do you sell?',
+                'consulting': 'Do you provide consulting services?',
+                'hours': 'What are your business hours?',
+                'contact': 'How can I contact you?',
+                'shipping': 'Do you ship products?',
+                'payment': 'What payment methods do you accept?',
+                'training': 'Do you offer training programs?'
+            };
 
             // Add loading state
             function setLoading(isLoading) {
                 sendButton.disabled = isLoading;
                 chatInput.disabled = isLoading;
-                imageButton.disabled = isLoading;
+                faqButtons.forEach(button => button.disabled = isLoading);
                 if (isLoading) {
                     sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                 } else {
@@ -576,6 +646,47 @@
                 const typing = document.getElementById('typing-indicator');
                 if (typing) {
                     typing.remove();
+                }
+            }
+
+            // Function to handle FAQ button click
+            async function handleFAQClick(question) {
+                // Add user question to chat
+                addMessage(faqData[question]);
+                
+                // Show loading state and typing indicator
+                setLoading(true);
+                showTypingIndicator();
+
+                try {
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({ message: faqData[question] })
+                    });
+
+                    const data = await response.json();
+
+                    // Hide typing indicator
+                    hideTypingIndicator();
+
+                    if (response.ok) {
+                        // Add bot response to chat
+                        addMessage(data.response, true);
+                    } else {
+                        // Handle error
+                        addMessage('Sorry, I encountered an error. Please try again later.', true);
+                        console.error('Chat error:', data.error);
+                    }
+                } catch (error) {
+                    hideTypingIndicator();
+                    console.error('Error:', error);
+                    addMessage('Sorry, I encountered an error. Please try again later.', true);
+                } finally {
+                    setLoading(false);
                 }
             }
 
@@ -646,16 +757,12 @@
                 }
             });
 
-            imageButton.addEventListener('click', function() {
-                imageInput.click();
-            });
-
-            imageInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const imageFile = this.files[0];
-                    addMessage(`Image selected: ${imageFile.name}`);
-                    // Note: Image upload functionality can be added later if needed
-                }
+            // FAQ button event listeners
+            faqButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    handleFAQClick(question);
+                });
             });
         });
     </script>
