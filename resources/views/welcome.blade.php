@@ -208,6 +208,48 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
             z-index: 100;
             transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+            position: fixed;
+            overflow: visible;
+        }
+
+        .chatbot-button::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #1B5E20; /* Dark green border */
+            box-shadow: 0 0 4px 4px #1B5E20AA; /* Dark green glow */
+            opacity: 0.7;
+            z-index: -1;
+            background: transparent;
+            animation: chatbot-ring-pulse 2.2s cubic-bezier(0.1, 0.1, 0.1, 0.1) infinite;
+        }
+
+        @keyframes chatbot-ring-pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.7;
+                box-shadow: 0 0 16px 4px #1B5E20AA;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.4;
+                box-shadow: 0 0 28px 10px #1B5E2077;
+            }
+            80% {
+                transform: translate(-50%, -50%) scale(1.35);
+                opacity: 0.15;
+                box-shadow: 0 0 36px 16px #1B5E2033;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.45);
+                opacity: 0;
+                box-shadow: 0 0 44px 22px #1B5E2000;
+            }
         }
 
         @media (max-width: 768px) {
@@ -218,6 +260,11 @@
                 bottom: 15px;
                 right: 15px;
             }
+            .chatbot-button::before {
+                width: 65px;
+                height: 65px;
+                border-width: 2px;
+            }
         }
 
         .chatbot-button:hover {
@@ -227,6 +274,22 @@
 
         .chatbot-button.active {
             transform: rotate(45deg);
+        }
+
+        .chatbot-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .chatbot-button:hover .chatbot-image {
+            transform: scale(1.05);
+        }
+
+        .chatbot-button.active .chatbot-image {
+            transform: rotate(-45deg);
         }
 
         /* Chatbot modal styles */
@@ -474,6 +537,7 @@
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s ease;
+            text-transform: capitalize; /* Capitalize first letter */
         }
 
         @media (max-width: 480px) {
@@ -553,7 +617,7 @@
     <div id="app"></div>
 
     <button id="chatbot-button" class="chatbot-button">
-        <i class="fas fa-comment-dots"></i>
+        <img src="{{ asset('images/pandoy cut 1.png') }}" alt="Chatbot" class="chatbot-image">
     </button>
 
     <div id="chat-modal" class="chat-modal">
@@ -563,7 +627,7 @@
         </div>
         <div class="chat-modal-body">
             <!-- Chat messages will go here -->
-            <p class="message received">Hello! How can I help you today?</p>
+            <p class="message received">Hello! Im Pandoy, How can I help you today?</p>
         </div>
         
         <!-- FAQ Section - positioned above input -->
@@ -595,13 +659,10 @@
             // FAQ data mapping
             const faqData = {
                 'services': 'What services do you offer?',
-                'products': 'What products do you sell?',
-                'consulting': 'Do you provide consulting services?',
-                'hours': 'What are your business hours?',
                 'contact': 'How can I contact you?',
                 'shipping': 'Do you ship products?',
                 'payment': 'What payment methods do you accept?',
-                'training': 'Do you offer training programs?'
+
             };
 
             // Add loading state
@@ -754,6 +815,18 @@
             chatInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     sendMessage();
+                }
+            });
+
+            // Auto-capitalize first letter of each word
+            chatInput.addEventListener('input', function(e) {
+                let value = this.value;
+                if (value.length > 0) {
+                    // Capitalize first letter of each word
+                    value = value.replace(/\b\w/g, function(char) {
+                        return char.toUpperCase();
+                    });
+                    this.value = value;
                 }
             });
 
