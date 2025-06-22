@@ -33,7 +33,7 @@ class InquiryController extends Controller
     {
         try {
             $validated = $request->validate([
-                'full_name' => 'required|string|max:255',
+                'full_name' =>'required','string','max:255','regex:/^[A-Za-z ]+$/',
                 'country_code' => 'required|string',
                 'contact_number' => 'required|string',
                 'email' => 'required|email|email:rfc,dns',

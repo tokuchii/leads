@@ -315,18 +315,20 @@
                         <form class="flex flex-col gap-4" @submit.prevent="submitInquiry">
                             <div>
                                 <label
-                                    for="full-name"
+                                    for="full_name"
                                     class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
                                     >Full Name</label
                                 >
                                 <input
                                     type="text"
+                                    inputmode="text"
                                     id="full_name"
                                     v-model="formData.full_name"
                                     name="full_name"
                                     class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
                                     :class="{'border-red-500': errorMessage && errorMessage.includes('full_name')}"
                                     @input="handleFullNameInput"
+                                    placeholder="e.g., Juan Dela Cruz"
                                     required
                                 />
                                 <p v-if="errorMessage && errorMessage.includes('full_name')" class="text-red-500 text-sm mt-1">
@@ -335,7 +337,7 @@
                             </div>
 <div>
                                 <label
-                                    for="contact-number"
+                                    for="contact_number"
                                     class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
                                     >Contact Number</label
                                 >
@@ -404,6 +406,7 @@
                                     name="email"
                                     class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
                                     :class="{'border-red-500': errorMessage && errorMessage.includes('email')}"
+                                    placeholder="e.g., name@example.com"
                                     required
                                 />
                                 <p v-if="errorMessage && errorMessage.includes('email')" class="text-red-500 text-sm mt-1">
@@ -412,7 +415,7 @@
                             </div>
                             <div>
                                 <label
-                                    for="tell-us-more"
+                                    for="message"
                                     class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
                                     >Tell us more</label
                                 >
@@ -424,13 +427,8 @@
                                     class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
                                     :class="{'border-red-500': errorMessage && errorMessage.includes('message')}"
                                     @input="handleMessageInput"
+                                    placeholder="Let us know how we can assist you"
                                 ></textarea>
-                                <p v-if="errorMessage && errorMessage.includes('message')" class="text-red-500 text-sm mt-1">
-                                    {{ errorMessage }}
-                                </p>
-                            </div>
-                            <div v-if="errorMessage" class="text-red-500 text-sm mb-4">
-                                {{ errorMessage }}
                             </div>
                             <button
                                 type="submit"

@@ -313,6 +313,7 @@ export default {
             { name: 'Vietnam', code: '+84', iso2: 'VN', iso3: 'VNM' },
             { name: 'Yemen', code: '+967', iso2: 'YE', iso3: 'YEM' },
         ];
+        
 
         // Set default selected country (Philippines)
         this.selectedCountry = this.countries.find(c => c.code === '+63') || this.countries[0];
@@ -564,7 +565,9 @@ export default {
         },
 
         handleFullNameInput(event) {
-            this.formData.full_name = this.capitalizeFirstLetter(event.target.value);
+            // Remove any character that is not a letter or space
+            let value = event.target.value.replace(/[^A-Za-z ]+/g, '');
+            this.formData.full_name = this.capitalizeFirstLetter(value);
         },
 
         handleMessageInput(event) {
@@ -620,6 +623,14 @@ export default {
 
                 if (this.formData.contact_number.length !== expectedLength) {
                     this.errorMessage = `Contact number for ${this.formData.country_code} must be ${expectedLength} digits.`;
+                    this.isSubmitting = false;
+                    return;
+                }
+
+                // Stricter email validation: must be in the format name@domain.com, domain must be gmail, yahoo, outlook, hotmail, or similar
+                const emailPattern = /^[A-Za-z0-9._%+-]+@(gmail|yahoo|outlook|hotmail|icloud|protonmail|zoho|aol|mail|gmx|yandex)\.[A-Za-z]{2,}$/i;
+                if (!emailPattern.test(this.formData.email)) {
+                    this.errorMessage = 'Please enter a valid email address (e.g., name@gmail.com, name@yahoo.com).';
                     this.isSubmitting = false;
                     return;
                 }
