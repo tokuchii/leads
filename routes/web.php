@@ -10,5 +10,6 @@ Route::get('/{any}', function () {
     return view('welcome');
 })->where('any', '.*');
 
+
 Route::post('/chat', [ChatController::class, 'chat'])->name('chat');
 Route::get('/faq', [ChatController::class, 'getFAQ'])->name('faq');

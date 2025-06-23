@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>LeadsAgri</title>
-    
+
     <!-- Styles -->
     <style>
         /* Font Awesome - Must be first */
@@ -20,7 +20,7 @@
             font-style: normal;
             font-display: swap;
         }
-        
+
         @font-face {
             font-family: 'Helvetica Neue LT Std';
             src: url('https://db.onlinewebfonts.com/c/66e796dac9aff5a6967ebdd5e021db01?family=HelveticaNeueLTStd-Medium') format('woff2');
@@ -28,7 +28,7 @@
             font-style: normal;
             font-display: swap;
         }
-        
+
         @font-face {
             font-family: 'Helvetica Neue LT Std';
             src: url('https://db.onlinewebfonts.com/c/66e796dac9aff5a6967ebdd5e021db01?family=HelveticaNeueLTStd-Bold') format('woff2');
@@ -608,7 +608,7 @@
             }
         }
     </style>
-    
+
     <!-- Main styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -629,7 +629,7 @@
             <!-- Chat messages will go here -->
             <p class="message received">Hello! Im Pandoy, How can I help you today?</p>
         </div>
-        
+
         <!-- FAQ Section - positioned above input -->
         <div class="faq-section">
             <div class="faq-buttons">
@@ -639,7 +639,7 @@
                 <button class="faq-button" data-question="payment">Payment Methods?</button>
             </div>
         </div>
-        
+
         <div class="chat-modal-footer">
             <input type="text" placeholder="Type your message...">
             <button id="send-button"><i class="fas fa-paper-plane"></i></button>
@@ -714,7 +714,7 @@
             async function handleFAQClick(question) {
                 // Add user question to chat
                 addMessage(faqData[question]);
-                
+
                 // Show loading state and typing indicator
                 setLoading(true);
                 showTypingIndicator();
@@ -818,15 +818,11 @@
                 }
             });
 
-            // Auto-capitalize first letter of each word
+            // Auto-capitalize only the first letter of the message
             chatInput.addEventListener('input', function(e) {
                 let value = this.value;
                 if (value.length > 0) {
-                    // Capitalize first letter of each word
-                    value = value.replace(/\b\w/g, function(char) {
-                        return char.toUpperCase();
-                    });
-                    this.value = value;
+                    this.value = value.charAt(0).toUpperCase() + value.slice(1);
                 }
             });
 

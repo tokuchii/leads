@@ -5,6 +5,7 @@ export default {
     data() {
         return {
             activeSection: 'home',
+            activeTab: 'roots',
             formData: {
                 full_name: '',
                 country_code: '+63',
@@ -313,7 +314,7 @@ export default {
             { name: 'Vietnam', code: '+84', iso2: 'VN', iso3: 'VNM' },
             { name: 'Yemen', code: '+967', iso2: 'YE', iso3: 'YEM' },
         ];
-        
+
 
         // Set default selected country (Philippines)
         this.selectedCountry = this.countries.find(c => c.code === '+63') || this.countries[0];
@@ -340,7 +341,7 @@ export default {
         // Mobile search functionality
         function toggleMobileSearch() {
             if (!mobileSearchContainer || !mobileSearchIcon || !mobilePhoneIcon) return;
-            
+
             const isVisible = !mobileSearchContainer.classList.contains('hidden');
 
             // Toggle visibility
@@ -392,7 +393,7 @@ export default {
         // Close desktop search when clicking outside
         document.addEventListener('click', (e) => {
             if (!searchContainer || !searchIcon) return;
-            
+
             const isClickInsideSearch = searchContainer.contains(e.target);
             const isClickOnSearchIcon = searchIcon.contains(e.target);
 
