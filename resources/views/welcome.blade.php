@@ -452,69 +452,79 @@
 
         /* FAQ buttons styles - moved to footer area */
         .faq-section {
-            background-color: #f1f0f0;
-            padding: 15px 20px;
+            background-color: transparent;
+            padding: 10px 10px;
+            width: 100%;
         }
 
         .faq-buttons {
             display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-bottom: 0;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            padding: 0 15px;
         }
 
         .faq-button {
-            background-color: #2E7D32;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 15px;
-            font-size: 10px;
+            background-color: #dcf8c6;
+            color: black;
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+            padding: 10px 10px;
+            border-radius: 20px;
+            font-size: 15px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            white-space: nowrap;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+            max-width: 280px;
+            position: relative;
+            overflow: hidden;
         }
 
         .faq-button:hover {
-            background-color: #388E3C;
+            background-color: #A5D6A7;
+            transform: translateY(-1px);
         }
 
         .faq-button:active {
-            transform: scale(0.95);
+            transform: translateY(0);
         }
 
         .faq-button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
+            border-color: #999;
+            color: #666;
         }
 
         @media (max-width: 768px) {
             .faq-section {
-                padding: 12px 15px;
+                padding: 8px;
             }
 
             .faq-buttons {
-                gap: 6px;
+                padding: 0 10px;
             }
 
             .faq-button {
-                padding: 6px 10px;
-                font-size: 11px;
+                padding: 8px 14px;
+                font-size: 13px;
             }
         }
 
         @media (max-width: 480px) {
             .faq-section {
-                padding: 10px;
+                padding: 6px;
             }
 
             .faq-buttons {
-                gap: 4px;
+                padding: 0 8px;
             }
 
             .faq-button {
-                padding: 5px 8px;
-                font-size: 10px;
+                padding: 8px 12px;
+                font-size: 12px;
+                max-width: 240px;
             }
         }
 
@@ -627,22 +637,10 @@
         </div>
         <div class="chat-modal-body">
             <!-- Chat messages will go here -->
-            <p class="message received">Hello! Im Pandoy, How can I help you today?</p>
-        </div>
-
-        <!-- FAQ Section - positioned above input -->
-        <div class="faq-section">
-            <div class="faq-buttons">
-                <button class="faq-button" data-question="services">Services?</button>
-                <button class="faq-button" data-question="contact">Contact Info?</button>
-                <button class="faq-button" data-question="shipping">Shipping?</button>
-                <button class="faq-button" data-question="payment">Payment Methods?</button>
+            <p class="message received">Good day! I'm Pandoy Thank you for reaching Leads Agricultural Products Corporation. For security purposes and to serve you better, kindly confirm if you agree to have this conversation recorded.</p>
+            <div class="faq-section" id="faq-section">
+                <div class="faq-buttons" id="faq-buttons"></div>
             </div>
-        </div>
-
-        <div class="chat-modal-footer">
-            <input type="text" placeholder="Type your message...">
-            <button id="send-button"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -651,29 +649,41 @@
             const chatbotButton = document.getElementById('chatbot-button');
             const chatModal = document.getElementById('chat-modal');
             const closeModalButton = document.querySelector('.chat-modal-close');
-            const chatInput = chatModal.querySelector('input[type="text"]');
-            const sendButton = document.getElementById('send-button');
             const chatBody = document.querySelector('.chat-modal-body');
-            const faqButtons = document.querySelectorAll('.faq-button');
+            const faqButtonsContainer = document.getElementById('faq-buttons');
+            const faqSection = document.getElementById('faq-section');
 
             // FAQ data mapping
             const faqData = {
-                'services': 'What services do you offer?',
-                'contact': 'How can I contact you?',
-                'shipping': 'Do you ship products?',
-                'payment': 'What payment methods do you accept?',
-
+                'Products & Services': 'Thank you for your interest in our products and services. You may know more about these through this link (website link for products and services).',
+                'Latest News ': 'Thank you for your interest in our latest news. You may know more about these through this link (website link for News).',
+                'Careers': 'Thank you for your interest in our current openings. You may know more about these through this link (website link for careers).',
+                'Contact Details': 'You may reach us via by directly contacting our customer service via +63 917 7726369 or contacting us via facebook.com/leadsagri. Alternatively, you may send us a message through this link (website linkf or email / messages)',
             };
 
-            // Add loading state
-            function setLoading(isLoading) {
-                sendButton.disabled = isLoading;
-                chatInput.disabled = isLoading;
-                faqButtons.forEach(button => button.disabled = isLoading);
-                if (isLoading) {
-                    sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                } else {
-                    sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            let confirmed = false;
+
+            function showTypingIndicator() {
+                const indicator = document.createElement('div');
+                indicator.id = 'typing-indicator';
+                indicator.classList.add('message', 'received');
+                indicator.style.backgroundColor = 'transparent';
+                indicator.style.boxShadow = 'none';
+                indicator.innerHTML = `
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                `;
+                chatBody.insertBefore(indicator, faqSection);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            function hideTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
                 }
             }
 
@@ -685,154 +695,92 @@
                     messageElement.classList.add('received');
                 }
                 messageElement.textContent = content;
-                chatBody.appendChild(messageElement);
+                // Insert the message before the FAQ section so buttons stay at the bottom
+                chatBody.insertBefore(messageElement, faqSection);
                 chatBody.scrollTop = chatBody.scrollHeight;
             }
 
-            // Function to show typing indicator
-            function showTypingIndicator() {
-                let typing = document.getElementById('typing-indicator');
-                if (!typing) {
-                    typing = document.createElement('div');
-                    typing.id = 'typing-indicator';
-                    typing.className = 'message received typing-indicator';
-                    typing.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
-                    chatBody.appendChild(typing);
-                    chatBody.scrollTop = chatBody.scrollHeight;
-                }
+            // Show Yes/No confirmation buttons initially
+            function showConfirmationButtons() {
+                faqButtonsContainer.innerHTML = '';
+                const yesBtn = document.createElement('button');
+                yesBtn.className = 'faq-button';
+                yesBtn.textContent = 'Yes, I agree.';
+                yesBtn.onclick = function() {
+                    confirmed = true;
+                    showFAQButtons();
+                    addMessage('Thank you very much! How can we help you today?', true);
+                };
+                const noBtn = document.createElement('button');
+                noBtn.className = 'faq-button';
+                noBtn.textContent = 'No.';
+                noBtn.onclick = function() {
+                    confirmed = false;
+                    showDisabledFAQButtons();
+                    addMessage('Thank you very much. Have a great day!', true);
+                };
+                faqButtonsContainer.appendChild(yesBtn);
+                faqButtonsContainer.appendChild(noBtn);
             }
 
-            // Function to hide typing indicator
-            function hideTypingIndicator() {
-                const typing = document.getElementById('typing-indicator');
-                if (typing) {
-                    typing.remove();
-                }
+            // Show FAQ buttons after confirmation
+            function showFAQButtons() {
+                faqButtonsContainer.innerHTML = '';
+                Object.keys(faqData).forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.className = 'faq-button';
+                    btn.textContent = key;
+                    btn.onclick = function() {
+                        addMessage(key);
+                        faqButtonsContainer.innerHTML = ''; // Clear buttons
+
+                        showTypingIndicator();
+
+                        // Simulate bot response delay
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage(faqData[key], true);
+                            showMainMenuButton();
+                        }, 1200);
+                    };
+                    faqButtonsContainer.appendChild(btn);
+                });
             }
 
-            // Function to handle FAQ button click
-            async function handleFAQClick(question) {
-                // Add user question to chat
-                addMessage(faqData[question]);
+            // Show a Main Menu button after a FAQ answer
+            function showMainMenuButton() {
+                faqButtonsContainer.innerHTML = '';
+                const mainMenuBtn = document.createElement('button');
+                mainMenuBtn.className = 'faq-button';
+                mainMenuBtn.textContent = 'Main Menu';
+                mainMenuBtn.onclick = showFAQButtons;
+                faqButtonsContainer.appendChild(mainMenuBtn);
 
-                // Show loading state and typing indicator
-                setLoading(true);
-                showTypingIndicator();
-
-                try {
-                    const response = await fetch('/chat', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify({ message: faqData[question] })
-                    });
-
-                    const data = await response.json();
-
-                    // Hide typing indicator
-                    hideTypingIndicator();
-
-                    if (response.ok) {
-                        // Add bot response to chat
-                        addMessage(data.response, true);
-                    } else {
-                        // Handle error
-                        addMessage('Sorry, I encountered an error. Please try again later.', true);
-                        console.error('Chat error:', data.error);
-                    }
-                } catch (error) {
-                    hideTypingIndicator();
-                    console.error('Error:', error);
-                    addMessage('Sorry, I encountered an error. Please try again later.', true);
-                } finally {
-                    setLoading(false);
-                }
+                const endBtn = document.createElement('button');
+                endBtn.className = 'faq-button';
+                endBtn.textContent = 'End of Conversation';
+                endBtn.onclick = function() {
+                    showDisabledFAQButtons();
+                    addMessage('Thank you very much. Have a great day!', true);
+                };
+                faqButtonsContainer.appendChild(endBtn);
             }
 
-            // Function to send a message
-            async function sendMessage() {
-                const messageText = chatInput.value.trim();
-                if (messageText === '') return;
-
-                // Add user message to chat
-                addMessage(messageText);
-                chatInput.value = '';
-
-                // Show loading state and typing indicator
-                setLoading(true);
-                showTypingIndicator();
-
-                try {
-                    const response = await fetch('/chat', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                        body: JSON.stringify({ message: messageText })
-                    });
-
-                    const data = await response.json();
-
-                    // Hide typing indicator
-                    hideTypingIndicator();
-
-                    if (response.ok) {
-                        // Add bot response to chat
-                        addMessage(data.response, true);
-                    } else {
-                        // Handle error
-                        addMessage('Sorry, I encountered an error. Please try again later.', true);
-                        console.error('Chat error:', data.error);
-                    }
-                } catch (error) {
-                    hideTypingIndicator();
-                    console.error('Error:', error);
-                    addMessage('Sorry, I encountered an error. Please try again later.', true);
-                } finally {
-                    setLoading(false);
-                }
+            // When conversation ends (after No), only show End of Conversation message, no FAQ buttons
+            function showDisabledFAQButtons() {
+                faqButtonsContainer.innerHTML = '';
             }
 
-            // Event listeners
-            chatbotButton.addEventListener('click', function() {
+            chatbotButton.onclick = function() {
                 chatModal.classList.toggle('active');
                 chatbotButton.classList.toggle('active');
-                if (chatModal.classList.contains('active')) {
-                    chatInput.focus();
-                }
-            });
-
-            closeModalButton.addEventListener('click', function() {
+            };
+            closeModalButton.onclick = function() {
                 chatModal.classList.remove('active');
                 chatbotButton.classList.remove('active');
-            });
+            };
 
-            sendButton.addEventListener('click', sendMessage);
-
-            chatInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-
-            // Auto-capitalize only the first letter of the message
-            chatInput.addEventListener('input', function(e) {
-                let value = this.value;
-                if (value.length > 0) {
-                    this.value = value.charAt(0).toUpperCase() + value.slice(1);
-                }
-            });
-
-            // FAQ button event listeners
-            faqButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const question = this.getAttribute('data-question');
-                    handleFAQClick(question);
-                });
-            });
+            showConfirmationButtons();
         });
     </script>
 </body>
