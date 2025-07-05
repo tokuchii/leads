@@ -313,7 +313,7 @@ export default {
                 },
                 {
                     name: 'MANGO',
-                    icon: '/images/mango.png',
+                    icon: '/images/Mango.png',
                     background: '/images/mango1.png',
                     image: '/images/mangoimg.png',
                     text: 'The Philippines is known for its <b>mangoes</b>, particularly the Carabao variety, which is celebrated for its sweetness and is considered the "king of fruits".Mango is the national fruit of the Philippines, and the country is a significant producer, ranking 10th globally. The Ilocos Region is the top mango producer, followed by SOCCSKSARGEN and Zamboanga Peninsula.',

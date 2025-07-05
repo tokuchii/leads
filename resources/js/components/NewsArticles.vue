@@ -1,9 +1,8 @@
 <template>
-    <div class="featured-news relative w-full">
+    <div class="news-articles relative w-full">
         <div class="relative">
             <img 
                 src="/public/images/newsimg.png" 
-                alt="Career Background" 
                 class="featured-image w-full h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover object-top z-0"
             >
             <div class="absolute inset-0 bg-[#004E27] opacity-55 z-10"></div>
@@ -15,8 +14,3 @@
         </div>
     </div>
 </template>
-<script>
-export default {
-    name: 'FeaturedNews',
-};
-</script>
