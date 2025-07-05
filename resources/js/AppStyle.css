@@ -308,12 +308,13 @@
 
 /* Products section styles */
 .product-container {
-    background-image: url('/images/banner.png');
+    background: #008643;
+    /* background-image: url('/images/banner.png'); */
     background-size: cover;
     background-position: top;
     background-repeat: no-repeat;
     width: 100%;
-    min-height: 920px;
+    min-height: 500px;
     margin: 0;
     padding: 0;
     transition: all 0.5s ease-in-out;
@@ -725,6 +726,15 @@ img:hover {
   transform: scale(1.02);
 }
 
+/* Override hover effect for specific images */
+.no-hover-effect {
+  transition: none !important;
+}
+
+.no-hover-effect:hover {
+  transform: none !important;
+}
+
 /* Button transitions */
 button {
   transition: all 0.3s ease-in-out;
@@ -835,7 +845,7 @@ button {
 
 @media (max-width: 480px) {
     .product-container {
-        min-height: 60vh;
+        min-height: 100vh;
         scroll-margin-top: 120px;
         display: flex;
         flex-direction: column;
@@ -983,4 +993,30 @@ button {
   .bg-\[\#008643\] h2.text-2xl {
     font-size: 1.25rem !important; /* text-xl */
   }
+}
+
+.news-learnmore-btn {
+  color: #fff !important;
+  margin-top: auto;
+  text-align: center;
+  display: inline-block;
+  font-size: medium;
+}
+.news-learnmore-btn:hover{
+  text-decoration: underline;
+}
+
+.news-description-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.font-helvetica-heavy {
+  font-family: 'Helvetica Neue LT Std', Helvetica, Arial, sans-serif;
+  font-weight: 900;
 }
