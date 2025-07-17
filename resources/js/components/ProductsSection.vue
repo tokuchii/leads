@@ -53,6 +53,7 @@
                         <button
                         v-if="hoveredProduct.name === 'MANGO'"
                         class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center lg:mt-0 lg:w-auto lg:text-left"
+                        @click="$emit('show-mango-products')"
                         >
                         AVAILABLE PRODUCTS FOR MANGOES
                         </button>
@@ -61,6 +62,7 @@
                         <button
                         v-if="hoveredProduct.name === 'RICE'"
                         class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center lg:mt-0 lg:w-auto lg:text-left"
+                        @click="$emit('show-rice-products')"
                         >
                         AVAILABLE PRODUCTS FOR RICE
                         </button>
@@ -69,6 +71,7 @@
                         <button
                         v-if="hoveredProduct.name === 'VEGETABLES'"
                         class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center lg:mt-0 lg:w-auto lg:text-left"
+                        @click="$emit('show-vegetable-products')"
                         >
                         AVAILABLE PRODUCTS FOR VEGETABLES
                         </button>
@@ -77,6 +80,7 @@
                         <button
                         v-if="hoveredProduct.name === 'SUGARCANE'"
                         class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center lg:mt-0 lg:w-auto lg:text-left"
+                        @click="$emit('show-sugarcane-products')"
                         >
                         AVAILABLE PRODUCTS FOR SUGARCANE
                         </button>
@@ -85,6 +89,7 @@
                         <button
                         v-if="hoveredProduct.name === 'OTHER CROPS'"
                         class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center lg:mt-0 lg:w-auto lg:text-left"
+                        @click="$emit('show-othercrop-products')"
                         >
                         AVAILABLE PRODUCTS FOR OTHER CROPS
                         </button>
@@ -99,4 +104,4 @@ export default {
     name: 'ProductsSection',
     props: ['hoveredProduct', 'productIcons'],
 };
-</script> 
+</script>
