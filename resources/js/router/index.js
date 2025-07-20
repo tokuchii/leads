@@ -8,7 +8,6 @@ import News from '../components/News.vue'
 import Careers from '../components/Careers.vue'
 import JobCareers from '../components/JobCareers.vue'
 import FeaturedNews from '../components/FeaturedNews.vue'
-import CareerDetail from '../components/CareerDetail.vue'
 
 const routes = [
     {
@@ -50,11 +49,6 @@ const routes = [
         path: '/featured-news',
         name: 'featured-news',
         component: FeaturedNews
-    },
-    {
-        path: '/careers-job',
-        name: 'career-detail',
-        component: CareerDetail
     }
 ]
 
