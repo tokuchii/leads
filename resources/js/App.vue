@@ -99,7 +99,18 @@
         </div>
 
         <transition name="fade" mode="out-in">
-            <div v-if="!showLearnMore && !showCareers && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts" key="main" class="main-container">
+            <div v-if="selectedNewsArticle" key="newsarticle" class="main-container">
+                <div class="news-article flex flex-col items-center justify-center bg-[#006D36] px-4 md:px-8 lg:px-16 py-8 shadow-lg max-w-full lg:max-w-7xl mx-auto mt-30 mb-10">
+                    <div class="w-full flex flex-col items-start mb-4">
+                        <span class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors" @click="goToFeaturedNews">NEWS | ARTICLES</span>
+                    </div>
+                    <img :src="selectedNewsArticle.featured_image_url || '/public/images/newsimg.png'" class="w-full max-w-xs sm:max-w-md md:max-w-xl lg:max-w-3xl h-auto mb-8 object-center no-hover-effect" />
+                    <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">{{ selectedNewsArticle.title }}</h1>
+                    <div class="prose prose-sm sm:prose md:prose-lg text-white mb-6 w-full max-w-full break-words" v-html="formattedSelectedArticleContent"></div>
+
+                </div>
+            </div>
+            <div v-else-if="!showLearnMore && !showCareers && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts" key="main" class="main-container">
                 <HeroSection />
                 <AboutSection @show-learn-more="handleShowLearnMore" />
                 <ProductsSection
@@ -292,7 +303,7 @@
                 <JobCareers @close="handleCloseCareers" />
             </div>
             <div v-else-if="showFeaturedNews" key="featurednews" class="main-container">
-                <FeaturedNews @close="handleCloseFeaturedNews" />
+                <FeaturedNews @show-news-article="handleShowNewsArticle" @close="handleCloseFeaturedNews" />
             </div>
         </transition>
         <!-- Footer -->
@@ -618,7 +629,8 @@ export default {
                 '+995': 9, // Georgia
                 '+996': 9, // Kyrgyzstan
                 '+998': 9, // Uzbekistan
-            }
+            },
+            selectedNewsArticle: null,
         }
     },
     async mounted() {
@@ -1115,6 +1127,7 @@ export default {
             }
         },
         scrollToSection(sectionId) {
+            this.selectedNewsArticle = null; // Hide article view on any navbar navigation
             if (this.showLearnMore) {
                 this.showLearnMore = false;
                 // Wait for DOM to update and section to exist
@@ -1680,6 +1693,30 @@ export default {
                 this.carouselCurrentSlide = this.carouselImages.length - 1; // Loop to last slide
             }
         },
+        handleShowNewsArticle(news) {
+            this.selectedNewsArticle = news;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        goToFeaturedNews() {
+            this.selectedNewsArticle = null;
+            this.showFeaturedNews = true;
+            this.showLearnMore = false;
+            this.showCareers = false;
+            this.showRiceProducts = false;
+            this.showMangoProducts = false;
+            this.showVegetableProducts = false;
+            this.showSugarcaneProducts = false;
+            this.showOthercropProducts = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        formatMonthYear(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (isNaN(date)) return '';
+            const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
+            const year = date.getFullYear();
+            return `${month} ${year}`;
+        },
     },
     watch: {
         $route() {
@@ -1692,7 +1729,17 @@ export default {
             this.showSugarcaneProducts = false;
             this.showOthercropProducts = false;
         }
-    }
+    },
+    computed: {
+        formattedSelectedArticleContent() {
+            if (!this.selectedNewsArticle || !this.selectedNewsArticle.content) return '';
+            // Replace every colon with two breaklines (remove the colon)
+            let content = this.selectedNewsArticle.content.replace(/:/g, '<br><br>');
+            // Make text inside double quotes bold, but hide the quotes
+            content = content.replace(/"([^"]+)"/g, '<b>$1</b>');
+            return content;
+        },
+    },
 }
 </script>
 

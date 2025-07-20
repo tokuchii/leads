@@ -1019,3 +1019,13 @@ button {
   font-family: 'Helvetica Neue LT Std', Helvetica, Arial, sans-serif;
   font-weight: 900;
 }
+
+.news-featured-img {
+    position: relative;
+    width: 70%;
+    left: -12px; /* Adjust as needed to move left */
+    clip-path: polygon(0 0, 100% 0, 91% 100%, 0% 100%);
+    /* This creates a slanted right edge. Adjust 97% and 100% for more/less angle */
+    transition: none !important;
+    box-shadow: 0 8px 40px 0 rgba(0,0,0,0.32), 0 3px 12px 0 rgba(0,0,0,0.25);
+}

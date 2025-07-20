@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 mt-20 sm:mt-24 lg:mt-30 relative">
+    <div class="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 mt-28 sm:mt-28 lg:mt-30 relative">
         <!-- Removed the close button so users use the navbar to navigate -->
         <!-- Tabs -->
         <div class="tab-bar flex flex-row justify-between items-center relative z-12" style="margin-bottom: -1px;">
