@@ -25,7 +25,31 @@
         <div class="bg-[#FFFFFF] rounded-4xl p-4 sm:p-8 lg:p-14 text-back shadow-xl" style="min-height: 600px;">
           <div v-if="activeTab === 'Herbicide'">
             <h3 class="text-xl font-bold mb-4">Herbicide</h3>
-            <p>Herbicides are chemicals used to control or eliminate unwanted plants (weeds) that compete with rice for nutrients, water, and sunlight. Proper use of herbicides can significantly improve rice yields by reducing weed pressure.</p>
+            <div v-if="newsList.length">
+              <table class="min-w-full text-left">
+                <thead>
+                  <tr>
+                    <th class="px-4 py-2">Title</th>
+                    <th class="px-4 py-2">Image1</th>
+                    <th class="px-4 py-2">Image2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in newsList" :key="item.id">
+                    <td class="border px-4 py-2">{{ item.title }}</td>
+                    <td class="border px-4 py-2">
+                      <img v-if="item.featured_image_url" :src="item.featured_image_url" alt="News Image" class="w-20 h-20 object-contain" />
+                    </td>
+                    <td class="border px-4 py-2">
+                      <img v-if="item.featured_image_2_url" :src="item.featured_image_2_url" alt="News Image" class="w-20 h-20 object-contain" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-else>
+              <p>No news found.</p>
+            </div>
           </div>
           <div v-else-if="activeTab === 'Biostimulant'">
             <h3 class="text-xl font-bold mb-4">Biostimulant</h3>
@@ -48,6 +72,8 @@
   </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
     name: 'MangoProductsSection',
     data() {
@@ -79,6 +105,7 @@ export default {
                     imgClass: 'w-16 h-14 ml-2',
                 },
             ],
+            products: [],
         };
     },
     computed: {
@@ -86,12 +113,26 @@ export default {
             const tab = this.tabs.find(t => t.alt === this.activeTab);
             return tab ? tab.bg : 'bg-orange-400';
         },
+        newsList() {
+            return this.products.sort((a, b) => a.id - b.id);
+        }
     },
     methods: {
         setActiveTab(tab) {
             this.activeTab = tab;
         },
+        async fetchProducts() {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/news');
+                this.products = response.data;
+            } catch (error) {
+                console.error('Failed to fetch news:', error);
+            }
+        }
     },
+    mounted() {
+        this.fetchProducts();
+    }
 };
 </script>
 <style scoped>

@@ -25,7 +25,27 @@
         <div class="bg-[#FFFFFF] rounded-4xl p-4 sm:p-8 lg:p-14 text-back shadow-xl" style="min-height: 600px;">
           <div v-if="activeTab === 'Herbicide'">
             <h3 class="text-xl font-bold mb-4">Herbicide</h3>
-            <p>Herbicides are used in vegetable farming to control weeds that compete with crops for nutrients, water, and sunlight. Proper weed management is essential for healthy vegetable growth and higher yields.</p>
+            <div v-if="sortedCareers.length">
+              <table class="min-w-full text-left">
+                <thead>
+                  <tr>
+                    <th class="px-4 py-2">Employment Type</th>
+                    <th class="px-4 py-2">Position</th>
+                    <th class="px-4 py-2">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="career in sortedCareers" :key="career.id">
+                    <td class="border px-4 py-2">{{ career.employment_type }}</td>
+                    <td class="border px-4 py-2">{{ career.position }}</td>
+                    <td class="border px-4 py-2">{{ career.details }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-else>
+              <p>No careers found.</p>
+            </div>
           </div>
           <div v-else-if="activeTab === 'Fungicide'">
             <h3 class="text-xl font-bold mb-4">Fungicide</h3>
@@ -48,6 +68,8 @@
   </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
     name: 'VegetableProductsSection',
     data() {
@@ -79,6 +101,7 @@ export default {
                     imgClass: 'w-16 h-14 ml-2',
                 },
             ],
+            careers: [],
         };
     },
     computed: {
@@ -86,12 +109,26 @@ export default {
             const tab = this.tabs.find(t => t.alt === this.activeTab);
             return tab ? tab.bg : 'bg-green-400';
         },
+        sortedCareers() {
+            return this.careers.sort((a, b) => a.id - b.id);
+        }
     },
     methods: {
         setActiveTab(tab) {
             this.activeTab = tab;
         },
+        async fetchCareers() {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/careers');
+                this.careers = response.data;
+            } catch (error) {
+                console.error('Failed to fetch careers:', error);
+            }
+        }
     },
+    mounted() {
+        this.fetchCareers();
+    }
 };
 </script>
 <style scoped>
