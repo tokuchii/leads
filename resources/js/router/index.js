@@ -1,13 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/Home.vue'
-import LearnMore from '../LearnMore.vue'
-import Hero from '../components/Hero.vue'
-import About from '../components/About.vue'
-import Products from '../components/Products.vue'
-import News from '../components/News.vue'
-import Careers from '../components/Careers.vue'
+import LearnMore from '../components/LearnMoreSection.vue'
+import About from '../components/AboutSection.vue'
+import Products from '../components/ProductsSection.vue'
+import News from '../components/NewsSection.vue'
+import Careers from '../components/CareersSection.vue'
 import JobCareers from '../components/JobCareers.vue'
 import FeaturedNews from '../components/FeaturedNews.vue'
+<<<<<<< HEAD
+=======
+import CareerDetail from '../components/CareersSection.vue'
+>>>>>>> 748e7bf2a6124eb797a98944b39b92ba233f718c
 
 const routes = [
     {
@@ -49,7 +52,16 @@ const routes = [
         path: '/featured-news',
         name: 'featured-news',
         component: FeaturedNews
+<<<<<<< HEAD
     }
+=======
+    },
+    {
+        path: '/careers-job',
+        name: 'career-detail',
+        component: CareerDetail
+    },
+>>>>>>> 748e7bf2a6124eb797a98944b39b92ba233f718c
 ]
 
 const router = createRouter({

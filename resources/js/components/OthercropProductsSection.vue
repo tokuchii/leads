@@ -11,84 +11,220 @@
       </div>
       <!-- Tabs -->
       <div class="flex justify-center gap-2 md:gap-8 lg:gap-12 px-6" style="margin-bottom: -1px;">
-        <button v-for="tab in tabs" :key="tab.alt"
-          :class="[tab.bg, 'w-17 h-18 sm:w-18 lg:w-20 md:h-20 rounded-t-full flex justify-center items-center', { '': activeTab === tab.alt }]"
-          @click="setActiveTab(tab.alt)">
-          <img :class="tab.imgClass" :src="tab.src" :alt="tab.alt">
+        <button
+          v-for="tab in tabs"
+          :key="tab.alt"
+          :class="[tab.bg, 'w-17 h-18 sm:w-18 lg:w-20 md:h-20 rounded-t-full flex justify-center items-center', { '' : activeTab === tab.alt }]"
+          @click="setActiveTab(tab.alt)"
+        >
+          <img :class="tab.imgClass" :src="tab.src" :alt="tab.alt" />
         </button>
       </div>
       <!-- Tab Content -->
       <div class="relative" :class="[activeTabBg, 'pt-6 rounded-4xl']" style="min-height: 480px;">
         <div class="bg-[#FFFFFF] rounded-4xl p-4 sm:p-8 lg:p-14 text-back shadow-xl" style="min-height: 600px;">
-          <div v-if="activeTab === 'Herbicide'">
-            <h3 class="text-xl font-bold mb-4">Herbicide</h3>
-            <p>Herbicides are used to manage weeds that compete with crops for resources, supporting healthy
-              crop development and maximizing yields.</p>
+          <!-- Herbicide Card Layout -->
+          <div v-if="activeTab === 'Herbicide' && othercropsHerbicideProducts.length" class="space-y-8">
+            <div v-for="product in othercropsHerbicideProducts" :key="product.id" class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+              <div class="flex-shrink-0 flex items-center justify-center md:w-1/2 pt-12">
+                <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1" class="w-full h-full" />
+              </div>
+              <div class="flex-1 p-6 md:p-8">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                </div>
+                <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2" class="w-100 h-40 object-contain mb-2" />
+                <div class="mb-2">
+                  <span class="font-bold">Description</span>
+                  <p class="text-gray-700">{{ product.description }}</p>
+                </div>
+                <div class="mb-2">
+                  <span class="font-bold">Features & Benefits</span>
+                  <p class="text-gray-700">{{ product.features }}</p>
+                </div>
+                <div class="mb-2">
+                  <span class="font-bold">Dosage</span>
+                  <p class="text-gray-700 whitespace-pre-line">
+                    <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
+                      {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <span class="font-bold">Target Weeds/Crops</span>
+                  <ul class="list-disc list-inside text-gray-700">
+                    <li v-for="(weed, idx) in formatTargetWeeds(product.target)" :key="idx">{{ weed }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
-          <div v-else-if="activeTab === 'Fungicide'">
-            <h3 class="text-xl font-bold mb-4">Fungicide</h3>
-            <p>Fungicides help protect various crops from fungal diseases, ensuring healthy growth and better
-              yields. They are essential for managing crop health in diverse environments.</p>
+          <!-- Fungicide Card Layout -->
+          <div v-if="activeTab === 'Fungicide' && othercropsFungicideProducts.length" class="space-y-8">
+            <div v-for="product in othercropsFungicideProducts" :key="product.id" class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+              <div class="flex-shrink-0 flex items-center justify-center md:w-1/2 pt-12">
+                <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1" class="w-full h-full" />
+              </div>
+              <div class="flex-1 p-6 md:p-8">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                </div>
+                <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2" class="w-100 h-40 object-contain mb-2" />
+                <div class="mb-2">
+                  <span class="font-bold">Description</span>
+                  <p class="text-gray-700">{{ product.description }}</p>
+                </div>
+                <div class="mb-2">
+                  <span class="font-bold">Features & Benefits</span>
+                  <p class="text-gray-700">{{ product.features }}</p>
+                </div>
+                <div class="mb-2">
+                  <span class="font-bold">Dosage</span>
+                  <p class="text-gray-700 whitespace-pre-line">
+                    <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
+                      {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <span class="font-bold">Target Weeds/Crops</span>
+                  <ul class="list-disc list-inside text-gray-700">
+                    <li v-for="(weed, idx) in formatTargetWeeds(product.target)" :key="idx">{{ weed }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
-          <div v-else-if="activeTab === 'Insecticide'">
-            <h3 class="text-xl font-bold mb-4">Insecticide</h3>
-            <p>Insecticides are used to control insect pests that can damage crops, helping to reduce losses and
-              maintain crop quality across different crop types.</p>
-          </div>
-          <div v-else>
-            <p>Select a product category above to see more information.</p>
+          <!-- Insecticide Card Layout -->
+          <div v-if="activeTab === 'Insecticide' && othercropsInsecticideProducts.length" class="space-y-8">
+            <div v-for="product in othercropsInsecticideProducts" :key="product.id" class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+              <div class="flex-shrink-0 flex items-center justify-center md:w-1/2 pt-12">
+                <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1" class="w-full h-full" />
+              </div>
+              <div class="flex-1 p-6 md:p-8">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                </div>
+                <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2" class="w-100 h-40 object-contain mb-2" />
+                <div class="mb-2">
+                  <span class="font-bold">Description</span>
+                  <p class="text-gray-700">{{ product.description }}</p>
+                </div>
+                <div class="mb-2">
+                  <span class="font-bold">Features & Benefits</span>
+                  <p class="text-gray-700">{{ product.features }}</p>
+                </div>
+                <div class="mb-2">
+                  <span class="font-bold">Dosage</span>
+                  <p class="text-gray-700 whitespace-pre-line">
+                    <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
+                      {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <span class="font-bold">Target Weeds/Crops</span>
+                  <ul class="list-disc list-inside text-gray-700">
+                    <li v-for="(weed, idx) in formatTargetWeeds(product.target)" :key="idx">{{ weed }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
+import axios from 'axios';
+
 export default {
-    name: 'OthercropProductsSection',
-    data() {
-        return {
-            activeTab: 'Herbicide',
-            tabs: [
-                {
-                    alt: 'Herbicide',
-                    src: '/images/Herbicide.png',
-                    bg: 'bg-[#22AA4A]',
-                    imgClass: 'w-12 h-14',
-                },
-                {
-                    alt: 'Fungicide',
-                    src: '/images/Fungicide.png',
-                    bg: 'bg-[#FDB913]',
-                    imgClass: 'w-16 h-14',
-                },
-                {
-                    alt: 'Insecticide',
-                    src: '/images/Insecticide.png',
-                    bg: 'bg-[#F37025]',
-                    imgClass: 'w-16 h-14 ml-2',
-                },
-            ],
-        };
-    },
-    computed: {
-        activeTabBg() {
-            const tab = this.tabs.find(t => t.alt === this.activeTab);
-            return tab ? tab.bg : 'bg-yellow-400';
+  name: 'OthercropsProductsSection',
+  data() {
+    return {
+      activeTab: 'Herbicide',
+      tabs: [
+        {
+          alt: 'Herbicide',
+          src: '/images/Herbicide.png',
+          bg: 'bg-[#22AA4A]',
+          imgClass: 'w-12 h-14',
         },
-    },
-    methods: {
-        setActiveTab(tab) {
-            this.activeTab = tab;
+        {
+          alt: 'Fungicide',
+          src: '/images/Fungicide.png',
+          bg: 'bg-[#FDB913]',
+          imgClass: 'w-16 h-14',
         },
+        {
+          alt: 'Insecticide',
+          src: '/images/Insecticide.png',
+          bg: 'bg-[#F37025]',
+          imgClass: 'w-16 h-14 ml-2',
+        },
+      ],
+      products: [],
+    };
+  },
+  computed: {
+    activeTabBg() {
+      const tab = this.tabs.find(t => t.alt === this.activeTab);
+      return tab ? tab.bg : 'bg-green-400';
     },
+    othercropsHerbicideProducts() {
+      return this.products
+        .filter(p => p.category === 'Other Crops' && p.type === 'Herbicide')
+        .sort((a, b) => a.id - b.id);
+    },
+    othercropsFungicideProducts() {
+      return this.products
+        .filter(p => p.category === 'Other Crops' && p.type === 'Fungicide')
+        .sort((a, b) => a.id - b.id);
+    },
+    othercropsInsecticideProducts() {
+      return this.products
+        .filter(p => p.category === 'Other Crops' && p.type === 'Insecticide')
+        .sort((a, b) => a.id - b.id);
+    },
+  },
+  methods: {
+    setActiveTab(tab) {
+      this.activeTab = tab;
+    },
+    async fetchProducts() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/products');
+        this.products = response.data;
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      }
+    },
+    formatTargetWeeds(val) {
+      if (Array.isArray(val)) return val;
+      if (typeof val === 'string') return val.split(',').map(s => s.trim());
+      return [];
+    },
+    formatDosage(val) {
+      if (Array.isArray(val)) return val;
+      if (typeof val === 'string') return val.split(',').map(s => s.trim());
+      return [];
+    },
+  },
+  mounted() {
+    this.fetchProducts();
+  },
 };
 </script>
+
 <style scoped>
 .othercrops-bg-img {
-  background-image: url('/images/othercropsimg.jpg');
+  background-image: url('/images/othercropsimg.png');
 }
+
 .othercrops-bg-outer {
+  /* You can adjust min-height as needed */
   min-height: 100vh;
 }
 </style>
