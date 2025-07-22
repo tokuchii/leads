@@ -1,8 +1,8 @@
 <template>
     <div class="featured-news relative w-full mt-26 px-8 py-8">
         <div class="relative">
-            <img 
-                src="/public/images/newsimg.png" 
+            <img
+                src="/public/images/newsimg.png"
                 class="featured-image w-full h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover object-top z-0"
             >
             <div class="absolute inset-0 bg-[#004E27] opacity-55 z-10"></div>
@@ -106,7 +106,7 @@ export default {
     methods: {
         async fetchNews() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/news');
+                const response = await axios.get('https://admin.leadsagri.site/api/news');
                 this.newsList = response.data;
             } catch (error) {
                 console.error('Failed to fetch news:', error);
