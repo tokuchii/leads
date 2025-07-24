@@ -1,13 +1,13 @@
 <template>
-    <div class="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 mt-28 sm:mt-28 lg:mt-30 relative">
+    <div class="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 mt-30 sm:mt-30 lg:mt-36 relative">
         <!-- Removed the close button so users use the navbar to navigate -->
         <!-- Tabs -->
-        <div class="tab-bar flex flex-row justify-between items-center relative z-12" style="margin-bottom: -1px;">
-            <button :class="['tab-btn', activeTab === 'roots' ? 'active' : '']" @click="$emit('update:activeTab', 'roots')" style="min-width: 200px;">OUR ROOTS</button>
+        <div class="tab-bar flex flex-row justify-between items-center relative z-12 " style="margin-bottom: -1px;">
+            <button :class="['tab-btn cursor-pointer', activeTab === 'roots' ? 'active' : '']" @click="$emit('update:activeTab', 'roots')" style="min-width: 200px;">OUR ROOTS</button>
             <div class="flex-1 flex justify-center">
-                <button :class="['tab-btn', activeTab === 'vision' ? 'active' : '']" @click="$emit('update:activeTab', 'vision')" style="min-width: 200px;">OUR VISION AND MISSION</button>
+                <button :class="['tab-btn cursor-pointer', activeTab === 'vision' ? 'active' : '']" @click="$emit('update:activeTab', 'vision')" style="min-width: 200px;">OUR VISION AND MISSION</button>
             </div>
-            <button :class="['tab-btn', activeTab === 'commitment' ? 'active' : '']" @click="$emit('update:activeTab', 'commitment')" style="min-width: 200px;">OUR COMMITMENT</button>
+            <button :class="['tab-btn cursor-pointer', activeTab === 'commitment' ? 'active' : '']" @click="$emit('update:activeTab', 'commitment')" style="min-width: 200px;">OUR COMMITMENT</button>
         </div>
         <!-- Tab Content -->
         <div class="bg-[#008643] rounded-b-lg p-4 sm:p-8 lg:p-14 text-white shadow-lg" style="min-height: 480px;">
@@ -166,7 +166,7 @@
                 <!-- Navigation Buttons -->
                 <button 
                     @click="$emit('carousel-prev')"
-                    class="absolute left-1 sm:left-3 lg:left-4 top-[45%] transform -translate-y-1/2 bg-black bg-opacity-10 text-white rounded-full p-1.5 sm:p-1.5 lg:p-1.5 transition-all duration-200 z-10"
+                    class="absolute left-1 sm:left-3 lg:left-4 top-[45%] transform -translate-y-1/2 bg-black bg-opacity-10 text-white rounded-full p-1.5 sm:p-1.5 lg:p-1.5 transition-all duration-200 z-10 cursor-pointer"
                     :class="{ 'opacity-0': carouselCurrentSlide === 0 }"
                 >
                     <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -176,7 +176,7 @@
                 
                 <button 
                     @click="$emit('carousel-next')"
-                    class="absolute right-1 sm:right-3 lg:right-4 top-[45%] transform -translate-y-1/2 bg-black bg-opacity-10 text-white rounded-full p-1.5 sm:p-1.5 lg:p-1.5 transition-all duration-200 z-10"
+                    class="absolute right-1 sm:right-3 lg:right-4 top-[45%] transform -translate-y-1/2 bg-black bg-opacity-10 text-white rounded-full p-1.5 sm:p-1.5 lg:p-1.5 transition-all duration-200 z-10 cursor-pointer"
                     :class="{ 'opacity-0': carouselCurrentSlide === carouselImages.length - 1 }"
                 >
                     <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

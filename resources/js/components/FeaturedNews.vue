@@ -22,9 +22,10 @@
                 <div class="flex-1 flex flex-col gap-4 sm:gap-6 items-center lg:items-start min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
                     <div v-for="news in leftColumn" :key="news.id" class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl relative mb-0">
                         <img :src="news.featured_image_url || '/public/images/newsimg.png'" alt="Story Image" class="w-full shadow-md rounded-tl-[20px] sm:rounded-tl-[30px] md:rounded-tl-[40px] rounded-br-[20px] sm:rounded-br-[30px] md:rounded-br-[40px] no-hover-effect" />
-                        <div class="absolute left-0 news-featured-img bg-green-800 text-white text-center py-1 sm:py-2 px-2 sm:px-4 bottom-8 sm:bottom-10 md:bottom-12">
-                            <h2 class="text-sm sm:text-base md:text-lg lg:text-xl font-bold">{{ news.title }}</h2>
+                        <div class="absolute left-0 news-featured-img bg-green-800 text-white text-center py-1 sm:py-2 px-4 sm:px-7 bottom-8 sm:bottom-10 md:bottom-12 min-w-[250px] sm:min-w-[300px]">
+                        <h2 class="text-sm sm:text-base md:text-lg lg:text-xl font-bold">{{ news.title }}</h2>
                         </div>
+
                         <div class="w-full flex flex-col items-start -mt-6 sm:-mt-8 mb-0">
                             <span class="text-green-900 font-bold text-xs sm:text-sm md:text-base">{{ formatMonthYear(news.published_at) }}</span>
                             <div class="w-16 sm:w-20 md:w-25 h-0.5 mt-1 mb-2 sm:mb-4 rounded" style="background-color: #D3AF37;"></div>

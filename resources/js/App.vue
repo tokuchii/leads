@@ -6,7 +6,7 @@
         <!-- Navigation -->
         <div class="fixed top-0 left-0 right-0 z-50">
             <!-- White fade gradient effect -->
-            <div class="h-30 bg-gradient-to-b from-white via-white/50 to-transparent"></div>
+            <div class="h-30 bg-gradient-to-b from-white via-white/70 to-transparent"></div>
             <!-- Navigation content -->
             <nav class="container mx-auto px-6 py-12 absolute top-0 left-0 right-0">
                 <!-- Search Container -->
@@ -36,10 +36,10 @@
                             <a href="#news" @click.prevent="scrollToSection('news')"
                                 :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'news' }]">NEWS</a>
                             <a href="#careers" @click.prevent="scrollToSection('careers')"
-                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'careers' }]">CAREERS</a>
+                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base ', { 'active-link': activeSection === 'careers' }]">CAREERS</a>
                             <span class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition" @click.prevent="scrollToSection('contact')"
                                 :class="{ 'active-link': activeSection === 'contact' }">
-                                <i class="fas fa-phone text-[#2E7D32] text-sm md:text-sm lg:text-base"></i>
+                                <i class="fas fa-phone text-[#2E7D32] text-sm md:text-sm lg:text-base cursor-pointer"></i>
                             </span>
                         </div>
                     </div>
@@ -125,7 +125,10 @@
                     @show-sugarcane-products="handleShowSugarcaneProducts"
                     @show-othercrop-products="handleOthercropProducts"
                 />
-                <NewsSection @show-featured-news="handleShowFeaturedNews" />
+                <NewsSection
+  @show-featured-news="handleShowFeaturedNews"
+  @show-news-article="handleShowNewsArticle"
+/>
                 <ContactSection>
                     <!-- The contact form and logic remain in App.vue, so slot is used -->
                     <form class="flex flex-col gap-4" @submit.prevent="submitInquiry">
@@ -249,7 +252,7 @@
                         </div>
                         <button
                             type="submit"
-                            class="bg-[#2E7D32] hover:bg-[#1B5E20] text-[#FFF8B9] font-bold py-3 px-8 rounded-lg transition-colors self-end mb-20"
+                            class="bg-[#2E7D32] hover:bg-[#1B5E20] text-[#FFF8B9] font-bold py-3 px-8 rounded-lg transition-colors self-end mb-20 cursor-pointer"
                             :disabled="isSubmitting"
                         >
                             {{ isSubmitting ? 'SUBMITTING...' : 'SUBMIT' }}
