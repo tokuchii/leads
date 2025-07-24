@@ -47,7 +47,7 @@ export default {
     methods: {
         async fetchNews() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/news');
+                const response = await axios.get('https://admin.leadsagri.site/api/news');
                 this.newsList = response.data;
             } catch (error) {
                 console.error('Failed to fetch news:', error);
@@ -70,4 +70,4 @@ export default {
         if (this.pollInterval) clearInterval(this.pollInterval);
     },
 };
-</script> 
+</script>
