@@ -220,7 +220,11 @@ export default {
 
 <style scoped>
 .othercrops-bg-img {
-  background-image: url('/images/othercropsimg.png');
+  background-image: url('/images/othercropsimg.jpg');
+  background-attachment: fixed; /* Keeps image fixed on scroll */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .othercrops-bg-outer {

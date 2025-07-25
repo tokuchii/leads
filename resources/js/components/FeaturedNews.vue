@@ -98,11 +98,9 @@ export default {
     mounted() {
         this.fetchNews();
         window.addEventListener('resize', this.handleResize);
-        this.pollInterval = setInterval(this.fetchNews, 2000); // fetch every 2 seconds
     },
     beforeUnmount() {
         window.removeEventListener('resize', this.handleResize);
-        if (this.pollInterval) clearInterval(this.pollInterval);
     },
     methods: {
         async fetchNews() {

@@ -268,6 +268,10 @@ export default {
 <style scoped>
 .vegetables-bg-img {
   background-image: url('/images/vegetablesimg.png');
+  background-attachment: fixed; /* Keeps image fixed on scroll */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .vegetables-bg-outer {

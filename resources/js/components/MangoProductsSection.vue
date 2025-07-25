@@ -268,6 +268,10 @@ export default {
 <style scoped>
 .mango-bg-img {
   background-image: url('/images/mangoimg.png');
+  background-attachment: fixed; /* Keeps image fixed on scroll */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .mango-bg-outer {

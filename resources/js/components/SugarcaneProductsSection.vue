@@ -174,6 +174,10 @@ export default {
 <style scoped>
 .sugarcane-bg-img {
   background-image: url('/images/sugarcaneimg.png');
+  background-attachment: fixed; /* Keeps image fixed on scroll */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .sugarcane-bg-outer {

@@ -315,6 +315,10 @@ export default {
 <style scoped>
 .rice-bg-img {
   background-image: url('/images/riceimg.png');
+  background-attachment: fixed; /* Keeps image fixed on scroll */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .rice-bg-outer {

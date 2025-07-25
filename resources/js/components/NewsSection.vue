@@ -31,6 +31,7 @@
 </template>
 <script>
 import axios from 'axios';
+
 export default {
     name: 'NewsSection',
     data() {
@@ -64,10 +65,9 @@ export default {
     },
     mounted() {
         this.fetchNews();
-        this.pollInterval = setInterval(this.fetchNews, 2000); // fetch every 2 seconds
     },
     beforeUnmount() {
         if (this.pollInterval) clearInterval(this.pollInterval);
     },
 };
-</script>
+</script> 
