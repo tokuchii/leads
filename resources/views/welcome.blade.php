@@ -617,6 +617,9 @@
                 opacity: 1;
             }
         }
+        .chatbot-scroll-link:hover {
+            color: #1B5E20 !important; /* Darker green on hover */
+        }
     </style>
 
     <!-- Main styles -->
@@ -632,7 +635,7 @@
 
     <div id="chat-modal" class="chat-modal">
         <div class="chat-modal-header">
-            <h4>🌿 LeadsAgri Bot</h4>
+            <h4>Pandoy Chat</h4>
             <button class="chat-modal-close"><i class="fas fa-times"></i></button>
         </div>
         <div class="chat-modal-body">
@@ -655,10 +658,10 @@
 
             // FAQ data mapping
             const faqData = {
-                'Products & Services': 'Thank you for your interest in our products and services. You may know more about these through this link (website link for products and services).',
-                'Latest News ': 'Thank you for your interest in our latest news. You may know more about these through this link (website link for News).',
-                'Careers': 'Thank you for your interest in our current openings. You may know more about these through this link (website link for careers).',
-                'Contact Details': 'You may reach us via by directly contacting our customer service via +63 917 7726369 or contacting us via facebook.com/leadsagri. Alternatively, you may send us a message through this link (website linkf or email / messages)',
+                'Products & Services': 'Thank you for your interest in our products and services. You may know more about these link <a href="#" onclick="scrollToSection(\'products\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Products & Services</a>.',
+                'Latest News ': 'Thank you for your interest in our latest news. You may know more about these through this link <a href="#" onclick="scrollToSection(\'news\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Latest News</a>.',
+                'Contact Details': 'You may reach us via by directly contacting our customer service via +63 917 7726369 or contacting us via facebook.com/leadsagri. Alternatively, you may send us a message through this link <a href="#" onclick="scrollToSection(\'contact\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Contact Details</a>.',
+                'Careers': 'Thank you for your interest in our current openings. You may know more about these through this link <a href="#" onclick="scrollToSection(\'careers\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Careers</a>.',
             };
 
             let confirmed = false;
@@ -693,8 +696,10 @@
                 messageElement.classList.add('message');
                 if (isReceived) {
                     messageElement.classList.add('received');
+                    messageElement.innerHTML = content;
+                } else {
+                    messageElement.textContent = content;
                 }
-                messageElement.textContent = content;
                 // Insert the message before the FAQ section so buttons stay at the bottom
                 chatBody.insertBefore(messageElement, faqSection);
                 chatBody.scrollTop = chatBody.scrollHeight;
@@ -769,6 +774,16 @@
             // When conversation ends (after No), only show End of Conversation message, no FAQ buttons
             function showDisabledFAQButtons() {
                 faqButtonsContainer.innerHTML = '';
+
+                // Continue button only
+                const continueBtn = document.createElement('button');
+                continueBtn.className = 'faq-button';
+                continueBtn.textContent = 'Continue';
+                continueBtn.onclick = function() {
+                    addMessage("Good day! I'm Pandoy Thank you for reaching Leads Agricultural Products Corporation. For security purposes and to serve you better, kindly confirm if you agree to have this conversation recorded.", true);
+                    showConfirmationButtons();
+                };
+                faqButtonsContainer.appendChild(continueBtn);
             }
 
             chatbotButton.onclick = function() {
