@@ -13,7 +13,7 @@
         <div class="bg-[#008643] rounded-b-lg p-4 sm:p-8 lg:p-14 text-white shadow-lg" style="min-height: 480px;">
             <template v-if="activeTab === 'roots'">
                 <div class="text-center">
-                    <h2 class="font-bold text-xl sm:text-2xl lg:text-3xl mb-6 sm:mb-8 lg:mb-12">THE COMPANY</h2>
+                    <h2 class="font-bold text-lg sm:text-2xl lg:text-3xl mb-6 sm:mb-8 lg:mb-12">THE COMPANY</h2>
                     <div class="text-sm sm:text-base lg:text-lg leading-relaxed space-y-4 sm:space-y-6 max-w-4xl mx-auto">
                         <p>
                             Since 1997, <b>Leads Agricultural Products Corp. (LAPC)</b> has been the partner of Filipino
@@ -45,8 +45,8 @@
                 <div class="text-center">
                     <div class="text-sm sm:text-base lg:text-lg leading-relaxed space-y-4 sm:space-y-6 max-w-4xl mx-auto">
                         <div>
-                            <h3 class="font-bold text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8 lg:mb-12">Our Mission</h3>
-                            <p class="text-sm sm:text-base lg:text-lg mb-3 sm:mb-4">
+                            <h3 class="font-bold text-xl sm:text2xl lg:text-3xl mb-6 sm:mb-8 lg:mb-12">Our Mission</h3>
+                            <p class="text-sm sm:text-base lg:text-lg leading-relaxed mb-3 sm:mb-4">
                                 Leads Agri is committed to provide a broad portfolio of science-based and cost effective
                                 agricultural solutions to Filipino farmers through various channels in all agricultural
                                 areas in the Philippines through cutting edge and innovative technology. We strive to
@@ -57,13 +57,13 @@
                             <p class="text-sm sm:text-base lg:text-lg mb-3 sm:mb-4">
                                 We engage every individual with dignity and utmost respect regardless of societal status.
                             </p>
-                            <p class="font-bold text-sm sm:text-base lg:text-lg mb-4 sm:mb-6">
+                            <p class="font-bold text-sm sm:text-base lg:text-lg mb-6 sm:mb-10">
                                 "Paggawa ayon sa patnubay ng pananampalataya at malasakit"
                             </p>
                         </div>
                         <div>
-                            <h3 class="font-bold text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8 lg:mb-12">Our Vision</h3>
-                            <p class="text-sm sm:text-base lg:text-lg">
+                            <h3 class="font-bold text-xl sm:text2xl lg:text-3xl mb-6 sm:mb-8 lg:mb-12">Our Vision</h3>
+                            <p class="text-sm sm:text-base lg:text-lg leading-relaxed">
                                 As the leading company that provides future-proof farm productivity solutions and services,
                                 we envision to be a pillar of hope and assume a pivotal role towards innovating the
                                 country's agricultural value chain for the welfare of the Filipino farmers.
@@ -83,18 +83,18 @@
                             <div class="space-y-3 sm:space-y-4">
                                 <div>
                                     <h4 class="font-bold text-sm sm:text-base lg:text-lg ml-6 sm:ml-8 lg:ml-12">• Customer satisfaction</h4>
-                                    <p class="text-sm sm:text-base lg:text-lg">We create and share value by giving attention to every detail of the customer
+                                    <p class="text-sm sm:text-base lg:text-lg font-normal">We create and share value by giving attention to every detail of the customer
                                         experience.</p>
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-sm sm:text-base lg:text-lg ml-6 sm:ml-8 lg:ml-12">• Compliance</h4>
-                                    <p class="text-sm sm:text-base lg:text-lg">We are <b>ISO 9001 certified since 2017</b> and we strictly
+                                    <p class="text-sm sm:text-base lg:text-lg font-normal">We are <b>ISO 9001 certified since 2017</b> and we strictly
                                         comply with all legal and regulatory requirements of the <b>FPA,
                                             FDA, PNP, BOC, BIR, BAI, BPI, and DOLE.</b></p>
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-sm sm:text-base lg:text-lg ml-6 sm:ml-8 lg:ml-12">• Continuous Improvement</h4>
-                                    <p class="text-sm sm:text-base lg:text-lg">We commit to continuously provide innovative solutions and support social innovation
+                                    <p class="text-sm sm:text-base lg:text-lg font-normal">We commit to continuously provide innovative solutions and support social innovation
                                         by creating an ecosystem of entrepreneurs connected to farming.</p>
                                 </div>
                             </div>
@@ -107,16 +107,16 @@
                             <div class="space-y-3 sm:space-y-4">
                                 <div>
                                     <h4 class="font-bold text-sm sm:text-base lg:text-lg ml-6 sm:ml-8 lg:ml-12">• Compliance</h4>
-                                    <p class="text-sm sm:text-base lg:text-lg">We ensure that we comply with local environmental regulatory requirements of <b>DENR and FPA.</b></p>
+                                    <p class="text-sm sm:text-base lg:text-lg font-normal">We ensure that we comply with local environmental regulatory requirements of <b>DENR and FPA.</b></p>
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-sm sm:text-base lg:text-lg ml-6 sm:ml-8 lg:ml-12">• Environmental Education</h4>
-                                    <p class="text-sm sm:text-base lg:text-lg">We are committed to ethical and responsible environmental protection through our
+                                    <p class="text-sm sm:text-base lg:text-lg font-normal">We are committed to ethical and responsible environmental protection through our
                                         product stewardship training and campaigns.</p>
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-sm sm:text-base lg:text-lg ml-6 sm:ml-8 lg:ml-12">• Continuous carbon footprint reduction</h4>
-                                    <p class="text-sm sm:text-base lg:text-lg">We veer away from red label agrochemicals and ensure that all production and
+                                    <p class="text-sm sm:text-base lg:text-lg font-normal">We veer away from red label agrochemicals and ensure that all production and
                                         distribution systems are efficient and safe for the environment.</p>
                                 </div>
                             </div>
