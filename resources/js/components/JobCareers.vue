@@ -82,22 +82,22 @@
                             class="w-full md:w-1/2 bg-white rounded-4xl shadow-2xl p-8 flex flex-col gap-4 min-w-[320px] max-w-lg mx-auto">
                             <h3 class="text-2xl font-bold text-[#006D36] text-center mb-2">JOIN OUR TEAM</h3>
                             <form class="flex flex-col gap-3 flex-1" @submit.prevent="submitForm">
-                                <input type="text" placeholder="Your Name*"
-                                    v-model="name"
-                                    @input="filterLetters"
-                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200" />
-                                <input type="email" placeholder="Your Email*"
-                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200" />
-                                <input type="text" placeholder="Your Position*"
-                                    v-model="position"
+                                <input type="text" placeholder="Your Name*" v-model="name" @input="filterLetters"
+                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
+                                    required />
+                                <input type="email" placeholder="Your Email*" v-model="email"
+                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
+                                    required />
+                                <input type="text" placeholder="Your Position*" v-model="position"
                                     @input="capitalizePositionFirstLetter"
-                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200" />
-                                <textarea placeholder="Enter your message" rows="4"
-                                    v-model="message"
+                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
+                                    required />
+                                <textarea placeholder="Enter your message" rows="4" v-model="message"
                                     @input="capitalizeFirstLetter"
-                                    class="rounded-3xl bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none flex-1 transition-all duration-200"></textarea>
+                                    class="rounded-3xl bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none flex-1 transition-all duration-200"
+                                    required ></textarea>
                                 <div>
-                                    <input id="resume-upload" type="file" class="hidden" @change="handleFileChange" />
+                                    <input id="resume-upload" type="file" class="hidden" @change="handleFileChange" required />
                                     <label for="resume-upload"
                                         class="inline-block rounded-full bg-[#F4F4F4] px-4 py-1 mb-10 text-gray-400 italic font-medium cursor-pointer hover:shadow-md transition-all duration-200">
                                         Add File Here*
@@ -105,9 +105,20 @@
                                     <span v-if="selectedFileName" class="block mt-2 text-sm text-gray-700">{{
                                         selectedFileName }}</span>
                                 </div>
-                                <button type="submit"
-                                    class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-2 rounded-full text-lg shadow-md">SUBMIT
-                                    APPLICATION</button>
+                                <button type="submit" :disabled="loading"
+                                    class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-2 rounded-full text-lg shadow-md flex items-center justify-center">
+                                    <span v-if="loading" class="flex items-center"><svg
+                                            class="animate-spin h-5 w-5 mr-2 text-white"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z">
+                                            </path>
+                                        </svg>Sending...</span>
+                                    <span v-else>
+                                        SUBMIT APPLICATION
+                                    </span>
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -134,8 +145,11 @@ export default {
             showAccountingApplication: false,
             showSuccess: false,
             name: '',
+            email: '',
             message: '',
             position: '',
+            resumeFile: null,
+            loading: false,
         };
     },
     methods: {
@@ -143,8 +157,10 @@ export default {
             const file = event.target.files[0];
             if (file) {
                 this.selectedFileName = file.name;
+                this.resumeFile = file;
             } else {
                 this.selectedFileName = null;
+                this.resumeFile = null;
             }
         },
         openRadiologistApplication() {
@@ -155,10 +171,47 @@ export default {
             this.showAccountingApplication = true;
             this.showRadiologistApplication = false;
         },
-        submitForm() {
-            // Here you would normally handle form validation and submission (e.g., API call)
-            // For now, just show the success message
-            this.showSuccess = true;
+        async submitForm() {
+            if (this.loading) return;
+            this.loading = true;
+            try {
+                const formData = new FormData();
+                formData.append('full_name', this.name);
+                formData.append('email', this.email);
+                formData.append('position', this.position);
+                formData.append('message', this.message);
+                if (this.resumeFile) {
+                    formData.append('resume_file', this.resumeFile);
+                }
+
+                const response = await fetch('/career-application', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    this.showSuccess = true;
+                    // Reset form
+                    this.name = '';
+                    this.email = '';
+                    this.position = '';
+                    this.message = '';
+                    this.selectedFileName = null;
+                    this.resumeFile = null;
+                } else {
+                    alert('Error: ' + (result.message || 'Failed to submit application'));
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('Error submitting application. Please try again.');
+            } finally {
+                this.loading = false;
+            }
         },
         filterLetters() {
             this.name = this.name.replace(/[^a-zA-Z\s]/g, '');

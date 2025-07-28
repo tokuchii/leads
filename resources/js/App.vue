@@ -11,10 +11,31 @@
             <nav class="container mx-auto px-6 py-12 absolute top-0 left-0 right-0">
                 <!-- Search Container -->
                 <div id="search-container" class="search-container">
-                    <input type="text" id="desktop-search" name="desktop-search" class="search-input" placeholder="Search..." autocomplete="off">
-                    <button id="close-search" name="close-search" class="text-[#2E7D32] hover:text-[#1B5E20] transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <div class="relative w-full">
+                        <input type="text" id="desktop-search" name="desktop-search" class="search-input" placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="handleSearchInput" @focus="showSearchResults = true">
+                        <button id="close-search" name="close-search" class="text-[#2E7D32] hover:text-[#1B5E20] transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                                                                        <!-- Search Results Dropdown -->
+                        <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading)" class="search-results-dropdown">
+                            <div v-if="isSearchLoading" class="search-result-item">
+                                <div class="search-result-content">
+                                    <span class="text-gray-500">Loading products...</span>
+                                </div>
+                            </div>
+                            <div v-else v-for="(result, index) in filteredSearchResults" :key="index"
+                                 class="search-result-item"
+                                 @click="handleSearchResultClick(result)">
+                                <div class="search-result-content">
+                                    <span class="search-result-category" v-html="highlightText(result.category, searchQuery)"></span>
+                                    <span class="search-result-separator">/</span>
+                                    <span class="search-result-type" v-html="highlightText(result.type, searchQuery)"></span>
+                                </div>
+                                <div class="search-result-count">{{ result.count }} products</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Desktop Navigation -->
@@ -78,7 +99,26 @@
                             <!-- Search Input -->
                             <div id="mobile-search-container" class="hidden w-[101%]">
                                 <div class="relative">
-                                    <input type="text" id="mobile-search" name="mobile-search" class="w-full border-b-2 border-[#2E7D32] rounded-none text-[#2E7D32] placeholder-[#2E7D32] focus:outline-none bg-transparent" placeholder="Search..." autocomplete="off">
+                                    <input type="text" id="mobile-search" name="mobile-search" class="w-full border-b-2 border-[#2E7D32] rounded-none text-[#2E7D32] placeholder-[#2E7D32] focus:outline-none bg-transparent" placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="handleSearchInput" @focus="showSearchResults = true">
+
+                                                                        <!-- Mobile Search Results Dropdown -->
+                                    <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading)" class="mobile-search-results-dropdown">
+                                        <div v-if="isSearchLoading" class="search-result-item">
+                                            <div class="search-result-content">
+                                                <span class="text-gray-500">Loading products...</span>
+                                            </div>
+                                        </div>
+                                        <div v-else v-for="(result, index) in filteredSearchResults" :key="index"
+                                             class="search-result-item"
+                                             @click="handleSearchResultClick(result)">
+                                            <div class="search-result-content">
+                                                <span class="search-result-category" v-html="highlightText(result.category, searchQuery)"></span>
+                                                <span class="search-result-separator">/</span>
+                                                <span class="search-result-type" v-html="highlightText(result.type, searchQuery)"></span>
+                                            </div>
+                                            <div class="search-result-count">{{ result.count }} products</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -278,28 +318,31 @@
             <div v-else-if="showRiceProducts" key="riceproducts" class="main-container">
                 <RiceProductsSection
                     :activeTab="riceActiveTab"
-                    @close="handleCloseRiceProducts"
                     @update:activeTab="handleRiceTabChange"
                 />
             </div>
             <div v-else-if="showMangoProducts" key="mangoproducts" class="main-container">
                 <MangoProductsSection
-                    @close="handleCloseMangoProducts"
+                    :activeTab="mangoActiveTab"
+                    @update:activeTab="handleMangoTabChange"
                 />
             </div>
             <div v-else-if="showVegetableProducts" key="vegetableproducts" class="main-container">
                 <VegetableProductsSection
-                    @close="handleCloseVegetableProducts"
+                    :activeTab="vegetableActiveTab"
+                    @update:activeTab="handleVegetableTabChange"
                 />
             </div>
             <div v-else-if="showSugarcaneProducts" key="sugarcaneproducts" class="main-container">
                 <SugarcaneProductsSection
-                    @close="handleCloseSugarcaneProducts"
+                    :activeTab="sugarcaneActiveTab"
+                    @update:activeTab="handleSugarcaneTabChange"
                 />
             </div>
             <div v-else-if="showOthercropProducts" key="othercropproducts" class="main-container">
                 <OthercropProductsSection
-                    @close="handleCloseOthercropProducts"
+                    :activeTab="othercropActiveTab"
+                    @update:activeTab="handleOthercropTabChange"
                 />
             </div>
             <div v-else-if="showCareers" key="careers" class="main-container">
@@ -403,6 +446,11 @@ export default {
             ],
             activeSection: 'home',
             activeTab: 'roots',
+            riceActiveTab: 'Herbicide',
+            vegetableActiveTab: 'Herbicide',
+            mangoActiveTab: 'Herbicide',
+            sugarcaneActiveTab: 'Herbicide',
+            othercropActiveTab: 'Herbicide',
             formData: {
                 full_name: '',
                 country_code: '+63',
@@ -634,6 +682,11 @@ export default {
                 '+998': 9, // Uzbekistan
             },
             selectedNewsArticle: null,
+            searchQuery: '',
+            showSearchResults: false,
+            filteredSearchResults: [],
+            allProducts: [],
+            isSearchLoading: false,
         }
     },
     async mounted() {
@@ -732,6 +785,9 @@ export default {
         // Set default selected country (Philippines)
         this.selectedCountry = this.countries.find(c => c.code === '+63') || this.countries[0];
 
+        // Fetch all products for search functionality
+        this.fetchAllProducts();
+
         // Mobile menu functionality
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const closeMenuButton = document.getElementById('close-menu-button');
@@ -751,7 +807,8 @@ export default {
         const mobileSearchInput = mobileSearchContainer?.querySelector('input');
         const mobilePhoneIcon = document.getElementById('mobile-phone-icon');
 
-        // Mobile search functionality
+                // Mobile search functionality
+        const self = this;
         function toggleMobileSearch() {
             if (!mobileSearchContainer || !mobileSearchIcon || !mobilePhoneIcon) return;
 
@@ -768,6 +825,12 @@ export default {
             } else if (mobileSearchInput) {
                 mobileSearchInput.value = '';
             }
+
+            // Clear search results when closing
+            if (isVisible) {
+                self.showSearchResults = false;
+                self.searchQuery = '';
+            }
         }
 
         if (mobileSearchIcon) {
@@ -780,6 +843,7 @@ export default {
                 !mobileSearchContainer.contains(e.target) &&
                 mobileSearchIcon && !mobileSearchIcon.contains(e.target)) {
                 toggleMobileSearch();
+                this.showSearchResults = false;
             }
         });
 
@@ -800,6 +864,8 @@ export default {
                 if (searchContainer) searchContainer.classList.remove('active');
                 if (navItems) navItems.classList.remove('hidden');
                 if (searchInput) searchInput.value = '';
+                this.showSearchResults = false;
+                this.searchQuery = '';
             });
         }
 
@@ -815,6 +881,7 @@ export default {
                 searchContainer.classList.remove('active');
                 if (navItems) navItems.classList.remove('hidden');
                 if (searchInput) searchInput.value = '';
+                this.showSearchResults = false;
             }
         });
 
@@ -1131,6 +1198,7 @@ export default {
         },
         scrollToSection(sectionId) {
             this.selectedNewsArticle = null; // Hide article view on any navbar navigation
+            this.showSearchResults = false; // Hide search results on navigation
             if (this.showLearnMore) {
                 this.showLearnMore = false;
                 // Wait for DOM to update and section to exist
@@ -1598,59 +1666,82 @@ export default {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleCloseLearnMore() {
-            this.showLearnMore = false;
+            this.closeAllSections();
         },
         handleShowCareers() {
             this.showCareers = true;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleCloseCareers() {
-            this.showCareers = false;
+            this.closeAllSections();
         },
         handleShowFeaturedNews() {
             this.showFeaturedNews = true;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleCloseFeaturedNews() {
-            this.showFeaturedNews = false;
+            this.closeAllSections();
         },
         handleShowRiceProducts() {
             this.showRiceProducts = true;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleCloseRiceProducts() {
-            this.showRiceProducts = false;
+            this.closeAllSections();
         },
         handleShowMangoProducts() {
             this.showMangoProducts = true;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleCloseMangoProducts() {
-            this.showMangoProducts = false;
+            this.closeAllSections();
         },
         handleShowVegetableProducts() {
             this.showVegetableProducts = true;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleCloseVegetableProducts() {
-            this.showVegetableProducts = false;
+            this.closeAllSections();
         },
         handleShowSugarcaneProducts() {
             this.showSugarcaneProducts = true;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleCloseSugarcaneProducts() {
-            this.showSugarcaneProducts = false;
+            this.closeAllSections();
         },
         handleOthercropProducts() {
             this.showOthercropProducts = true;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         handleCloseOthercropProducts() {
+            this.closeAllSections();
+        },
+        closeAllSections() {
+            this.showLearnMore = false;
+            this.showCareers = false;
+            this.showFeaturedNews = false;
+            this.showRiceProducts = false;
+            this.showMangoProducts = false;
+            this.showVegetableProducts = false;
+            this.showSugarcaneProducts = false;
             this.showOthercropProducts = false;
+            this.selectedNewsArticle = null;
         },
         handleRiceTabChange(tab) {
             this.riceActiveTab = tab;
+        },
+        handleVegetableTabChange(tab) {
+            this.vegetableActiveTab = tab;
+        },
+        handleMangoTabChange(tab) {
+            this.mangoActiveTab = tab;
+        },
+        handleSugarcaneTabChange(tab) {
+            this.sugarcaneActiveTab = tab;
+        },
+        handleOthercropTabChange(tab) {
+            this.othercropActiveTab = tab;
         },
         handleTabChange(tab) {
             this.activeTab = tab;
@@ -1712,13 +1803,136 @@ export default {
             this.showOthercropProducts = false;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
-        formatMonthYear(dateString) {
+                formatMonthYear(dateString) {
             if (!dateString) return '';
             const date = new Date(dateString);
             if (isNaN(date)) return '';
             const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
             const year = date.getFullYear();
             return `${month} ${year}`;
+        },
+        async fetchAllProducts() {
+            this.isSearchLoading = true;
+            try {
+                const response = await fetch('https://admin.leadsagri.site/api/products');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                this.allProducts = data;
+                console.log('Products loaded for search:', data.length);
+            } catch (error) {
+                console.error('Failed to fetch products:', error);
+                // Fallback to empty array to prevent errors
+                this.allProducts = [];
+            } finally {
+                this.isSearchLoading = false;
+            }
+        },
+        handleSearchInput(event) {
+            this.searchQuery = event.target.value;
+            this.showSearchResults = true;
+
+            if (!this.searchQuery.trim()) {
+                this.filteredSearchResults = [];
+                return;
+            }
+
+            const query = this.searchQuery.toLowerCase();
+            const searchResults = [];
+
+            // Group products by category and type
+            const groupedProducts = {};
+
+            this.allProducts.forEach(product => {
+                const category = product.category || '';
+                const type = product.type || '';
+
+                if (category.toLowerCase().includes(query) || type.toLowerCase().includes(query)) {
+                    const key = `${category}-${type}`;
+                    if (!groupedProducts[key]) {
+                        groupedProducts[key] = {
+                            category: category,
+                            type: type,
+                            count: 0,
+                            section: this.getSectionForCategory(category)
+                        };
+                    }
+                    groupedProducts[key].count++;
+                }
+            });
+
+            // Convert to array and sort by relevance
+            this.filteredSearchResults = Object.values(groupedProducts)
+                .sort((a, b) => {
+                    // Sort by exact matches first, then by count
+                    const aExactMatch = a.category.toLowerCase() === query || a.type.toLowerCase() === query;
+                    const bExactMatch = b.category.toLowerCase() === query || b.type.toLowerCase() === query;
+
+                    if (aExactMatch && !bExactMatch) return -1;
+                    if (!aExactMatch && bExactMatch) return 1;
+
+                    return b.count - a.count;
+                })
+                .slice(0, 10); // Limit to 10 results
+        },
+        getSectionForCategory(category) {
+            const categoryMap = {
+                'Rice': 'rice',
+                'Mango': 'mango',
+                'Vegetables': 'vegetable',
+                'Sugarcane': 'sugarcane',
+                'Other Crops': 'othercrop'
+            };
+            return categoryMap[category] || 'rice';
+        },
+                handleSearchResultClick(result) {
+            this.searchQuery = `${result.category} / ${result.type}`;
+            this.showSearchResults = false;
+
+            // Set the appropriate active tab based on the product type
+            const productType = result.type;
+
+            // Close all current product sections first
+            this.showLearnMore = false;
+            this.showCareers = false;
+            this.showFeaturedNews = false;
+            this.showRiceProducts = false;
+            this.showMangoProducts = false;
+            this.showVegetableProducts = false;
+            this.showSugarcaneProducts = false;
+            this.showOthercropProducts = false;
+
+            // Navigate to the appropriate section
+            const section = result.section;
+            switch (section) {
+                case 'rice':
+                    this.riceActiveTab = productType;
+                    this.handleShowRiceProducts();
+                    break;
+                case 'mango':
+                    this.mangoActiveTab = productType;
+                    this.handleShowMangoProducts();
+                    break;
+                case 'vegetable':
+                    this.vegetableActiveTab = productType;
+                    this.handleShowVegetableProducts();
+                    break;
+                case 'sugarcane':
+                    this.sugarcaneActiveTab = productType;
+                    this.handleShowSugarcaneProducts();
+                    break;
+                case 'othercrop':
+                    this.othercropActiveTab = productType;
+                    this.handleOthercropProducts();
+                    break;
+            }
+        },
+        highlightText(text, query) {
+            if (!query || !text) return text;
+
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
         },
     },
     watch: {

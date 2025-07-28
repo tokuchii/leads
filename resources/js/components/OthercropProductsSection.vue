@@ -1,7 +1,7 @@
 <template>
-    <div class="relative w-full min-h-[800px] flex items-center justify-center othercrops-back-bg-outer overflow-hidden">
+    <div class="relative w-full min-h-[800px] flex items-center justify-center othercrops-bg-outer overflow-hidden">
         <!-- Background image -->
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0 othercrops-back-bg-img"></div>
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat z-0 othercrops-bg-img"></div>
         <!-- White overlay -->
         <div class="absolute inset-0 bg-white opacity-78 z-10"></div>
         <!-- Actual content -->
@@ -157,9 +157,14 @@ import axios from 'axios';
 
 export default {
     name: 'OthercropsProductsSection',
+    props: {
+        activeTab: {
+            type: String,
+            default: 'Herbicide'
+        }
+    },
     data() {
         return {
-            activeTab: 'Herbicide',
             tabs: [
                 {
                     alt: 'Herbicide',
@@ -206,7 +211,7 @@ export default {
     },
     methods: {
         setActiveTab(tab) {
-            this.activeTab = tab;
+            this.$emit('update:activeTab', tab);
         },
         async fetchProducts() {
             try {

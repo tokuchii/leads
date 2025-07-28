@@ -115,9 +115,14 @@ import axios from 'axios';
 
 export default {
     name: 'SugarcaneProductsSection',
+    props: {
+        activeTab: {
+            type: String,
+            default: 'Herbicide'
+        }
+    },
     data() {
         return {
-            activeTab: 'Herbicide',
             tabs: [
                 {
                     alt: 'Herbicide',
@@ -153,7 +158,7 @@ export default {
     },
     methods: {
         setActiveTab(tab) {
-            this.activeTab = tab;
+            this.$emit('update:activeTab', tab);
         },
         async fetchProducts() {
             try {
