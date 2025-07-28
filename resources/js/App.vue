@@ -1197,448 +1197,63 @@ export default {
             }
         },
         scrollToSection(sectionId) {
-            this.selectedNewsArticle = null; // Hide article view on any navbar navigation
-            this.showSearchResults = false; // Hide search results on navigation
-            if (this.showLearnMore) {
-                this.showLearnMore = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
+            // Always hide overlays and article view
+            this.selectedNewsArticle = null;
+            this.showLearnMore = false;
+            this.showCareers = false;
+            this.showFeaturedNews = false;
+            this.showRiceProducts = false;
+            this.showMangoProducts = false;
+            this.showVegetableProducts = false;
+            this.showSugarcaneProducts = false;
+            this.showOthercropProducts = false;
+
+            // Wait for DOM to update and section to exist
+            const tryScroll = (attempts = 0) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    // Close mobile menu if it's open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (mobileMenu && mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                        document.body.style.overflow = 'auto';
                     }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showCareers) {
-                this.showCareers = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
+                    let offset = 0;
+                    if (sectionId === 'about') {
+                        offset = 100;
+                    } else if (sectionId === 'products') {
+                        if (window.innerWidth >= 1025) {
+                            offset = 190;
+                        } else if (window.innerWidth <= 426) {
+                            offset = 60;
                         }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
                     }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showFeaturedNews) {
-                this.showFeaturedNews = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
+                    const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
+                    const startPosition = window.pageYOffset;
+                    const distance = sectionTop - startPosition;
+                    const duration = 1000;
+                    let start = null;
+                    function animation(currentTime) {
+                        if (start === null) start = currentTime;
+                        const timeElapsed = currentTime - start;
+                        const progress = Math.min(timeElapsed / duration, 1);
+                        const easeInOutCubic = progress => {
+                            return progress < 0.5
+                                ? 4 * progress * progress * progress
+                                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                        };
+                        const newPosition = startPosition + (distance * easeInOutCubic(progress));
+                        window.scrollTo(0, newPosition);
+                        if (timeElapsed < duration) {
+                            requestAnimationFrame(animation);
                         }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
                     }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showRiceProducts) {
-                this.showRiceProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showMangoProducts) {
-                this.showMangoProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showVegetableProducts) {
-                this.showVegetableProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showSugarcaneProducts) {
-                this.showSugarcaneProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showOthercropProducts) {
-                this.showOthercropProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            const section = document.getElementById(sectionId);
-            if (section) {
-                // Close mobile menu if it's open
-                const mobileMenu = document.getElementById('mobile-menu');
-                if (mobileMenu && mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                    document.body.style.overflow = 'auto';
+                    requestAnimationFrame(animation);
+                } else if (attempts < 20) {
+                    setTimeout(() => tryScroll(attempts + 1), 50);
                 }
-                let offset = 0;
-                if (sectionId === 'about') {
-                    offset = 100;
-                } else if (sectionId === 'products') {
-                    if (window.innerWidth >= 1025) {
-                        offset = 190;
-                    } else if (window.innerWidth <= 426) {
-                        offset = 60;
-                    }
-                }
-                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                const startPosition = window.pageYOffset;
-                const distance = sectionTop - startPosition;
-                const duration = 1000;
-                let start = null;
-                function animation(currentTime) {
-                    if (start === null) start = currentTime;
-                    const timeElapsed = currentTime - start;
-                    const progress = Math.min(timeElapsed / duration, 1);
-                    const easeInOutCubic = progress => {
-                        return progress < 0.5
-                            ? 4 * progress * progress * progress
-                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                    };
-                    const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                    window.scrollTo(0, newPosition);
-                    if (timeElapsed < duration) {
-                        requestAnimationFrame(animation);
-                    }
-                }
-                requestAnimationFrame(animation);
-            }
+            };
+            tryScroll();
         },
         isDesktop() {
             return window.innerWidth >= 768;
