@@ -547,7 +547,7 @@
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s ease;
-            text-transform: capitalize; /* Capitalize first letter */
+            /* Removed text-transform: capitalize; to allow normal typing */
         }
 
         @media (max-width: 480px) {
@@ -640,11 +640,14 @@
         </div>
         <div class="chat-modal-body">
             <!-- Chat messages will go here -->
-            <p class="message received">Good day! I'm Pandoy Thank you for reaching Leads Agricultural Products Corporation. For security purposes and to serve you better, kindly confirm if you agree to have this conversation recorded.</p>
             <div class="faq-section" id="faq-section">
                 <div class="faq-buttons" id="faq-buttons"></div>
             </div>
         </div>
+        <form id="chat-modal-footer" class="chat-modal-footer" style="display:none;">
+            <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off" />
+            <button type="submit" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </form>
     </div>
 
     <script>
@@ -655,23 +658,26 @@
             const chatBody = document.querySelector('.chat-modal-body');
             const faqButtonsContainer = document.getElementById('faq-buttons');
             const faqSection = document.getElementById('faq-section');
+            const chatFooter = document.getElementById('chat-modal-footer');
+            const chatInput = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-btn');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            // FAQ data mapping
-            const faqData = {
-                'Products & Services': 'Thank you for your interest in our products and services. You may know more about these link <a href="#" onclick="scrollToSection(\'products\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Products & Services</a>.',
-                'Latest News ': 'Thank you for your interest in our latest news. You may know more about these through this link <a href="#" onclick="scrollToSection(\'news\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Latest News</a>.',
-                'Contact Details': 'You may reach us via by directly contacting our customer service via +63 917 7726369 or contacting us via facebook.com/leadsagri. Alternatively, you may send us a message through this link <a href="#" onclick="scrollToSection(\'contact\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Contact Details</a>.',
-                'Careers': 'Thank you for your interest in our current openings. You may know more about these through this link <a href="#" onclick="scrollToSection(\'careers\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Careers</a>.',
-            };
-
-            let confirmed = false;
+            let conversationEnded = false;
+            let currentMenu = 'main'; // 'main' or 'product-info'
+            let chatGreeted = false;
 
             function showTypingIndicator() {
                 const indicator = document.createElement('div');
                 indicator.id = 'typing-indicator';
                 indicator.classList.add('message', 'received');
-                indicator.style.backgroundColor = 'transparent';
-                indicator.style.boxShadow = 'none';
+                indicator.style.backgroundColor = '#f1f0f0';
+                indicator.style.boxShadow = '0px 1px 2px rgba(0,0,0,0.1)';
+                indicator.style.borderRadius = '18px';
+                indicator.style.padding = '10px 15px';
+                indicator.style.marginBottom = '5px';
+                indicator.style.maxWidth = '80%';
+                indicator.style.alignSelf = 'flex-start';
                 indicator.innerHTML = `
                     <div class="typing-indicator">
                         <div class="typing-dot"></div>
@@ -705,97 +711,203 @@
                 chatBody.scrollTop = chatBody.scrollHeight;
             }
 
-            // Show Yes/No confirmation buttons initially
-            function showConfirmationButtons() {
+            // Show AI chat input immediately
+            function showAIChat() {
                 faqButtonsContainer.innerHTML = '';
-                const yesBtn = document.createElement('button');
-                yesBtn.className = 'faq-button';
-                yesBtn.textContent = 'Yes, I agree.';
-                yesBtn.onclick = function() {
-                    confirmed = true;
-                    showFAQButtons();
-                    addMessage('Thank you very much! How can we help you today?', true);
-                };
-                const noBtn = document.createElement('button');
-                noBtn.className = 'faq-button';
-                noBtn.textContent = 'No.';
-                noBtn.onclick = function() {
-                    confirmed = false;
-                    showDisabledFAQButtons();
-                    addMessage('Thank you very much. Have a great day!', true);
-                };
-                faqButtonsContainer.appendChild(yesBtn);
-                faqButtonsContainer.appendChild(noBtn);
+                chatFooter.style.display = 'flex';
+                chatInput.value = '';
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
             }
 
-            // Show FAQ buttons after confirmation
-            function showFAQButtons() {
-                faqButtonsContainer.innerHTML = '';
-                Object.keys(faqData).forEach(key => {
-                    const btn = document.createElement('button');
-                    btn.className = 'faq-button';
-                    btn.textContent = key;
-                    btn.onclick = function() {
-                        addMessage(key);
-                        faqButtonsContainer.innerHTML = ''; // Clear buttons
-
-                        showTypingIndicator();
-
-                        // Simulate bot response delay
-                        setTimeout(() => {
-                            hideTypingIndicator();
-                            addMessage(faqData[key], true);
-                            showMainMenuButton();
-                        }, 1200);
-                    };
-                    faqButtonsContainer.appendChild(btn);
-                });
-            }
-
-            // Show a Main Menu button after a FAQ answer
-            function showMainMenuButton() {
-                faqButtonsContainer.innerHTML = '';
-                const mainMenuBtn = document.createElement('button');
-                mainMenuBtn.className = 'faq-button';
-                mainMenuBtn.textContent = 'Main Menu';
-                mainMenuBtn.onclick = showFAQButtons;
-                faqButtonsContainer.appendChild(mainMenuBtn);
-
-                const endBtn = document.createElement('button');
-                endBtn.className = 'faq-button';
-                endBtn.textContent = 'End of Conversation';
-                endBtn.onclick = function() {
-                    showDisabledFAQButtons();
-                    addMessage('Thank you very much. Have a great day!', true);
-                };
-                faqButtonsContainer.appendChild(endBtn);
-            }
-
-            // When conversation ends (after No), only show End of Conversation message, no FAQ buttons
+            // When conversation ends, only show Continue button
             function showDisabledFAQButtons() {
+                chatFooter.style.display = 'none';
                 faqButtonsContainer.innerHTML = '';
-
-                // Continue button only
                 const continueBtn = document.createElement('button');
                 continueBtn.className = 'faq-button';
                 continueBtn.textContent = 'Continue';
                 continueBtn.onclick = function() {
-                    addMessage("Good day! I'm Pandoy Thank you for reaching Leads Agricultural Products Corporation. For security purposes and to serve you better, kindly confirm if you agree to have this conversation recorded.", true);
-                    showConfirmationButtons();
+                    addMessage("👋 Hello Ka-Leads! Ako si PandoyBot, ang digital farm buddy mo mula sa Leads Agri! May katanungan ka ba? Message ka lang!🌾", true);
+                    showAIChat();
+                    conversationEnded = false;
+                    setTimeout(() => {
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
+                        }, 1000);
+                    }, 2000);
                 };
                 faqButtonsContainer.appendChild(continueBtn);
             }
 
+            // Handle chat form submit
+            chatFooter.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (conversationEnded) return;
+                const userMsg = chatInput.value.trim();
+                if (!userMsg) return;
+                addMessage(userMsg, false);
+                chatInput.value = '';
+                chatInput.disabled = true;
+                sendBtn.disabled = true;
+
+                // Handle going back to main menu
+                if (currentMenu === 'product-info' && (userMsg.toLowerCase() === 'back' || userMsg.toLowerCase() === 'menu')) {
+                    currentMenu = 'main';
+                    setTimeout(() => {
+                        addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                    }, 400);
+                    return;
+                }
+
+                // Main menu logic
+                if (currentMenu === 'main') {
+                    if (userMsg === '1') {
+                        currentMenu = 'product-info';
+                        setTimeout(() => {
+                            addMessage('Product Info📦<br><br>Anong klaseng produkto ang gusto mong makita? I-type lang ang number o product name na nais makita (hal. Jackpot, Starkle, etc.) at hintayin itong lumabas sa chat box!<br><br>1️⃣ Hybrid Rice Seeds 🌾<br>2️⃣ Insecticides 🐛<br>3️⃣ Herbicides 🌿<br>4️⃣ Fungicides 🍄<br>5️⃣ Fertilizers 💧<br>6️⃣ Molluscicides 🐌', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                        }, 400);
+                        return;
+                    } else {
+                        // For now, send other main menu options to AI (or you can add more custom logic for 2-6)
+                        // You can add more else ifs here for other main menu options if you want custom responses
+                    }
+                }
+
+                // Product info logic
+                if (currentMenu === 'product-info') {
+                    // Product name to info mapping
+                    const productInfoMap = [
+                        { name: 'Brofreya 20 SC', info: '<b>Brofreya 20 SC</b><br><br>A systemic insecticide that controls insect pests in rice and vegetable crops.' },
+                        { name: 'Pleo 10 EC', info: '<b>Pleo 10 EC</b><br><br>A contact and stomach insecticide with novel chemical structure for the control of insect pests of cabbage and tobacco.' },
+                        { name: 'Rimon 10 EC', info: '<b>Rimon 10 EC</b><br><br>An insect growth regulator, which acts as chitin inhibitor, thereby causing abnormal endocuticular deposition and abortive molting.' },
+                        { name: 'Aztron WDG', info: '<b>Aztron WDG</b><br><br>A biological insecticide intended for the control of worms (insect larvae).' },
+                        { name: 'Benefit 20 SC', info: '<b>Benefit 20 SC</b><br><br>A systemic insecticide that controls insect pests in rice and vegetable crops.' },
+                        { name: 'Starkle 20 SG', info: '<b>Starkle 20 SG</b><br><br>An organic fungicide that targets black sigatoka on vegetable crops.' },
+                        { name: 'Lancer Gold 55 WG', info: '<b>Lancer Gold 55 WG</b><br><br>An organic fungicide that targets black sigatoka on vegetable crops.' },
+                        { name: 'Frontier 200 OD', info: '<b>Frontier 200 OD</b><br><br>A post-emergent herbicide that targets weeds in rice plant to avoid crop-weed competition.' },
+                        { name: 'Frontier MAX', info: '<b>Frontier MAX</b><br><br>A herbicide with the mixed efficiency of Frontier 200 OD and Leads Exit.' },
+                        { name: 'Mower 48 SL', info: '<b>Mower 48 SL</b><br><br>A post-emergent general foliar weed killer that controls the growth of weeds in various crops.' },
+                        { name: 'Agil 100 EC', info: '<b>Agil 100 EC</b><br><br>This herbicide can avoid the growth of weeds in onions.' },
+                        { name: 'Mower Ultra 514 SL', info: '<b>Mower Ultra 514 SL</b><br><br>A post-emergent general foliar weed killer that controls the growth of weeds in Glyphosate-tolerant corn.' },
+                        { name: 'Top Ace 80 SC', info: '<b>Top Ace 80 SC</b><br><br>A systemic herbicide with Diuron that targets weeds.' },
+                        { name: 'Top Ace MAX', info: '<b>Top Ace MAX</b><br><br>A herbicide with the mixed efficiency of Top Ace 80 SC and Leads Exit.' },
+                        { name: 'Karmex Gold', info: '<b>Karmex Gold</b><br><br>A highly systemic herbicide against weeds on various crops.' },
+                        { name: 'Ignite 15 SL', info: '<b>Ignite 15 SL</b><br><br>Non-selective herbicide with Glufosinate Ammonium that targets weeds.' },
+                        { name: 'STK Regev', info: '<b>STK Regev</b><br><br>The first hybrid fungicide in the country: it has the joint efficacy of systemic fungicide and tea tree oil that controls diseases on crops.' },
+                        { name: 'Timorex Gold', info: '<b>Timorex Gold</b><br><br>With its tea tree oil ingredient, Timorex Gold has the power to defend and heal planted vegetable crops against black sigatoka and other diseases.' },
+                        { name: 'Domark Pro', info: '<b>Domark Pro</b><br><br>A systemic fungicide that targets anthracnose and stem-end rot in mango trees.' },
+                        { name: 'Manager 80 WP', info: '<b>Manager 80 WP</b><br><br>Its active ingredient, Mancozeb, helps in giving crops a long-lasting resistance against fungus. It also has zinc and manganese for added protection.' },
+                        { name: 'Armore 70 WP', info: '<b>Armore 70 WP</b><br><br>Being a systemic fungicide, Armor 70 WP seeps through the roots of the plant for longer effectivity.' },
+                        { name: 'Leadonil 500 SC', info: '<b>Leadonil 500 SC</b><br><br>A broad spectrum agricultural fungicide effective against a wide range of diseases in field, fruit and vegetable crops.' },
+                        { name: 'iSmart Ceres', info: '<b>iSmart Ceres</b><br><br>A biostimulant that helps in the growth of crops, while also avoiding transplanting shock and abiotic stress due to extreme heat, flooding, and drought.' },
+                        { name: 'iSmart Boom Flower-n', info: '<b>iSmart Boom Flower-n</b><br><br>iSmart Boom Flower Improves flower initiation, improves fruit retention and assimilation, and increases fruit size, weight and quality.' },
+                        { name: 'iSmart Nano Urea', info: '<b>iSmart Nano Urea</b><br><br>This fertilizer helps bring Nitrogen to the plant on a nano sized level that allows for better absorption with reduced chances of wash off.' },
+                        { name: 'Kawa 422', info: '<b>Kawa 422</b><br><br>Kawa 422 is an organic fertilizer that’s a good alternative to chicken manure as it\'s more cost-effective to use, and more eco-friendly.' },
+                        { name: 'MegaBooster', info: '<b>MegaBooster</b><br><br>MegaBooster is a water soluble foliar fertilizer that meets the high nutrient requirements of your crops during fruit development and ripening.' },
+                        { name: 'Tecamin Max', info: '<b>Tecamin Max</b><br><br>A foliar biostimulant with amino acids that enhances qualities of vegetables by fighting abiotic stress.' },
+                        { name: 'Niclos M Plus', info: '<b>Niclos M Plus</b><br><br>As a molluscicide, Niclos M Plus contains Niclosamide in wettable power formulation.' }
+                    ];
+                    // Category number to info mapping
+                    const productCategoryResponses = {
+                        '1': "Hybrid Rice Seeds 🌾<br><br>TBA",
+                        '2': "Insecticides 🐛<br><br><b>Brofreya 20 SC</b>: A systemic insecticide that controls insect pests in rice and vegetable crops.<br><b>Pleo 10 EC</b>: A contact and stomach insecticide with novel chemical structure for the control of insect pests of cabbage and tobacco.<br><b>Rimon 10 EC</b>: An insect growth regulator, which acts as chitin inhibitor, thereby causing abnormal endocuticular deposition and abortive molting.<br><b>Aztron WDG</b>: A biological insecticide intended for the control of worms (insect larvae).<br><b>Benefit 20 SC</b>: A systemic insecticide that controls insect pests in rice and vegetable crops.<br><b>Starkle 20 SG</b>: An organic fungicide that targets black sigatoka on vegetable crops.<br><b>Lancer Gold 55 WG</b>: An organic fungicide that targets black sigatoka on vegetable crops.",
+                        '3': "Herbicides 🌿<br><br><b>Frontier 200 OD</b>: A post-emergent herbicide that targets weeds in rice plant to avoid crop-weed competition.<br><b>Frontier MAX</b>: A herbicide with the mixed efficiency of Frontier 200 OD and Leads Exit.<br><b>Mower 48 SL</b>: A post-emergent general foliar weed killer that controls the growth of weeds in various crops<br><b>Agil 100 EC</b>: This herbicide can avoid the growth of weeds in onions<br><b>Mower Ultra 514 SL</b>: A post-emergent general foliar weed killer that controls the growth of weeds in Glyphosate-tolerant corn<br><b>Top Ace 80 SC</b>: A systemic herbicide with Diuron that targets weeds<br><b>Top Ace MAX</b>: A herbicide with the mixed efficiency of Top Ace 80 SC and Leads Exit.<br><b>Karmex Gold</b>: A highly systemic herbicide against weeds on various crops.<br><b>Ignite 15 SL</b>: Non-selective herbicide with Glufosinate Ammonium that targets weeds",
+                        '4': "Fungicides 🍄<br><br><b>STK Regev</b>: The first hybrid fungicide in the country: it has the joint efficacy of systemic fungicide and tea tree oil that controls diseases on crops.<br><b>Timorex Gold</b>: With its tea tree oil ingredient, Timorex Gold has the power to defend and heal planted vegetable crops against black sigatoka and other diseases<br><b>Domark Pro</b>: A systemic fungicide that targets anthracnose and stem-end rot in mango trees.<br><b>Manager 80 WP</b>: Its active ingredient, Mancozeb, helps in giving crops a long-lasting resistance against fungus. It also has zinc and manganese for added protection.<br><b>Armore 70 WP</b>: Being a systemic fungicide, Armor 70 WP seeps through the roots of the plant for longer effectivity.<br><b>Leadonil 500 SC</b>: A broad spectrum agricultural fungicide effective against a wide range of diseases in field, fruit and vegetable crops.",
+                        '5': "Fertilizers 💧<br><br><b>iSmart Ceres</b>: A biostimulant that helps in the growth of crops, while also avoiding transplanting shock and abiotic stress due to extreme heat, flooding, and drought.<br><b>iSmart Boom Flower-n</b>: iSmart Boom Flower Improves flower initiation, improves fruit retention and assimilation, and increases fruit size, weight and quality.<br><b>iSmart Nano Urea</b>: This fertilizer helps bring Nitrogen to the plant on a nano sized level that allows for better absorption with reduced chances of wash off.<br><b>Kawa 422</b>: Kawa 422 is an organic fertilizer that's a good alternative to chicken manure as it's more cost-effective to use, and more eco-friendly.<br><b>MegaBooster</b>: MegaBooster is a water soluble foliar fertilizer that meets the high nutrient requirements of your crops during fruit development and ripening.<br><b>Tecamin Max</b>: A foliar biostimulant with amino acids that enhances qualities of vegetables by fighting abiotic stress",
+                        '6': "Molluscicides 🐌<br><br><b>Niclos M Plus</b>: As a molluscicide, Niclos M Plus contains Niclosamide in wettable power formulation."
+                    };
+                    // Try to match product name (case-insensitive, partial match)
+                    const userMsgLower = userMsg.toLowerCase();
+                    const foundProduct = productInfoMap.find(p => userMsgLower.includes(p.name.toLowerCase()));
+                    if (foundProduct) {
+                        setTimeout(() => {
+                            addMessage(foundProduct.info, true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                        }, 400);
+                        return;
+                    }
+                    // If not a product name, check for category number
+                    if (productCategoryResponses[userMsg]) {
+                        setTimeout(() => {
+                            addMessage(productCategoryResponses[userMsg], true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                        }, 400);
+                        return;
+                    }
+                    // If not found, you can show a fallback or send to AI
+                    // For now, send to AI as usual
+                }
+
+                showTypingIndicator();
+                // Send to backend
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ message: userMsg })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    hideTypingIndicator();
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    if (data.response) {
+                        addMessage(data.response, true);
+                    } else {
+                        addMessage('Sorry, there was an error. Please try again later.', true);
+                    }
+                })
+                .catch(() => {
+                    hideTypingIndicator();
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    addMessage('Sorry, there was an error. Please try again later.', true);
+                });
+            });
+
+            // Capitalize only the first letter of the input automatically
+            chatInput.addEventListener('input', function(e) {
+                if (chatInput.value.length === 1) {
+                    chatInput.value = chatInput.value.charAt(0).toUpperCase();
+                } else if (chatInput.value.length > 1 && chatInput.value.charAt(0) !== chatInput.value.charAt(0).toUpperCase()) {
+                    chatInput.value = chatInput.value.charAt(0).toUpperCase() + chatInput.value.slice(1);
+                }
+            });
+
             chatbotButton.onclick = function() {
                 chatModal.classList.toggle('active');
                 chatbotButton.classList.toggle('active');
+                if (chatModal.classList.contains('active')) {
+                    showAIChat();
+                    if (!chatGreeted) {
+                        chatGreeted = true;
+                        addMessage("👋 Hello Ka-Leads! Ako si PandoyBot, ang digital farm buddy mo mula sa Leads Agri! May katanungan ka ba? Message ka lang!🌾", true);
+                        setTimeout(() => {
+                            showTypingIndicator();
+                            setTimeout(() => {
+                                hideTypingIndicator();
+                                addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
+                            }, 1000);
+                        }, 500);
+                    }
+                }
             };
             closeModalButton.onclick = function() {
                 chatModal.classList.remove('active');
                 chatbotButton.classList.remove('active');
             };
-
-            showConfirmationButtons();
         });
     </script>
 </body>
