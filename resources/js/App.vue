@@ -6,7 +6,7 @@
         <!-- Navigation -->
         <div class="fixed top-0 left-0 right-0 z-50">
             <!-- White fade gradient effect -->
-            <div class="h-30 bg-gradient-to-b from-white via-white/50 to-transparent"></div>
+            <div class="h-30 bg-gradient-to-b from-white via-white/15 to-transparent"></div>
             <!-- Navigation content -->
             <nav class="container mx-auto px-6 py-12 absolute top-0 left-0 right-0">
                 <!-- Search Container -->
