@@ -6,7 +6,7 @@
         <!-- Navigation -->
         <div class="fixed top-0 left-0 right-0 z-50">
             <!-- White fade gradient effect -->
-            <div class="h-30 bg-gradient-to-b from-white via-white/70 to-transparent"></div>
+            <div class="absolute w-full left-0 h-30 bg-gradient-to-b from-white via-white/15 to-transparent z-50"></div>
             <!-- Navigation content -->
             <nav class="container mx-auto px-6 py-12 absolute top-0 left-0 right-0">
                 <!-- Search Container -->
@@ -23,22 +23,26 @@
                         <!-- Navigation Links -->
                         <div id="nav-items" class="flex items-center space-x-[500px] sm:space-x-[30px] md:space-x-[55px] lg:space-x-[80px] xl:space-x-[120px]">
                             <span id="search-icon" class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base cursor-pointer">
-                                <i class="fas fa-search text-[#2E7D32] text-sm md:text-sm lg:text-base"></i>
+                                <i class="fas fa-search text-[#2E7D32] text-sm md:text-sm lg:text-base"style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);"></i>
                             </span>
                             <a href="#about" @click.prevent="scrollToSection('about')"
-                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'about' }]">ABOUT US</a>
+                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'about' }]"
+                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">ABOUT US</a>
                             <a href="#products" @click.prevent="scrollToSection('products')"
-                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'products' }]">PRODUCTS</a>
+                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'products' }]"
+                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">PRODUCTS</a>
                             <a href="#home" @click.prevent="scrollToSection('home')"
                                 :class="['nav-link transition flex items-center', { 'active-link': activeSection === 'home' }]">
-                                <img src="/public/images/logo-green.png" alt="LeadsAgri Logo" class="h-10 w-auto md:h-10 lg:h-12" style="color: #1B5E20;" />
+                                <img src="/public/images/logo-green.png" alt="LeadsAgri Logo" class="h-10 w-auto md:h-8 lg:h-10" style="color: #1B5E20;" />
                             </a>
                             <a href="#news" @click.prevent="scrollToSection('news')"
-                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'news' }]">NEWS</a>
+                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'news' }]"
+                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">NEWS</a>
                             <a href="#careers" @click.prevent="scrollToSection('careers')"
-                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base ', { 'active-link': activeSection === 'careers' }]">CAREERS</a>
+                                :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base ', { 'active-link': activeSection === 'careers' }]"
+                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">CAREERS</a>
                             <span class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition" @click.prevent="scrollToSection('contact')"
-                                :class="{ 'active-link': activeSection === 'contact' }">
+                                :class="{ 'active-link': activeSection === 'contact' }"style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">
                                 <i class="fas fa-phone text-[#2E7D32] text-sm md:text-sm lg:text-base cursor-pointer"></i>
                             </span>
                         </div>
@@ -102,7 +106,7 @@
             <div v-if="selectedNewsArticle" key="newsarticle" class="main-container">
                 <div class="news-article flex flex-col items-center justify-center bg-[#006D36] px-4 md:px-8 lg:px-16 py-8 shadow-lg max-w-full lg:max-w-7xl mx-auto mt-30 mb-10">
                     <div class="w-full flex flex-col items-start mb-4">
-                        <span class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors" @click="goToFeaturedNews">NEWS | ARTICLES</span>
+                        <span class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors hover:underline" @click="goToFeaturedNews">NEWS | ARTICLES</span>
                     </div>
                     <img :src="selectedNewsArticle.featured_image_url || '/public/images/newsimg.png'" class="w-full max-w-xs sm:max-w-md md:max-w-xl lg:max-w-3xl h-auto mb-8 object-center no-hover-effect" />
                     <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">{{ selectedNewsArticle.title }}</h1>
@@ -126,9 +130,9 @@
                     @show-othercrop-products="handleOthercropProducts"
                 />
                 <NewsSection
-  @show-featured-news="handleShowFeaturedNews"
-  @show-news-article="handleShowNewsArticle"
-/>
+                @show-featured-news="handleShowFeaturedNews"
+                @show-news-article="handleShowNewsArticle"
+                />
                 <ContactSection>
                     <!-- The contact form and logic remain in App.vue, so slot is used -->
                     <form class="flex flex-col gap-4" @submit.prevent="submitInquiry">

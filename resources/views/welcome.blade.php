@@ -754,13 +754,44 @@
                 chatInput.disabled = true;
                 sendBtn.disabled = true;
 
-                // Handle going back to main menu
-                if (currentMenu === 'product-info' && (userMsg.toLowerCase() === 'back' || userMsg.toLowerCase() === 'menu')) {
+                // Always show main menu if user types 'menu', even if already in main menu
+                if (userMsg.toLowerCase() === 'menu') {
                     currentMenu = 'main';
+                    showTypingIndicator();
                     setTimeout(() => {
+                        hideTypingIndicator();
                         addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
                         chatInput.disabled = false;
                         sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 1000);
+                    return;
+                }
+
+                // Guard clause: Prevent fetch for invalid main menu input
+                if (currentMenu === 'main' && !['1', '2', '3', '4', '5', '6'].includes(userMsg)) {
+                    console.log('Invalid input at main menu, blocking fetch.'); // Debug log
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “Menu” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 400);
+                    return;
+                }
+
+                // Handle going back to main menu
+                if (currentMenu === 'product-info' && (userMsg.toLowerCase() === 'menu')) {
+                    currentMenu = 'main';
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
                     }, 400);
                     return;
                 }
@@ -769,16 +800,116 @@
                 if (currentMenu === 'main') {
                     if (userMsg === '1') {
                         currentMenu = 'product-info';
+                        showTypingIndicator();
                         setTimeout(() => {
+                            hideTypingIndicator();
                             addMessage('Product Info📦<br><br>Anong klaseng produkto ang gusto mong makita? I-type lang ang number o product name na nais makita (hal. Jackpot, Starkle, etc.) at hintayin itong lumabas sa chat box!<br><br>1️⃣ Hybrid Rice Seeds 🌾<br>2️⃣ Insecticides 🐛<br>3️⃣ Herbicides 🌿<br>4️⃣ Fungicides 🍄<br>5️⃣ Fertilizers 💧<br>6️⃣ Molluscicides 🐌', true);
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
+                            chatInput.focus();
                         }, 400);
                         return;
-                    } else {
-                        // For now, send other main menu options to AI (or you can add more custom logic for 2-6)
-                        // You can add more else ifs here for other main menu options if you want custom responses
                     }
+                    if (userMsg === '2') {
+                        currentMenu = 'technical-support';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Technical Support👨‍🌾<br><br>Anong klaseng assistance ang kailangan mo, Ka-LEADS?<br><br>1. Paggamit ng produkto  <br>2. Peste o sakit sa palay  <br>3. Schedule ng abono o spray  <br><br>I-type lang ang concern mo (hal. “Anong solusyon sa brown planthopper?” or “Kailan i-spray ang Frontier?”) at tutulungan ka ng aming customer service support sa iyong concern!', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '3') {
+                        currentMenu = 'find-dealer';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Find a Dealer📍<br><br>📍 Sabihin mo lang kung saan ka located (Barangay/Town/Province), at hahanapan kita ng nearest Leads Agri dealer.', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '4') {
+                        currentMenu = 'farming-tips';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Farming Tips🌱<br><br> 🚜 Gusto mo ba ng quick tips para mapataas ang ani? <br>1. Pest control calendar <br>2. Yield boosting tips <br>3. Healthy soil guide <br>4. Sustainable farming practices <br><br>Pili ka lang (1–4) at kami ang bahala sa ‘yo, Ka-LEADS!', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '5') {
+                        currentMenu = 'promos-incentives';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Promos & Incentives🎁<br><br>🎉 *GROW & GO TO HONG KONG!* <br><br> Bumili ng Leads Agri products, earn points, and get a chance to win an all-expense-paid trip to *Hong Kong!* 🇭🇰 <br><br>👉 Type “REWARDS” to check your points <br>👉 Type “JOIN” to register for the promo <br>👉 Type “MECHANICS” para malaman ang buong detalye', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '6') {
+                        currentMenu = 'leads-expert';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator(); 
+                            addMessage('Talk to a Ka-Leads Expert☎️ <br><br>📞 Gusto mo bang makausap ang isang Leads Agri Technician o Sales Officer? <br>Pakisend lang ang: <br>✅ Pangalan mo <br>✅ Lokasyon mo <br>✅ Concern or tanong <br><br>I-coconnect kita agad, Ka-LEADS!', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                }
+
+                // Find a Dealer logic: do NOT send to Mistral AI, just show a static message or handle locally
+                if (currentMenu === 'find-dealer') {
+                    // List of Leads Agri dealer locations (sample data, expand as needed)
+                    const dealers = [
+                        { name: 'Agri Depot Cabanatuan', city: 'Cabanatuan', phone: '0917-234-5678', address: 'Maharlika Highway, Brgy. Mabini', hours: 'Mon–Sat, 8AM–5PM', areas: ['cabanatuan', 'mabini', 'maharlika', 'nueva ecija'] },
+                        { name: 'Leads Agri Dealer - Manila', city: 'Manila', phone: '0917-111-2222', address: '123 Rizal Ave, Manila', hours: 'Mon–Sat, 8AM–5PM', areas: ['manila', 'ermita', 'malate', 'sampaloc', 'quiapo'] },
+                        { name: 'Leads Agri Dealer - Quezon City', city: 'Quezon City', phone: '0917-333-4444', address: '456 Commonwealth Ave, Quezon City', hours: 'Mon–Sat, 8AM–5PM', areas: ['quezon city', 'commonwealth', 'novaliches', 'cubao', 'diliman'] },
+                        { name: 'Leads Agri Dealer - Cebu', city: 'Cebu', phone: '0917-555-6666', address: '789 Osmeña Blvd, Cebu City', hours: 'Mon–Sat, 8AM–5PM', areas: ['cebu', 'cebu city', 'mandaue', 'lapu-lapu', 'talamban'] },
+                        { name: 'Leads Agri Dealer - Davao', city: 'Davao', phone: '0917-777-8888', address: '101 JP Laurel Ave, Davao City', hours: 'Mon–Sat, 8AM–5PM', areas: ['davao', 'davao city', 'matina', 'bajada', 'toril'] },
+                        { name: 'Leads Agri Dealer - Iloilo', city: 'Iloilo', phone: '0917-999-0000', address: '202 Jaro, Iloilo City', hours: 'Mon–Sat, 8AM–5PM', areas: ['iloilo', 'iloilo city', 'jaro', 'lapaz', 'mandurriao'] },
+                        { name: 'Leads Agri Dealer - Baguio', city: 'Baguio', phone: '0917-121-2121', address: '303 Session Rd, Baguio City', hours: 'Mon–Sat, 8AM–5PM', areas: ['baguio', 'baguio city', 'la trinidad', 'benquet', 'camp john hay'] },
+                        { name: 'Leads Agri Dealer - Cagayan de Oro', city: 'Cagayan de Oro', phone: '0917-232-3232', address: '404 Limketkai Center, Cagayan de Oro', hours: 'Mon–Sat, 8AM–5PM', areas: ['cagayan de oro', 'cdo', 'limketkai', 'macasandig', 'bulua'] },
+                        { name: 'Leads Agri Dealer - General Santos', city: 'General Santos', phone: '0917-343-4343', address: '505 Santiago Blvd, General Santos City', hours: 'Mon–Sat, 8AM–5PM', areas: ['general santos', 'gensan', 'santiago blvd', 'lagao', 'calumpang'] },
+                    ];
+                    const userLocation = userMsg.toLowerCase();
+                    // Try to find a dealer whose areas include the user's input (partial match)
+                    const foundDealer = dealers.find(dealer => dealer.areas.some(area => userLocation.includes(area)));
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        if (foundDealer) {
+                            addMessage(
+                                `👍 Malapit ka pala sa <b>${foundDealer.city}</b>!<br><br>` +
+                                `Subukan mo dito:<br>` +
+                                `🛒 <b>${foundDealer.name}</b><br>` +
+                                `📞 ${foundDealer.phone}<br>` +
+                                `📍 ${foundDealer.address}<br>` +
+                                `🕒 Open: ${foundDealer.hours}`,
+                                true
+                            );
+                        } else {
+                            addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “Menu” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                        }
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 400);
+                    return;
                 }
 
                 // Product info logic
@@ -828,27 +959,92 @@
                     const userMsgLower = userMsg.toLowerCase();
                     const foundProduct = productInfoMap.find(p => userMsgLower.includes(p.name.toLowerCase()));
                     if (foundProduct) {
+                        showTypingIndicator();
                         setTimeout(() => {
+                            hideTypingIndicator();
                             addMessage(foundProduct.info, true);
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
+                            chatInput.focus();
                         }, 400);
                         return;
                     }
                     // If not a product name, check for category number
                     if (productCategoryResponses[userMsg]) {
+                        showTypingIndicator();
                         setTimeout(() => {
+                            hideTypingIndicator();
                             addMessage(productCategoryResponses[userMsg], true);
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
+                            chatInput.focus();
                         }, 400);
                         return;
                     }
+                    // If not a product name or valid category number, show error and block fetch
+                    if (
+                        !productCategoryResponses[userMsg] &&
+                        !productInfoMap.some(p => userMsg.toLowerCase().includes(p.name.toLowerCase()))
+                    ) {
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “Menu” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+
                     // If not found, you can show a fallback or send to AI
                     // For now, send to AI as usual
                 }
 
+                // Farming Tips logic
+                if (currentMenu === 'farming-tips') {
+                    if (userMsg === '1') {
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage(
+                                '🗓️ <b>Pest Control Calendar</b><br><br>' +
+                                '✅ 0–14 DAT: Apply herbicide like <b>Frontier 200OD</b><br>' +
+                                '✅ 14–30 DAT: Insecticide like <b>Starkle 20SG</b><br>' +
+                                '✅ 30–45 DAT: Start fungicide like <b>Fuji One</b><br>' +
+                                '✅ 45–60 DAT: Follow up with <b>Galileo</b><br><br>' +
+                                '⏱️ Reminder: Stick to your schedule para consistent ang protection!'
+                                , true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    // If not '1', show error message
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “MENU” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 400);
+                    return;
+                }
+
+                // Only allow Mistral AI for technical support
+                if (currentMenu !== 'technical-support') {
+                    return;
+                }
+
+                // Show 3-dot typing indicator for technical support (Mistral AI answering)
                 showTypingIndicator();
+
+                let context = '';
+                if (currentMenu === 'technical-support') {
+                    context = `HERBICIDE\n🌿 Weeds/Damo? Subukan ang *Frontier 200 OD!* — post-emergent at nanunuot sa halaman.\n\n✅ Rescue application = best protection\n💧 Gamitin sa unang aplikasyon at bilang rescue application\n🥶 Malamig ang pormulasyon sa palay – hindi nasusunog ang halaman\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Frontier MAX!* — post-emergent herbicide na may halong Leads Exit.\n\n✅ Rescue application = best protection\n💧 Gamitin sa unang aplikasyon at bilang rescue application\n🥶 Malamig ang pormulasyon sa palay – hindi nasusunog ang halaman\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Mower 48 SL!* — foliar herbicide na nanunuot sa buong halaman at sa ugat nito para sa pag-kontrol ng damo.\n\n✅ Foliar = puwedeng i-apply sa dahon ng damo\n💧 Gamitin sa unang aplikasyon at bilang rescue application\n🥬 Pwedeng gamitin sa iba't-ibang tanim na gulay\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Mower Ultra 514 SL!* — post-emergent general weed killer na kumokontrol sa paglago at pagdami ng iba't-ibang damo sa taniman, lalo na sa maisan.\n\n✅ Systemic action = mabilis manuot sa damo\n💧 May kombinasyon ng mga kemikal na pumipigil sa shoot and root elongation o paglago ng damo\n❌ Walang latak sa taniman\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Agil 100 EC!* — post-emergent herbicide na pumupuksa sa damo sa tanim na sibuyas.\n\n☔ May rainfast formula = hindi basta nawawala kahit umuulan\n🧅 Mabisa sa tanim na sibuyas\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Top Ace 80 SC!* — post-emergent general weed killer na kumokontrol sa paglago at pagdami ng iba't-ibang damo sa taniman, lalo na sa maisan.\n\n✅ Systemic action = mabilis kumalat paloob sa mga ugat ng damo\n⏳ May long residual action kaya nananatili ang bisa\n👍 Puwede bilang pre-emergent, early post-emergent at late post-emergent\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Top Ace MAX!* — may pinagsamang pwersa ng Top Ace at Leads Exit\n\n✅ Mayroon tong Diuron = sangkap na nanunuot sa damo\n⏳ Malawak ang timing ng aplikasyon\n👍 Puwede bilang early hanggang post-emergent: pumupuksa sa damo sa iba't-ibang yugto ng paglaki nito\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Ignite 15 SL!* — non-selective herbicide laban sa mga damong mahirap puksain at umaagaw sa nutrisyon ng mga tanim.\n\n✅ Maaaring gamitin bilang pamatay-damo sa cavendish bananas, rubber, oil palm, at bilang industrial weed control\n🏜️ Pwede sa sloping areas para maiwasan ang soil erosion\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!`;
+                }
                 // Send to backend
                 fetch('/chat', {
                     method: 'POST',
@@ -856,13 +1052,14 @@
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': csrfToken
                     },
-                    body: JSON.stringify({ message: userMsg })
+                    body: JSON.stringify({ message: userMsg, context: context })
                 })
                 .then(res => res.json())
                 .then(data => {
                     hideTypingIndicator();
                     chatInput.disabled = false;
                     sendBtn.disabled = false;
+                    chatInput.focus();
                     if (data.response) {
                         addMessage(data.response, true);
                     } else {
@@ -873,6 +1070,7 @@
                     hideTypingIndicator();
                     chatInput.disabled = false;
                     sendBtn.disabled = false;
+                    chatInput.focus();
                     addMessage('Sorry, there was an error. Please try again later.', true);
                 });
             });
