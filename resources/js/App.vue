@@ -17,11 +17,16 @@
                             <i class="fas fa-times"></i>
                         </button>
 
-                                                                        <!-- Search Results Dropdown -->
-                        <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading)" class="search-results-dropdown">
+                        <!-- Search Results Dropdown -->
+                        <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading || (searchQuery.trim() && filteredSearchResults.length === 0))" class="search-results-dropdown">
                             <div v-if="isSearchLoading" class="search-result-item">
                                 <div class="search-result-content">
                                     <span class="text-gray-500">Loading products...</span>
+                                </div>
+                            </div>
+                            <div v-else-if="searchQuery.trim() && filteredSearchResults.length === 0" class="search-result-item">
+                                <div class="search-result-content">
+                                    <span class="text-gray-500">No products found</span>
                                 </div>
                             </div>
                             <div v-else v-for="(result, index) in filteredSearchResults" :key="index"
@@ -106,10 +111,15 @@
                                     <input type="text" id="mobile-search" name="mobile-search" class="w-full border-b-2 border-[#2E7D32] rounded-none text-[#2E7D32] placeholder-[#2E7D32] focus:outline-none bg-transparent" placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="handleSearchInput" @focus="showSearchResults = true">
 
                                                                         <!-- Mobile Search Results Dropdown -->
-                                    <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading)" class="mobile-search-results-dropdown">
+                                    <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading || (searchQuery.trim() && filteredSearchResults.length === 0))" class="mobile-search-results-dropdown">
                                         <div v-if="isSearchLoading" class="search-result-item">
                                             <div class="search-result-content">
                                                 <span class="text-gray-500">Loading products...</span>
+                                            </div>
+                                        </div>
+                                        <div v-else-if="searchQuery.trim() && filteredSearchResults.length === 0" class="search-result-item">
+                                            <div class="search-result-content">
+                                                <span class="text-gray-500">No products found</span>
                                             </div>
                                         </div>
                                         <div v-else v-for="(result, index) in filteredSearchResults" :key="index"
@@ -156,7 +166,7 @@
             </div>
             <div v-else-if="!showLearnMore && !showCareers && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts" key="main" class="main-container">
                 <HeroSection />
-                
+
                 <AboutSection @show-learn-more="handleShowLearnMore" />
                 <ProductsSection
                     :hoveredProduct="hoveredProduct"
