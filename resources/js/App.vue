@@ -6,7 +6,7 @@
         <!-- Navigation -->
         <div class="fixed top-0 left-0 right-0 z-50">
             <!-- White fade gradient effect -->
-            <div class="absolute w-full left-0 h-30 bg-gradient-to-b from-white via-white/15 to-transparent z-50"></div>
+            <div class="w-full left-0 h-30 bg-gradient-to-b from-white via-white/15 to-transparent"></div>
             <!-- Navigation content -->
             <nav class="container mx-auto px-6 py-12 absolute top-0 left-0 right-0">
                 <!-- Search Container -->
@@ -116,6 +116,7 @@
             </div>
             <div v-else-if="!showLearnMore && !showCareers && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts" key="main" class="main-container">
                 <HeroSection />
+                
                 <AboutSection @show-learn-more="handleShowLearnMore" />
                 <ProductsSection
                     :hoveredProduct="hoveredProduct"
@@ -1545,7 +1546,7 @@ export default {
                 }
                 let offset = 0;
                 if (sectionId === 'about') {
-                    offset = 100;
+                    offset = -10;
                 } else if (sectionId === 'products') {
                     if (window.innerWidth >= 1025) {
                         offset = 190;
