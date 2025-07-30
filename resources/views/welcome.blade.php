@@ -547,7 +547,7 @@
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s ease;
-            text-transform: capitalize; /* Capitalize first letter */
+            /* Removed text-transform: capitalize; to allow normal typing */
         }
 
         @media (max-width: 480px) {
@@ -640,11 +640,14 @@
         </div>
         <div class="chat-modal-body">
             <!-- Chat messages will go here -->
-            <p class="message received">Good day! I'm Pandoy Thank you for reaching Leads Agricultural Products Corporation. For security purposes and to serve you better, kindly confirm if you agree to have this conversation recorded.</p>
             <div class="faq-section" id="faq-section">
                 <div class="faq-buttons" id="faq-buttons"></div>
             </div>
         </div>
+        <form id="chat-modal-footer" class="chat-modal-footer" style="display:none;">
+            <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off" />
+            <button type="submit" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+        </form>
     </div>
 
     <script>
@@ -655,23 +658,26 @@
             const chatBody = document.querySelector('.chat-modal-body');
             const faqButtonsContainer = document.getElementById('faq-buttons');
             const faqSection = document.getElementById('faq-section');
+            const chatFooter = document.getElementById('chat-modal-footer');
+            const chatInput = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-btn');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            // FAQ data mapping
-            const faqData = {
-                'Products & Services': 'Thank you for your interest in our products and services. You may know more about these link <a href="#" onclick="scrollToSection(\'products\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Products & Services</a>.',
-                'Latest News ': 'Thank you for your interest in our latest news. You may know more about these through this link <a href="#" onclick="scrollToSection(\'news\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Latest News</a>.',
-                'Contact Details': 'You may reach us via by directly contacting our customer service via +63 917 7726369 or contacting us via facebook.com/leadsagri. Alternatively, you may send us a message through this link <a href="#" onclick="scrollToSection(\'contact\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Contact Details</a>.',
-                'Careers': 'Thank you for your interest in our current openings. You may know more about these through this link <a href="#" onclick="scrollToSection(\'careers\'); return false;" class="chatbot-scroll-link" style="color:#22AA4A;text-decoration:underline;">Careers</a>.',
-            };
-
-            let confirmed = false;
+            let conversationEnded = false;
+            let currentMenu = 'main'; // 'main' or 'product-info'
+            let chatGreeted = false;
 
             function showTypingIndicator() {
                 const indicator = document.createElement('div');
                 indicator.id = 'typing-indicator';
                 indicator.classList.add('message', 'received');
-                indicator.style.backgroundColor = 'transparent';
-                indicator.style.boxShadow = 'none';
+                indicator.style.backgroundColor = '#f1f0f0';
+                indicator.style.boxShadow = '0px 1px 2px rgba(0,0,0,0.1)';
+                indicator.style.borderRadius = '18px';
+                indicator.style.padding = '10px 15px';
+                indicator.style.marginBottom = '5px';
+                indicator.style.maxWidth = '80%';
+                indicator.style.alignSelf = 'flex-start';
                 indicator.innerHTML = `
                     <div class="typing-indicator">
                         <div class="typing-dot"></div>
@@ -705,97 +711,401 @@
                 chatBody.scrollTop = chatBody.scrollHeight;
             }
 
-            // Show Yes/No confirmation buttons initially
-            function showConfirmationButtons() {
+            // Show AI chat input immediately
+            function showAIChat() {
                 faqButtonsContainer.innerHTML = '';
-                const yesBtn = document.createElement('button');
-                yesBtn.className = 'faq-button';
-                yesBtn.textContent = 'Yes, I agree.';
-                yesBtn.onclick = function() {
-                    confirmed = true;
-                    showFAQButtons();
-                    addMessage('Thank you very much! How can we help you today?', true);
-                };
-                const noBtn = document.createElement('button');
-                noBtn.className = 'faq-button';
-                noBtn.textContent = 'No.';
-                noBtn.onclick = function() {
-                    confirmed = false;
-                    showDisabledFAQButtons();
-                    addMessage('Thank you very much. Have a great day!', true);
-                };
-                faqButtonsContainer.appendChild(yesBtn);
-                faqButtonsContainer.appendChild(noBtn);
+                chatFooter.style.display = 'flex';
+                chatInput.value = '';
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
             }
 
-            // Show FAQ buttons after confirmation
-            function showFAQButtons() {
-                faqButtonsContainer.innerHTML = '';
-                Object.keys(faqData).forEach(key => {
-                    const btn = document.createElement('button');
-                    btn.className = 'faq-button';
-                    btn.textContent = key;
-                    btn.onclick = function() {
-                        addMessage(key);
-                        faqButtonsContainer.innerHTML = ''; // Clear buttons
-
-                        showTypingIndicator();
-
-                        // Simulate bot response delay
-                        setTimeout(() => {
-                            hideTypingIndicator();
-                            addMessage(faqData[key], true);
-                            showMainMenuButton();
-                        }, 1200);
-                    };
-                    faqButtonsContainer.appendChild(btn);
-                });
-            }
-
-            // Show a Main Menu button after a FAQ answer
-            function showMainMenuButton() {
-                faqButtonsContainer.innerHTML = '';
-                const mainMenuBtn = document.createElement('button');
-                mainMenuBtn.className = 'faq-button';
-                mainMenuBtn.textContent = 'Main Menu';
-                mainMenuBtn.onclick = showFAQButtons;
-                faqButtonsContainer.appendChild(mainMenuBtn);
-
-                const endBtn = document.createElement('button');
-                endBtn.className = 'faq-button';
-                endBtn.textContent = 'End of Conversation';
-                endBtn.onclick = function() {
-                    showDisabledFAQButtons();
-                    addMessage('Thank you very much. Have a great day!', true);
-                };
-                faqButtonsContainer.appendChild(endBtn);
-            }
-
-            // When conversation ends (after No), only show End of Conversation message, no FAQ buttons
+            // When conversation ends, only show Continue button
             function showDisabledFAQButtons() {
+                chatFooter.style.display = 'none';
                 faqButtonsContainer.innerHTML = '';
-
-                // Continue button only
                 const continueBtn = document.createElement('button');
                 continueBtn.className = 'faq-button';
                 continueBtn.textContent = 'Continue';
                 continueBtn.onclick = function() {
-                    addMessage("Good day! I'm Pandoy Thank you for reaching Leads Agricultural Products Corporation. For security purposes and to serve you better, kindly confirm if you agree to have this conversation recorded.", true);
-                    showConfirmationButtons();
+                    addMessage("👋 Hello Ka-Leads! Ako si PandoyBot, ang digital farm buddy mo mula sa Leads Agri! May katanungan ka ba? Message ka lang!🌾", true);
+                    showAIChat();
+                    conversationEnded = false;
+                    setTimeout(() => {
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
+                        }, 1000);
+                    }, 2000);
                 };
                 faqButtonsContainer.appendChild(continueBtn);
             }
 
+            // Handle chat form submit
+            chatFooter.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (conversationEnded) return;
+                const userMsg = chatInput.value.trim();
+                if (!userMsg) return;
+                addMessage(userMsg, false);
+                chatInput.value = '';
+                chatInput.disabled = true;
+                sendBtn.disabled = true;
+
+                // Always show main menu if user types 'menu', even if already in main menu
+                if (userMsg.toLowerCase() === 'menu') {
+                    currentMenu = 'main';
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 1000);
+                    return;
+                }
+
+                // Guard clause: Prevent fetch for invalid main menu input
+                if (currentMenu === 'main' && !['1', '2', '3', '4', '5', '6'].includes(userMsg)) {
+                    console.log('Invalid input at main menu, blocking fetch.'); // Debug log
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “Menu” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 400);
+                    return;
+                }
+
+                // Handle going back to main menu
+                if (currentMenu === 'product-info' && (userMsg.toLowerCase() === 'menu')) {
+                    currentMenu = 'main';
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 400);
+                    return;
+                }
+
+                // Main menu logic
+                if (currentMenu === 'main') {
+                    if (userMsg === '1') {
+                        currentMenu = 'product-info';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Product Info📦<br><br>Anong klaseng produkto ang gusto mong makita? I-type lang ang number o product name na nais makita (hal. Jackpot, Starkle, etc.) at hintayin itong lumabas sa chat box!<br><br>1️⃣ Hybrid Rice Seeds 🌾<br>2️⃣ Insecticides 🐛<br>3️⃣ Herbicides 🌿<br>4️⃣ Fungicides 🍄<br>5️⃣ Fertilizers 💧<br>6️⃣ Molluscicides 🐌', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '2') {
+                        currentMenu = 'technical-support';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Technical Support👨‍🌾<br><br>Anong klaseng assistance ang kailangan mo, Ka-LEADS?<br><br>1. Paggamit ng produkto  <br>2. Peste o sakit sa palay  <br>3. Schedule ng abono o spray  <br><br>I-type lang ang concern mo (hal. “Anong solusyon sa brown planthopper?” or “Kailan i-spray ang Frontier?”) at tutulungan ka ng aming customer service support sa iyong concern!', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '3') {
+                        currentMenu = 'find-dealer';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Find a Dealer📍<br><br>📍 Sabihin mo lang kung saan ka located (Barangay/Town/Province), at hahanapan kita ng nearest Leads Agri dealer.', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '4') {
+                        currentMenu = 'farming-tips';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Farming Tips🌱<br><br> 🚜 Gusto mo ba ng quick tips para mapataas ang ani? <br>1. Pest control calendar <br>2. Yield boosting tips <br>3. Healthy soil guide <br>4. Sustainable farming practices <br><br>Pili ka lang (1–4) at kami ang bahala sa ‘yo, Ka-LEADS!', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '5') {
+                        currentMenu = 'promos-incentives';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('Promos & Incentives🎁<br><br>🎉 *GROW & GO TO HONG KONG!* <br><br> Bumili ng Leads Agri products, earn points, and get a chance to win an all-expense-paid trip to *Hong Kong!* 🇭🇰 <br><br>👉 Type “REWARDS” to check your points <br>👉 Type “JOIN” to register for the promo <br>👉 Type “MECHANICS” para malaman ang buong detalye', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    if (userMsg === '6') {
+                        currentMenu = 'leads-expert';
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator(); 
+                            addMessage('Talk to a Ka-Leads Expert☎️ <br><br>📞 Gusto mo bang makausap ang isang Leads Agri Technician o Sales Officer? <br>Pakisend lang ang: <br>✅ Pangalan mo <br>✅ Lokasyon mo <br>✅ Concern or tanong <br><br>I-coconnect kita agad, Ka-LEADS!', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                }
+
+                // Find a Dealer logic: do NOT send to Mistral AI, just show a static message or handle locally
+                if (currentMenu === 'find-dealer') {
+                    // List of Leads Agri dealer locations (sample data, expand as needed)
+                    const dealers = [
+                        { name: 'Agri Depot Cabanatuan', city: 'Cabanatuan', phone: '0917-234-5678', address: 'Maharlika Highway, Brgy. Mabini', hours: 'Mon–Sat, 8AM–5PM', areas: ['cabanatuan', 'mabini', 'maharlika', 'nueva ecija'] },
+                        { name: 'Leads Agri Dealer - Manila', city: 'Manila', phone: '0917-111-2222', address: '123 Rizal Ave, Manila', hours: 'Mon–Sat, 8AM–5PM', areas: ['manila', 'ermita', 'malate', 'sampaloc', 'quiapo'] },
+                        { name: 'Leads Agri Dealer - Quezon City', city: 'Quezon City', phone: '0917-333-4444', address: '456 Commonwealth Ave, Quezon City', hours: 'Mon–Sat, 8AM–5PM', areas: ['quezon city', 'commonwealth', 'novaliches', 'cubao', 'diliman'] },
+                        { name: 'Leads Agri Dealer - Cebu', city: 'Cebu', phone: '0917-555-6666', address: '789 Osmeña Blvd, Cebu City', hours: 'Mon–Sat, 8AM–5PM', areas: ['cebu', 'cebu city', 'mandaue', 'lapu-lapu', 'talamban'] },
+                        { name: 'Leads Agri Dealer - Davao', city: 'Davao', phone: '0917-777-8888', address: '101 JP Laurel Ave, Davao City', hours: 'Mon–Sat, 8AM–5PM', areas: ['davao', 'davao city', 'matina', 'bajada', 'toril'] },
+                        { name: 'Leads Agri Dealer - Iloilo', city: 'Iloilo', phone: '0917-999-0000', address: '202 Jaro, Iloilo City', hours: 'Mon–Sat, 8AM–5PM', areas: ['iloilo', 'iloilo city', 'jaro', 'lapaz', 'mandurriao'] },
+                        { name: 'Leads Agri Dealer - Baguio', city: 'Baguio', phone: '0917-121-2121', address: '303 Session Rd, Baguio City', hours: 'Mon–Sat, 8AM–5PM', areas: ['baguio', 'baguio city', 'la trinidad', 'benquet', 'camp john hay'] },
+                        { name: 'Leads Agri Dealer - Cagayan de Oro', city: 'Cagayan de Oro', phone: '0917-232-3232', address: '404 Limketkai Center, Cagayan de Oro', hours: 'Mon–Sat, 8AM–5PM', areas: ['cagayan de oro', 'cdo', 'limketkai', 'macasandig', 'bulua'] },
+                        { name: 'Leads Agri Dealer - General Santos', city: 'General Santos', phone: '0917-343-4343', address: '505 Santiago Blvd, General Santos City', hours: 'Mon–Sat, 8AM–5PM', areas: ['general santos', 'gensan', 'santiago blvd', 'lagao', 'calumpang'] },
+                    ];
+                    const userLocation = userMsg.toLowerCase();
+                    // Try to find a dealer whose areas include the user's input (partial match)
+                    const foundDealer = dealers.find(dealer => dealer.areas.some(area => userLocation.includes(area)));
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        if (foundDealer) {
+                            addMessage(
+                                `👍 Malapit ka pala sa <b>${foundDealer.city}</b>!<br><br>` +
+                                `Subukan mo dito:<br>` +
+                                `🛒 <b>${foundDealer.name}</b><br>` +
+                                `📞 ${foundDealer.phone}<br>` +
+                                `📍 ${foundDealer.address}<br>` +
+                                `🕒 Open: ${foundDealer.hours}`,
+                                true
+                            );
+                        } else {
+                            addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “Menu” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                        }
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 400);
+                    return;
+                }
+
+                // Product info logic
+                if (currentMenu === 'product-info') {
+                    // Product name to info mapping
+                    const productInfoMap = [
+                        { name: 'Brofreya 20 SC', info: '<b>Brofreya 20 SC</b><br><br>A systemic insecticide that controls insect pests in rice and vegetable crops.' },
+                        { name: 'Pleo 10 EC', info: '<b>Pleo 10 EC</b><br><br>A contact and stomach insecticide with novel chemical structure for the control of insect pests of cabbage and tobacco.' },
+                        { name: 'Rimon 10 EC', info: '<b>Rimon 10 EC</b><br><br>An insect growth regulator, which acts as chitin inhibitor, thereby causing abnormal endocuticular deposition and abortive molting.' },
+                        { name: 'Aztron WDG', info: '<b>Aztron WDG</b><br><br>A biological insecticide intended for the control of worms (insect larvae).' },
+                        { name: 'Benefit 20 SC', info: '<b>Benefit 20 SC</b><br><br>A systemic insecticide that controls insect pests in rice and vegetable crops.' },
+                        { name: 'Starkle 20 SG', info: '<b>Starkle 20 SG</b><br><br>An organic fungicide that targets black sigatoka on vegetable crops.' },
+                        { name: 'Lancer Gold 55 WG', info: '<b>Lancer Gold 55 WG</b><br><br>An organic fungicide that targets black sigatoka on vegetable crops.' },
+                        { name: 'Frontier 200 OD', info: '<b>Frontier 200 OD</b><br><br>A post-emergent herbicide that targets weeds in rice plant to avoid crop-weed competition.' },
+                        { name: 'Frontier MAX', info: '<b>Frontier MAX</b><br><br>A herbicide with the mixed efficiency of Frontier 200 OD and Leads Exit.' },
+                        { name: 'Mower 48 SL', info: '<b>Mower 48 SL</b><br><br>A post-emergent general foliar weed killer that controls the growth of weeds in various crops.' },
+                        { name: 'Agil 100 EC', info: '<b>Agil 100 EC</b><br><br>This herbicide can avoid the growth of weeds in onions.' },
+                        { name: 'Mower Ultra 514 SL', info: '<b>Mower Ultra 514 SL</b><br><br>A post-emergent general foliar weed killer that controls the growth of weeds in Glyphosate-tolerant corn.' },
+                        { name: 'Top Ace 80 SC', info: '<b>Top Ace 80 SC</b><br><br>A systemic herbicide with Diuron that targets weeds.' },
+                        { name: 'Top Ace MAX', info: '<b>Top Ace MAX</b><br><br>A herbicide with the mixed efficiency of Top Ace 80 SC and Leads Exit.' },
+                        { name: 'Karmex Gold', info: '<b>Karmex Gold</b><br><br>A highly systemic herbicide against weeds on various crops.' },
+                        { name: 'Ignite 15 SL', info: '<b>Ignite 15 SL</b><br><br>Non-selective herbicide with Glufosinate Ammonium that targets weeds.' },
+                        { name: 'STK Regev', info: '<b>STK Regev</b><br><br>The first hybrid fungicide in the country: it has the joint efficacy of systemic fungicide and tea tree oil that controls diseases on crops.' },
+                        { name: 'Timorex Gold', info: '<b>Timorex Gold</b><br><br>With its tea tree oil ingredient, Timorex Gold has the power to defend and heal planted vegetable crops against black sigatoka and other diseases.' },
+                        { name: 'Domark Pro', info: '<b>Domark Pro</b><br><br>A systemic fungicide that targets anthracnose and stem-end rot in mango trees.' },
+                        { name: 'Manager 80 WP', info: '<b>Manager 80 WP</b><br><br>Its active ingredient, Mancozeb, helps in giving crops a long-lasting resistance against fungus. It also has zinc and manganese for added protection.' },
+                        { name: 'Armore 70 WP', info: '<b>Armore 70 WP</b><br><br>Being a systemic fungicide, Armor 70 WP seeps through the roots of the plant for longer effectivity.' },
+                        { name: 'Leadonil 500 SC', info: '<b>Leadonil 500 SC</b><br><br>A broad spectrum agricultural fungicide effective against a wide range of diseases in field, fruit and vegetable crops.' },
+                        { name: 'iSmart Ceres', info: '<b>iSmart Ceres</b><br><br>A biostimulant that helps in the growth of crops, while also avoiding transplanting shock and abiotic stress due to extreme heat, flooding, and drought.' },
+                        { name: 'iSmart Boom Flower-n', info: '<b>iSmart Boom Flower-n</b><br><br>iSmart Boom Flower Improves flower initiation, improves fruit retention and assimilation, and increases fruit size, weight and quality.' },
+                        { name: 'iSmart Nano Urea', info: '<b>iSmart Nano Urea</b><br><br>This fertilizer helps bring Nitrogen to the plant on a nano sized level that allows for better absorption with reduced chances of wash off.' },
+                        { name: 'Kawa 422', info: '<b>Kawa 422</b><br><br>Kawa 422 is an organic fertilizer that’s a good alternative to chicken manure as it\'s more cost-effective to use, and more eco-friendly.' },
+                        { name: 'MegaBooster', info: '<b>MegaBooster</b><br><br>MegaBooster is a water soluble foliar fertilizer that meets the high nutrient requirements of your crops during fruit development and ripening.' },
+                        { name: 'Tecamin Max', info: '<b>Tecamin Max</b><br><br>A foliar biostimulant with amino acids that enhances qualities of vegetables by fighting abiotic stress.' },
+                        { name: 'Niclos M Plus', info: '<b>Niclos M Plus</b><br><br>As a molluscicide, Niclos M Plus contains Niclosamide in wettable power formulation.' }
+                    ];
+                    // Category number to info mapping
+                    const productCategoryResponses = {
+                        '1': "Hybrid Rice Seeds 🌾<br><br>TBA",
+                        '2': "Insecticides 🐛<br><br><b>Brofreya 20 SC</b>: A systemic insecticide that controls insect pests in rice and vegetable crops.<br><b>Pleo 10 EC</b>: A contact and stomach insecticide with novel chemical structure for the control of insect pests of cabbage and tobacco.<br><b>Rimon 10 EC</b>: An insect growth regulator, which acts as chitin inhibitor, thereby causing abnormal endocuticular deposition and abortive molting.<br><b>Aztron WDG</b>: A biological insecticide intended for the control of worms (insect larvae).<br><b>Benefit 20 SC</b>: A systemic insecticide that controls insect pests in rice and vegetable crops.<br><b>Starkle 20 SG</b>: An organic fungicide that targets black sigatoka on vegetable crops.<br><b>Lancer Gold 55 WG</b>: An organic fungicide that targets black sigatoka on vegetable crops.",
+                        '3': "Herbicides 🌿<br><br><b>Frontier 200 OD</b>: A post-emergent herbicide that targets weeds in rice plant to avoid crop-weed competition.<br><b>Frontier MAX</b>: A herbicide with the mixed efficiency of Frontier 200 OD and Leads Exit.<br><b>Mower 48 SL</b>: A post-emergent general foliar weed killer that controls the growth of weeds in various crops<br><b>Agil 100 EC</b>: This herbicide can avoid the growth of weeds in onions<br><b>Mower Ultra 514 SL</b>: A post-emergent general foliar weed killer that controls the growth of weeds in Glyphosate-tolerant corn<br><b>Top Ace 80 SC</b>: A systemic herbicide with Diuron that targets weeds<br><b>Top Ace MAX</b>: A herbicide with the mixed efficiency of Top Ace 80 SC and Leads Exit.<br><b>Karmex Gold</b>: A highly systemic herbicide against weeds on various crops.<br><b>Ignite 15 SL</b>: Non-selective herbicide with Glufosinate Ammonium that targets weeds",
+                        '4': "Fungicides 🍄<br><br><b>STK Regev</b>: The first hybrid fungicide in the country: it has the joint efficacy of systemic fungicide and tea tree oil that controls diseases on crops.<br><b>Timorex Gold</b>: With its tea tree oil ingredient, Timorex Gold has the power to defend and heal planted vegetable crops against black sigatoka and other diseases<br><b>Domark Pro</b>: A systemic fungicide that targets anthracnose and stem-end rot in mango trees.<br><b>Manager 80 WP</b>: Its active ingredient, Mancozeb, helps in giving crops a long-lasting resistance against fungus. It also has zinc and manganese for added protection.<br><b>Armore 70 WP</b>: Being a systemic fungicide, Armor 70 WP seeps through the roots of the plant for longer effectivity.<br><b>Leadonil 500 SC</b>: A broad spectrum agricultural fungicide effective against a wide range of diseases in field, fruit and vegetable crops.",
+                        '5': "Fertilizers 💧<br><br><b>iSmart Ceres</b>: A biostimulant that helps in the growth of crops, while also avoiding transplanting shock and abiotic stress due to extreme heat, flooding, and drought.<br><b>iSmart Boom Flower-n</b>: iSmart Boom Flower Improves flower initiation, improves fruit retention and assimilation, and increases fruit size, weight and quality.<br><b>iSmart Nano Urea</b>: This fertilizer helps bring Nitrogen to the plant on a nano sized level that allows for better absorption with reduced chances of wash off.<br><b>Kawa 422</b>: Kawa 422 is an organic fertilizer that's a good alternative to chicken manure as it's more cost-effective to use, and more eco-friendly.<br><b>MegaBooster</b>: MegaBooster is a water soluble foliar fertilizer that meets the high nutrient requirements of your crops during fruit development and ripening.<br><b>Tecamin Max</b>: A foliar biostimulant with amino acids that enhances qualities of vegetables by fighting abiotic stress",
+                        '6': "Molluscicides 🐌<br><br><b>Niclos M Plus</b>: As a molluscicide, Niclos M Plus contains Niclosamide in wettable power formulation."
+                    };
+                    // Try to match product name (case-insensitive, partial match)
+                    const userMsgLower = userMsg.toLowerCase();
+                    const foundProduct = productInfoMap.find(p => userMsgLower.includes(p.name.toLowerCase()));
+                    if (foundProduct) {
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage(foundProduct.info, true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    // If not a product name, check for category number
+                    if (productCategoryResponses[userMsg]) {
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage(productCategoryResponses[userMsg], true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    // If not a product name or valid category number, show error and block fetch
+                    if (
+                        !productCategoryResponses[userMsg] &&
+                        !productInfoMap.some(p => userMsg.toLowerCase().includes(p.name.toLowerCase()))
+                    ) {
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “Menu” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+
+                    // If not found, you can show a fallback or send to AI
+                    // For now, send to AI as usual
+                }
+
+                // Farming Tips logic
+                if (currentMenu === 'farming-tips') {
+                    if (userMsg === '1') {
+                        showTypingIndicator();
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage(
+                                '🗓️ <b>Pest Control Calendar</b><br><br>' +
+                                '✅ 0–14 DAT: Apply herbicide like <b>Frontier 200OD</b><br>' +
+                                '✅ 14–30 DAT: Insecticide like <b>Starkle 20SG</b><br>' +
+                                '✅ 30–45 DAT: Start fungicide like <b>Fuji One</b><br>' +
+                                '✅ 45–60 DAT: Follow up with <b>Galileo</b><br><br>' +
+                                '⏱️ Reminder: Stick to your schedule para consistent ang protection!'
+                                , true);
+                            chatInput.disabled = false;
+                            sendBtn.disabled = false;
+                            chatInput.focus();
+                        }, 400);
+                        return;
+                    }
+                    // If not '1', show error message
+                    showTypingIndicator();
+                    setTimeout(() => {
+                        hideTypingIndicator();
+                        addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “MENU” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                        chatInput.disabled = false;
+                        sendBtn.disabled = false;
+                        chatInput.focus();
+                    }, 400);
+                    return;
+                }
+
+                // Only allow Mistral AI for technical support
+                if (currentMenu !== 'technical-support') {
+                    return;
+                }
+
+                // Show 3-dot typing indicator for technical support (Mistral AI answering)
+                showTypingIndicator();
+
+                let context = '';
+                if (currentMenu === 'technical-support') {
+                    context = `HERBICIDE\n🌿 Weeds/Damo? Subukan ang *Frontier 200 OD!* — post-emergent at nanunuot sa halaman.\n\n✅ Rescue application = best protection\n💧 Gamitin sa unang aplikasyon at bilang rescue application\n🥶 Malamig ang pormulasyon sa palay – hindi nasusunog ang halaman\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Frontier MAX!* — post-emergent herbicide na may halong Leads Exit.\n\n✅ Rescue application = best protection\n💧 Gamitin sa unang aplikasyon at bilang rescue application\n🥶 Malamig ang pormulasyon sa palay – hindi nasusunog ang halaman\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Mower 48 SL!* — foliar herbicide na nanunuot sa buong halaman at sa ugat nito para sa pag-kontrol ng damo.\n\n✅ Foliar = puwedeng i-apply sa dahon ng damo\n💧 Gamitin sa unang aplikasyon at bilang rescue application\n🥬 Pwedeng gamitin sa iba't-ibang tanim na gulay\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Mower Ultra 514 SL!* — post-emergent general weed killer na kumokontrol sa paglago at pagdami ng iba't-ibang damo sa taniman, lalo na sa maisan.\n\n✅ Systemic action = mabilis manuot sa damo\n💧 May kombinasyon ng mga kemikal na pumipigil sa shoot and root elongation o paglago ng damo\n❌ Walang latak sa taniman\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Agil 100 EC!* — post-emergent herbicide na pumupuksa sa damo sa tanim na sibuyas.\n\n☔ May rainfast formula = hindi basta nawawala kahit umuulan\n🧅 Mabisa sa tanim na sibuyas\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Top Ace 80 SC!* — post-emergent general weed killer na kumokontrol sa paglago at pagdami ng iba't-ibang damo sa taniman, lalo na sa maisan.\n\n✅ Systemic action = mabilis kumalat paloob sa mga ugat ng damo\n⏳ May long residual action kaya nananatili ang bisa\n👍 Puwede bilang pre-emergent, early post-emergent at late post-emergent\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Top Ace MAX!* — may pinagsamang pwersa ng Top Ace at Leads Exit\n\n✅ Mayroon tong Diuron = sangkap na nanunuot sa damo\n⏳ Malawak ang timing ng aplikasyon\n👍 Puwede bilang early hanggang post-emergent: pumupuksa sa damo sa iba't-ibang yugto ng paglaki nito\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!\n🌿 Weeds/Damo? Subukan ang *Ignite 15 SL!* — non-selective herbicide laban sa mga damong mahirap puksain at umaagaw sa nutrisyon ng mga tanim.\n\n✅ Maaaring gamitin bilang pamatay-damo sa cavendish bananas, rubber, oil palm, at bilang industrial weed control\n🏜️ Pwede sa sloping areas para maiwasan ang soil erosion\n\n📘 Need a full guide? Pwede ko i-PM sa'yo!`;
+                }
+                // Send to backend
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ message: userMsg, context: context })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    hideTypingIndicator();
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    chatInput.focus();
+                    if (data.response) {
+                        addMessage(data.response, true);
+                    } else {
+                        addMessage('Sorry, there was an error. Please try again later.', true);
+                    }
+                })
+                .catch(() => {
+                    hideTypingIndicator();
+                    chatInput.disabled = false;
+                    sendBtn.disabled = false;
+                    chatInput.focus();
+                    addMessage('Sorry, there was an error. Please try again later.', true);
+                });
+            });
+
+            // Capitalize only the first letter of the input automatically
+            chatInput.addEventListener('input', function(e) {
+                if (chatInput.value.length === 1) {
+                    chatInput.value = chatInput.value.charAt(0).toUpperCase();
+                } else if (chatInput.value.length > 1 && chatInput.value.charAt(0) !== chatInput.value.charAt(0).toUpperCase()) {
+                    chatInput.value = chatInput.value.charAt(0).toUpperCase() + chatInput.value.slice(1);
+                }
+            });
+
             chatbotButton.onclick = function() {
                 chatModal.classList.toggle('active');
                 chatbotButton.classList.toggle('active');
+                if (chatModal.classList.contains('active')) {
+                    showAIChat();
+                    if (!chatGreeted) {
+                        chatGreeted = true;
+                        addMessage("👋 Hello Ka-Leads! Ako si PandoyBot, ang digital farm buddy mo mula sa Leads Agri! May katanungan ka ba? Message ka lang!🌾", true);
+                        setTimeout(() => {
+                            showTypingIndicator();
+                            setTimeout(() => {
+                                hideTypingIndicator();
+                                addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matulungan ka!", true);
+                            }, 1000);
+                        }, 500);
+                    }
+                }
             };
             closeModalButton.onclick = function() {
                 chatModal.classList.remove('active');
                 chatbotButton.classList.remove('active');
             };
-
-            showConfirmationButtons();
         });
     </script>
 </body>
