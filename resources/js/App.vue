@@ -11,10 +11,31 @@
             <nav class="container mx-auto px-6 py-12 absolute top-0 left-0 right-0">
                 <!-- Search Container -->
                 <div id="search-container" class="search-container">
-                    <input type="text" id="desktop-search" name="desktop-search" class="search-input" placeholder="Search..." autocomplete="off">
-                    <button id="close-search" name="close-search" class="text-[#2E7D32] hover:text-[#1B5E20] transition-colors">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <div class="relative w-full">
+                        <input type="text" id="desktop-search" name="desktop-search" class="search-input" placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="handleSearchInput" @focus="showSearchResults = true">
+                        <button id="close-search" name="close-search" class="text-[#2E7D32] hover:text-[#1B5E20] transition-colors">
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                                                                        <!-- Search Results Dropdown -->
+                        <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading)" class="search-results-dropdown">
+                            <div v-if="isSearchLoading" class="search-result-item">
+                                <div class="search-result-content">
+                                    <span class="text-gray-500">Loading products...</span>
+                                </div>
+                            </div>
+                            <div v-else v-for="(result, index) in filteredSearchResults" :key="index"
+                                 class="search-result-item"
+                                 @click="handleSearchResultClick(result)">
+                                <div class="search-result-content">
+                                    <span class="search-result-category" v-html="highlightText(result.category, searchQuery)"></span>
+                                    <span class="search-result-separator">/</span>
+                                    <span class="search-result-type" v-html="highlightText(result.type, searchQuery)"></span>
+                                </div>
+                                <div class="search-result-count">{{ result.count }} products</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Desktop Navigation -->
@@ -79,10 +100,29 @@
                                 <i class="fas fa-search text-lg text-[#2E7D32]"></i>
                             </span>
 
-                            <!-- Search Input -->
-                            <div id="mobile-search-container" class="hidden w-[101%]">
+                                <!-- Search Input -->
+                                <div id="mobile-search-container" class="hidden w-[101%]">
                                 <div class="relative">
-                                    <input type="text" id="mobile-search" name="mobile-search" class="w-full border-b-2 border-[#2E7D32] rounded-none text-[#2E7D32] placeholder-[#2E7D32] focus:outline-none bg-transparent" placeholder="Search..." autocomplete="off">
+                                    <input type="text" id="mobile-search" name="mobile-search" class="w-full border-b-2 border-[#2E7D32] rounded-none text-[#2E7D32] placeholder-[#2E7D32] focus:outline-none bg-transparent" placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="handleSearchInput" @focus="showSearchResults = true">
+
+                                                                        <!-- Mobile Search Results Dropdown -->
+                                    <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading)" class="mobile-search-results-dropdown">
+                                        <div v-if="isSearchLoading" class="search-result-item">
+                                            <div class="search-result-content">
+                                                <span class="text-gray-500">Loading products...</span>
+                                            </div>
+                                        </div>
+                                        <div v-else v-for="(result, index) in filteredSearchResults" :key="index"
+                                             class="search-result-item"
+                                             @click="handleSearchResultClick(result)">
+                                            <div class="search-result-content">
+                                                <span class="search-result-category" v-html="highlightText(result.category, searchQuery)"></span>
+                                                <span class="search-result-separator">/</span>
+                                                <span class="search-result-type" v-html="highlightText(result.type, searchQuery)"></span>
+                                            </div>
+                                            <div class="search-result-count">{{ result.count }} products</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -289,21 +329,29 @@
             </div>
             <div v-else-if="showMangoProducts" key="mangoproducts" class="main-container">
                 <MangoProductsSection
+                    :activeTab="mangoActiveTab"
+                    @update:activeTab="handleMangoTabChange"
                     @close="handleCloseMangoProducts"
                 />
             </div>
             <div v-else-if="showVegetableProducts" key="vegetableproducts" class="main-container">
                 <VegetableProductsSection
+                    :activeTab="vegetableActiveTab"
+                    @update:activeTab="handleVegetableTabChange"
                     @close="handleCloseVegetableProducts"
                 />
             </div>
             <div v-else-if="showSugarcaneProducts" key="sugarcaneproducts" class="main-container">
                 <SugarcaneProductsSection
+                    :activeTab="sugarcaneActiveTab"
+                    @update:activeTab="handleSugarcaneTabChange"
                     @close="handleCloseSugarcaneProducts"
                 />
             </div>
             <div v-else-if="showOthercropProducts" key="othercropproducts" class="main-container">
                 <OthercropProductsSection
+                    :activeTab="othercropActiveTab"
+                    @update:activeTab="handleOthercropTabChange"
                     @close="handleCloseOthercropProducts"
                 />
             </div>
@@ -408,6 +456,11 @@ export default {
             ],
             activeSection: 'home',
             activeTab: 'roots',
+            riceActiveTab: 'Herbicide',
+            vegetableActiveTab: 'Herbicide',
+            mangoActiveTab: 'Herbicide',
+            sugarcaneActiveTab: 'Herbicide',
+            othercropActiveTab: 'Herbicide',
             formData: {
                 full_name: '',
                 country_code: '+63',
@@ -639,6 +692,11 @@ export default {
                 '+998': 9, // Uzbekistan
             },
             selectedNewsArticle: null,
+            searchQuery: '',
+            showSearchResults: false,
+            filteredSearchResults: [],
+            allProducts: [],
+            isSearchLoading: false,
         }
     },
     async mounted() {
@@ -743,6 +801,9 @@ export default {
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileNav = document.querySelector('.mobile-nav');
 
+        // Fetch all products for search functionality
+        this.fetchAllProducts();
+
         // Search functionality
         const searchIcon = document.getElementById('search-icon');
         const searchContainer = document.getElementById('search-container');
@@ -756,6 +817,7 @@ export default {
         const mobileSearchInput = mobileSearchContainer?.querySelector('input');
         const mobilePhoneIcon = document.getElementById('mobile-phone-icon');
 
+        const self = this;
         // Mobile search functionality
         function toggleMobileSearch() {
             if (!mobileSearchContainer || !mobileSearchIcon || !mobilePhoneIcon) return;
@@ -773,6 +835,11 @@ export default {
             } else if (mobileSearchInput) {
                 mobileSearchInput.value = '';
             }
+               // Clear search results when closing
+               if (isVisible) {
+                self.showSearchResults = false;
+                self.searchQuery = '';
+            }
         }
 
         if (mobileSearchIcon) {
@@ -785,6 +852,7 @@ export default {
                 !mobileSearchContainer.contains(e.target) &&
                 mobileSearchIcon && !mobileSearchIcon.contains(e.target)) {
                 toggleMobileSearch();
+                this.showSearchResults = false;
             }
         });
 
@@ -805,6 +873,8 @@ export default {
                 if (searchContainer) searchContainer.classList.remove('active');
                 if (navItems) navItems.classList.remove('hidden');
                 if (searchInput) searchInput.value = '';
+                this.showSearchResults = false;
+                this.searchQuery = '';
             });
         }
 
@@ -820,6 +890,7 @@ export default {
                 searchContainer.classList.remove('active');
                 if (navItems) navItems.classList.remove('hidden');
                 if (searchInput) searchInput.value = '';
+                this.showSearchResults = false;
             }
         });
 
@@ -1135,448 +1206,79 @@ export default {
             }
         },
         scrollToSection(sectionId) {
-            this.selectedNewsArticle = null; // Hide article view on any navbar navigation
-            if (this.showLearnMore) {
-                this.showLearnMore = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
+    // Reset states
+    this.selectedNewsArticle = null;
+    this.showLearnMore = false;
+    this.showCareers = false;
+    this.showFeaturedNews = false;
+    this.showRiceProducts = false;
+    this.showMangoProducts = false;
+    this.showVegetableProducts = false;
+    this.showSugarcaneProducts = false;
+    this.showOthercropProducts = false;
+
+    // Smooth scroll function
+    const tryScroll = (attempts = 0) => {
+        const section = document.getElementById(sectionId);
+        if (!section) {
+            if (attempts < 20) {
+                setTimeout(() => tryScroll(attempts + 1), 50);
             }
-            if (this.showCareers) {
-                this.showCareers = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
+            return;
+        }
+
+        // Close mobile menu if active
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu && mobileMenu.classList.contains('active')) {
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Determine scroll offset
+        let offset = 0;
+        if (sectionId === 'about') {
+            offset = 0;
+        } else if (sectionId === 'products') {
+            if (window.innerWidth >= 1025) {
+                offset = 190;
+            } else if (window.innerWidth <= 426) {
+                offset = 60;
             }
-            if (this.showFeaturedNews) {
-                this.showFeaturedNews = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showRiceProducts) {
-                this.showRiceProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showMangoProducts) {
-                this.showMangoProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showVegetableProducts) {
-                this.showVegetableProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showSugarcaneProducts) {
-                this.showSugarcaneProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            if (this.showOthercropProducts) {
-                this.showOthercropProducts = false;
-                // Wait for DOM to update and section to exist
-                const tryScroll = (attempts = 0) => {
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                        // Close mobile menu if it's open
-                        const mobileMenu = document.getElementById('mobile-menu');
-                        if (mobileMenu && mobileMenu.classList.contains('active')) {
-                            mobileMenu.classList.remove('active');
-                            document.body.style.overflow = 'auto';
-                        }
-                        let offset = 0;
-                        if (sectionId === 'about') {
-                            offset = 100;
-                        } else if (sectionId === 'products') {
-                            if (window.innerWidth >= 1025) {
-                                offset = 190;
-                            } else if (window.innerWidth <= 426) {
-                                offset = 60;
-                            }
-                        }
-                        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                        const startPosition = window.pageYOffset;
-                        const distance = sectionTop - startPosition;
-                        const duration = 1000;
-                        let start = null;
-                        function animation(currentTime) {
-                            if (start === null) start = currentTime;
-                            const timeElapsed = currentTime - start;
-                            const progress = Math.min(timeElapsed / duration, 1);
-                            const easeInOutCubic = progress => {
-                                return progress < 0.5
-                                    ? 4 * progress * progress * progress
-                                    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                            };
-                            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                            window.scrollTo(0, newPosition);
-                            if (timeElapsed < duration) {
-                                requestAnimationFrame(animation);
-                            }
-                        }
-                        requestAnimationFrame(animation);
-                    } else if (attempts < 20) {
-                        setTimeout(() => tryScroll(attempts + 1), 50);
-                    }
-                };
-                tryScroll();
-                return;
-            }
-            const section = document.getElementById(sectionId);
-            if (section) {
-                // Close mobile menu if it's open
-                const mobileMenu = document.getElementById('mobile-menu');
-                if (mobileMenu && mobileMenu.classList.contains('active')) {
-                    mobileMenu.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-                let offset = 0;
-                if (sectionId === 'about') {
-                    offset = -10;
-                } else if (sectionId === 'products') {
-                    if (window.innerWidth >= 1025) {
-                        offset = 190;
-                    } else if (window.innerWidth <= 426) {
-                        offset = 60;
-                    }
-                }
-                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-                const startPosition = window.pageYOffset;
-                const distance = sectionTop - startPosition;
-                const duration = 1000;
-                let start = null;
-                function animation(currentTime) {
-                    if (start === null) start = currentTime;
-                    const timeElapsed = currentTime - start;
-                    const progress = Math.min(timeElapsed / duration, 1);
-                    const easeInOutCubic = progress => {
-                        return progress < 0.5
-                            ? 4 * progress * progress * progress
-                            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-                    };
-                    const newPosition = startPosition + (distance * easeInOutCubic(progress));
-                    window.scrollTo(0, newPosition);
-                    if (timeElapsed < duration) {
-                        requestAnimationFrame(animation);
-                    }
-                }
+        }
+
+        // Get scroll positions
+        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
+        const startPosition = window.pageYOffset;
+        const distance = sectionTop - startPosition;
+        const duration = 1000;
+        let start = null;
+
+        // Easing function
+        const easeInOutCubic = progress => {
+            return progress < 0.5
+                ? 4 * progress * progress * progress
+                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        };
+
+        // Animation function
+        function animation(currentTime) {
+            if (start === null) start = currentTime;
+            const timeElapsed = currentTime - start;
+            const progress = Math.min(timeElapsed / duration, 1);
+            const newPosition = startPosition + (distance * easeInOutCubic(progress));
+            window.scrollTo(0, newPosition);
+            if (timeElapsed < duration) {
                 requestAnimationFrame(animation);
             }
-        },
+        }
+
+        requestAnimationFrame(animation);
+    };
+
+    // Call scroll function
+    tryScroll();
+},
+
         isDesktop() {
             return window.innerWidth >= 768;
         },
@@ -1657,6 +1359,18 @@ export default {
         handleRiceTabChange(tab) {
             this.riceActiveTab = tab;
         },
+        handleVegetableTabChange(tab) {
+            this.vegetableActiveTab = tab;
+        },
+        handleMangoTabChange(tab) {
+            this.mangoActiveTab = tab;
+        },
+        handleSugarcaneTabChange(tab) {
+            this.sugarcaneActiveTab = tab;
+        },
+        handleOthercropTabChange(tab) {
+            this.othercropActiveTab = tab;
+        },
         handleTabChange(tab) {
             this.activeTab = tab;
         },
@@ -1724,6 +1438,129 @@ export default {
             const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
             const year = date.getFullYear();
             return `${month} ${year}`;
+        },
+        async fetchAllProducts() {
+            this.isSearchLoading = true;
+            try {
+                const response = await fetch('https://admin.leadsagri.site/api/products');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                this.allProducts = data;
+                console.log('Products loaded for search:', data.length);
+            } catch (error) {
+                console.error('Failed to fetch products:', error);
+                // Fallback to empty array to prevent errors
+                this.allProducts = [];
+            } finally {
+                this.isSearchLoading = false;
+            }
+        },
+        handleSearchInput(event) {
+            this.searchQuery = event.target.value;
+            this.showSearchResults = true;
+
+            if (!this.searchQuery.trim()) {
+                this.filteredSearchResults = [];
+                return;
+            }
+
+            const query = this.searchQuery.toLowerCase();
+            const searchResults = [];
+
+            // Group products by category and type
+            const groupedProducts = {};
+
+            this.allProducts.forEach(product => {
+                const category = product.category || '';
+                const type = product.type || '';
+
+                if (category.toLowerCase().includes(query) || type.toLowerCase().includes(query)) {
+                    const key = `${category}-${type}`;
+                    if (!groupedProducts[key]) {
+                        groupedProducts[key] = {
+                            category: category,
+                            type: type,
+                            count: 0,
+                            section: this.getSectionForCategory(category)
+                        };
+                    }
+                    groupedProducts[key].count++;
+                }
+            });
+
+            // Convert to array and sort by relevance
+            this.filteredSearchResults = Object.values(groupedProducts)
+                .sort((a, b) => {
+                    // Sort by exact matches first, then by count
+                    const aExactMatch = a.category.toLowerCase() === query || a.type.toLowerCase() === query;
+                    const bExactMatch = b.category.toLowerCase() === query || b.type.toLowerCase() === query;
+
+                    if (aExactMatch && !bExactMatch) return -1;
+                    if (!aExactMatch && bExactMatch) return 1;
+
+                    return b.count - a.count;
+                })
+                .slice(0, 10); // Limit to 10 results
+        },
+        getSectionForCategory(category) {
+            const categoryMap = {
+                'Rice': 'rice',
+                'Mango': 'mango',
+                'Vegetables': 'vegetable',
+                'Sugarcane': 'sugarcane',
+                'Other Crops': 'othercrop'
+            };
+            return categoryMap[category] || 'rice';
+        },
+                handleSearchResultClick(result) {
+            this.searchQuery = `${result.category} / ${result.type}`;
+            this.showSearchResults = false;
+
+            // Set the appropriate active tab based on the product type
+            const productType = result.type;
+
+            // Close all current product sections first
+            this.showLearnMore = false;
+            this.showCareers = false;
+            this.showFeaturedNews = false;
+            this.showRiceProducts = false;
+            this.showMangoProducts = false;
+            this.showVegetableProducts = false;
+            this.showSugarcaneProducts = false;
+            this.showOthercropProducts = false;
+
+            // Navigate to the appropriate section
+            const section = result.section;
+            switch (section) {
+                case 'rice':
+                    this.riceActiveTab = productType;
+                    this.handleShowRiceProducts();
+                    break;
+                case 'mango':
+                    this.mangoActiveTab = productType;
+                    this.handleShowMangoProducts();
+                    break;
+                case 'vegetable':
+                    this.vegetableActiveTab = productType;
+                    this.handleShowVegetableProducts();
+                    break;
+                case 'sugarcane':
+                    this.sugarcaneActiveTab = productType;
+                    this.handleShowSugarcaneProducts();
+                    break;
+                case 'othercrop':
+                    this.othercropActiveTab = productType;
+                    this.handleOthercropProducts();
+                    break;
+            }
+        },
+        highlightText(text, query) {
+            if (!query || !text) return text;
+
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
         },
     },
     watch: {
