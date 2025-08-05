@@ -31,17 +31,15 @@
                     <div
                         class="bg-[#003D1F] text-white p-6 flex flex-col w-full md:w-1/2 justify-between rounded-3xl shadow-2xl mb-8 md:mb-0 min-h">
                         <div>
-                            <div class="text-based mb-2">Full time</div>
-                            <div class="text-2xl font-bold mb-2">Accounting Staff</div>
-                            <div class="text-based mb-2">Graduate of BS Accountancy; Proficient in Microsoft Office
-                                applications particularly MS Word and MS Excel</div>
-                            <div class="text-based mb-4">Location: San Pedro, Laguna</div>
+                            <div class="text-based mb-2">{{ job.employment_type }}</div>
+                            <div class="text-2xl font-bold mb-2">{{ job.position }}</div>
+                            <div class="text-based mb-2">{{ job.details }}</div>
+                            <div class="text-based mb-4">Location: {{ job.location }}</div>
                             <div class="text-based font-semibold mb-1">Job Description:</div>
-                            <ul class="text-xs list-disc pl-5 space-y-1">
-                                <li>_______</li>
-                                <li>_______</li>
-                                <li>_______</li>
-                                <li>_______</li>
+                            <ul class="text-xs mb-4 list-disc pl-5 space-y-1">
+                                <li v-for="(word, index) in job.job_description.split(' ')" :key="index">
+                                    {{ word }}
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -56,7 +54,7 @@
                             <input type="email" placeholder="Your Email*" v-model="email"
                                 class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
                                 required />
-                            <input type="text" placeholder="Your Position*" value="Accounting Staff" readonly
+                            <input type="text" placeholder="Your Position*" :value="job.position" readonly
                                 class="rounded-full bg-[#F4F4F4] shadow-md placeholder:italic px-4 py-3 border border-gray-200 focus:outline-none focus:ring-0 text-black" />
                             <textarea placeholder="Enter your message" rows="4" v-model="message"
                                 @input="capitalizeMessageFirstLetter"
@@ -94,9 +92,15 @@
 <script>
 import ApplicationSuccess from './ApplicationSuccess.vue';
 export default {
-    name: 'AccountingApplication',
+    name: 'ApplicationFormCareers',
     components: {
         ApplicationSuccess,
+    },
+    props: {
+        job: {
+            type: Object,
+            required: true
+        }
     },
     data() {
         return {
@@ -139,7 +143,7 @@ export default {
                 const formData = new FormData();
                 formData.append('full_name', this.name);
                 formData.append('email', this.email);
-                formData.append('position', 'Accounting Staff');
+                formData.append('position', this.job.position);
                 formData.append('message', this.message);
                 if (this.resumeFile) {
                     formData.append('resume_file', this.resumeFile);

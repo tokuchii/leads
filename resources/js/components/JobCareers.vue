@@ -1,7 +1,7 @@
 <template>
     <div>
-        <RadiologistApplication v-if="showRadiologistApplication" @close="showRadiologistApplication = false" />
-        <AccountingApplication v-else-if="showAccountingApplication" @close="showAccountingApplication = false" />
+        <SeeMoreCareers v-if="showRadiologistApplication" ref="radiologistApplication" :jobs="jobs" @close="showRadiologistApplication = false" @apply="openApplication" />
+        <ApplicationFormCareers v-else-if="showAccountingApplication" :job="selectedJob" @close="showAccountingApplication = false" />
         <template v-else>
             <!-- Upper image/overlay/CAREERS section -->
             <div class="job-careers relative w-full">
@@ -48,33 +48,30 @@
                         class="w-full max-w-6xl flex flex-col md:flex-row justify-center gap-5 items-stretch px-6 md:px-0">
                         <!-- Left: Job Cards -->
                         <div class="flex flex-col gap-6 w-full md:w-1/2">
-                            <!-- Radiologist Card -->
                             <div
-                                class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[400px] shadow-lg">
+                                v-for="job in jobs"
+                                :key="job.id"
+                                class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[400px] shadow-lg"
+                            >
                                 <div>
-                                    <div class="text-white text-based mb-1">Full time</div>
-                                    <div class="text-white text-2xl font-bold mb-2">Radiologist</div>
-                                    <div class="text-white text-based mb-1">Graduate of BS Radiologic Technology with
-                                        PRC License</div>
-                                    <div class="text-white text-based">Location: San Pedro, Laguna</div>
+                                    <div class="text-white text-based mb-1">{{ job.employment_type }}</div>
+                                    <div class="text-white text-2xl font-bold mb-2">{{ job.position }}</div>
+                                    <div class="text-white text-based mb-1">{{ job.details }}</div>
+                                    <div class="text-white text-based">Location: {{ job.location }}</div>
                                 </div>
                                 <button
                                     class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-1 rounded text-lg shadow-md w-full"
-                                    @click="openRadiologistApplication">APPLY NOW</button>
+                                    @click="openApplication(job)"
+                                >
+                                    APPLY NOW
+                                </button>
                             </div>
-                            <!-- Accounting Staff Card -->
-                            <div
-                                class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[400px] shadow-lg">
-                                <div>
-                                    <div class="text-white text-based mb-1">Full time</div>
-                                    <div class="text-white text-2xl font-bold mb-2">Accounting Staff</div>
-                                    <div class="text-white text-based mb-1">Graduate of BS Accountancy; Proficient in
-                                        Microsoft Office applications particularly MS Word and MS Excel</div>
-                                    <div class="text-white text-based">Location: San Pedro, Laguna</div>
-                                </div>
-                                <button
-                                    class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-1 rounded text-lg shadow-md w-full"
-                                    @click="openAccountingApplication">APPLY NOW</button>
+                            <!-- See More Careers Link -->
+                            <div v-if="jobs.length > 1" class="text-center mt-4">
+                                <a href="#" @click.prevent="showAllCareers"
+                                   class="text-[#006D36] hover:text-[#004E27] font-semibold text-lg underline transition-colors duration-200">
+                                    See More Careers
+                                </a>
                             </div>
                         </div>
                         <!-- Right: Application Form -->
@@ -128,18 +125,20 @@
     </div>
 </template>
 <script>
-import RadiologistApplication from './RadiologistApplication.vue';
-import AccountingApplication from './AccountingApplication.vue';
+import SeeMoreCareers from './SeeMoreCareers.vue';
+import ApplicationFormCareers from './ApplicationFormCareers.vue';
 import ApplicationSuccess from './ApplicationSuccess.vue';
 export default {
     name: 'JobCareers',
     components: {
-        RadiologistApplication,
-        AccountingApplication,
+        SeeMoreCareers,
+        ApplicationFormCareers,
         ApplicationSuccess,
     },
     data() {
         return {
+            jobs: [],
+            selectedJob: null,
             selectedFileName: null,
             showRadiologistApplication: false,
             showAccountingApplication: false,
@@ -152,7 +151,19 @@ export default {
             loading: false,
         };
     },
+    mounted() {
+        this.fetchJobs();
+    },
     methods: {
+        async fetchJobs() {
+            try {
+                const response = await fetch('https://admin.leadsagri.site/api/careers');
+                const data = await response.json();
+                this.jobs = data;
+            } catch (error) {
+                console.error('Failed to fetch jobs:', error);
+            }
+        },
         handleFileChange(event) {
             const file = event.target.files[0];
             if (file) {
@@ -170,6 +181,12 @@ export default {
         openAccountingApplication() {
             this.showAccountingApplication = true;
             this.showRadiologistApplication = false;
+        },
+        openApplication(job) {
+            this.selectedJob = job;
+            this.position = job.position;
+            this.showRadiologistApplication = false;
+            this.showAccountingApplication = true;
         },
         async submitForm() {
             if (this.loading) return;
@@ -229,6 +246,14 @@ export default {
                 this.position = this.position.charAt(0).toUpperCase() + this.position.slice(1);
             }
         },
+        showAllCareers() {
+            this.showRadiologistApplication = true;
+            this.showAccountingApplication = false;
+            // Pass all job data to the RadiologistApplication component
+            this.$nextTick(() => {
+                this.$refs.radiologistApplication.setJobs(this.jobs);
+            });
+        }
     },
 };
 </script>

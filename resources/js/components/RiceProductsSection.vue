@@ -149,7 +149,7 @@
                     <!-- Insecticide Card Layout -->
                     <div v-if="activeTab === 'Insecticide' && riceInsecticideProducts.length" class="space-y-8">
                         <div v-for="product in riceInsecticideProducts" :key="product.id"
-                            class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+                            class="flex flex-col md:flex-row bg-white rounded-3xl">
                             <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-24">
                                 <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
                                     class="object-contain h-full w-full mx-auto" />
@@ -353,11 +353,12 @@ export default {
 
 <style scoped>
 .rice-bg-img {
-  background-image: url('/images/riceimg.png');
-  background-attachment: fixed; /* Keeps image fixed on scroll */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    background-image: url('/images/riceimg.png');
+    background-attachment: fixed;
+    /* Keeps image fixed on scroll */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .rice-bg-outer {
