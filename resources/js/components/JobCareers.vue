@@ -67,7 +67,7 @@
                                 </button>
                             </div>
                             <!-- See More Careers Link -->
-                            <div v-if="jobs.length > 1" class="text-center mt-4">
+                            <div v-if="jobs.length > 2" class="text-center mt-4">
                                 <a href="#" @click.prevent="showAllCareers"
                                    class="text-[#006D36] hover:text-[#004E27] font-semibold text-lg underline transition-colors duration-200">
                                     See More Careers
