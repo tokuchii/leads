@@ -36,11 +36,11 @@
                                     class="w-100 h-40 object-contain mb-2" />
                                 <div class="mb-2">
                                     <span class="font-bold">Description</span>
-                                    <p class="text-gray-700">{{ product.description }}</p>
+                                    <p class="text-gray-700 text-justify">{{ product.description }}</p>
                                 </div>
                                 <div class="mb-2">
                                     <span class="font-bold">Features & Benefits</span>
-                                    <p class="text-gray-700">{{ product.features }}</p>
+                                    <p class="text-gray-700 text-justify">{{ product.features }}</p>
                                 </div>
                                 <div class="mb-2">
                                     <span class="font-bold">Dosage</span>
@@ -52,9 +52,9 @@
                                 </div>
                                 <div>
                                     <span class="font-bold">Target Weeds/Crops</span>
-                                    <div class="flex gap-6">
+                                    <div class="flex gap-4">
                                         <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx" class="list-disc list-outside text-gray-700 text-m pl-4">
+                                            :key="colIdx" class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
                                             <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
                                         </ul>
                                     </div>
@@ -78,11 +78,11 @@
                                     class="w-100 h-40 object-contain mb-2" />
                                 <div class="mb-2">
                                     <span class="font-bold">Description</span>
-                                    <p class="text-gray-700">{{ product.description }}</p>
+                                    <p class="text-gray-700 text-justify">{{ product.description }}</p>
                                 </div>
                                 <div class="mb-2">
                                     <span class="font-bold">Features & Benefits</span>
-                                    <p class="text-gray-700">{{ product.features }}</p>
+                                    <p class="text-gray-700 text-justify">{{ product.features }}</p>
                                 </div>
                                 <div class="mb-2">
                                     <span class="font-bold">Dosage</span>
@@ -94,9 +94,9 @@
                                 </div>
                                 <div>
                                     <span class="font-bold">Target Weeds/Crops</span>
-                                    <div class="flex gap-6">
+                                    <div class="flex gap-4">
                                         <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx" class="list-disc list-outside text-gray-700 text-m pl-4">
+                                            :key="colIdx" class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
                                             <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
                                         </ul>
                                     </div>

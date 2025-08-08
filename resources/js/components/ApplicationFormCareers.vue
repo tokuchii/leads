@@ -61,12 +61,25 @@
                                 class="rounded-2xl bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
                                 required ></textarea>
                             <div>
-                                <input id="resume-upload" type="file" class="hidden" @change="handleFileChange" required />
+                                <input id="resume-upload" type="file" class="hidden" @change="handleFileChange" accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
                                 <label for="resume-upload"
                                     class="inline-block rounded-full bg-[#F4F4F4] px-4 py-1 mb-2 text-gray-400 italic font-medium cursor-pointer hover:shadow-md transition-all duration-200">Add
                                     File Here*</label>
-                                <span v-if="selectedFileName" class="block mt-1 text-sm text-gray-700">{{
-                                    selectedFileName }}</span>
+                                <span class="block text-xs text-gray-500 not-italic">(PDF or DOCX, Max 15 MB)</span>
+                                <p v-if="fileError" class="text-red-500 text-xs mb-6">{{ fileError }}</p>
+                                    <div v-if="selectedFileName" class="flex items-center gap-2 mt-2">
+                                        <span class="text-sm text-gray-700">{{ selectedFileName }}</span>
+                                        <button
+                                            type="button"
+                                            @click="removeFile"
+                                            class="text-red-500 hover:text-red-700 transition-colors duration-200"
+                                            title="Remove file"
+                                        >
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
                             </div>
                             <button type="submit" :disabled="loading"
                                 class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-2 rounded-full text-lg shadow-md flex items-center justify-center">
@@ -111,6 +124,7 @@ export default {
             resumeFile: null,
             showSuccess: false,
             loading: false,
+            fileError: '',
         };
     },
     methods: {
@@ -128,7 +142,33 @@ export default {
         },
         handleFileChange(event) {
             const file = event.target.files[0];
+            this.fileError = '';
+            const MAX_SIZE_BYTES = 15 * 1024 * 1024;
+            const allowedMimeTypes = [
+                'application/pdf',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ];
+            const allowedExtensions = ['pdf', 'docx'];
             if (file) {
+                const fileName = file.name || '';
+                const fileExt = fileName.split('.').pop().toLowerCase();
+                const isAllowedType = allowedMimeTypes.includes(file.type) || allowedExtensions.includes(fileExt);
+                if (!isAllowedType) {
+                    this.fileError = 'Invalid file type. Only PDF or DOCX are allowed.';
+                    this.selectedFileName = null;
+                    this.resumeFile = null;
+                    const fileInput = document.getElementById('resume-upload');
+                    if (fileInput) fileInput.value = '';
+                    return;
+                }
+                if (file.size > MAX_SIZE_BYTES) {
+                    this.fileError = 'File exceeds the 15 MB limit. Please choose a smaller file.';
+                    this.selectedFileName = null;
+                    this.resumeFile = null;
+                    const fileInput = document.getElementById('resume-upload');
+                    if (fileInput) fileInput.value = '';
+                    return;
+                }
                 this.selectedFileName = file.name;
                 this.resumeFile = file;
             } else {
@@ -136,10 +176,42 @@ export default {
                 this.resumeFile = null;
             }
         },
+        removeFile() {
+            this.selectedFileName = null;
+            this.resumeFile = null;
+            this.fileError = '';
+            // Reset the file input
+            const fileInput = document.getElementById('resume-upload');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        },
         async submitForm() {
             if (this.loading) return;
             this.loading = true;
             try {
+                // Guard: ensure file type and size are valid
+                const MAX_SIZE_BYTES = 15 * 1024 * 1024;
+                const allowedMimeTypes = [
+                    'application/pdf',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ];
+                const allowedExtensions = ['pdf', 'docx'];
+                if (this.resumeFile) {
+                    const fileName = this.resumeFile.name || '';
+                    const fileExt = fileName.split('.').pop().toLowerCase();
+                    const isAllowedType = allowedMimeTypes.includes(this.resumeFile.type) || allowedExtensions.includes(fileExt);
+                    if (!isAllowedType) {
+                        this.fileError = 'Invalid file type. Only PDF or DOCX are allowed.';
+                        this.loading = false;
+                        return;
+                    }
+                    if (this.resumeFile.size > MAX_SIZE_BYTES) {
+                        this.fileError = 'File exceeds the 15 MB limit. Please choose a smaller file.';
+                        this.loading = false;
+                        return;
+                    }
+                }
                 const formData = new FormData();
                 formData.append('full_name', this.name);
                 formData.append('email', this.email);

@@ -44,7 +44,7 @@
                             class="w-80 h-80 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] object-contain -mt-22"
                         />
                         <p
-                            class="text-lg text-white text-center w-full max-w-none md:mt-0 md:absolute md:top-[75%] md:left-1/2 md:transform md:-translate-x-1/2"
+                            class="text-md md:text-lg text-white text-center w-full max-w-none md:mt-0 md:absolute md:top-[75%] md:left-1/2 md:transform md:-translate-x-1/2 px-4 md:px-34"
                         >
                             <span v-html="hoveredProduct.text"></span>
                         </p>
@@ -52,7 +52,7 @@
                     <div>
                         <button
                         v-if="hoveredProduct.name === 'MANGO'"
-                        class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center cursor-pointer lg:mt-0 lg:w-auto lg:text-left"
+                        class="font-bold text-white mt-6 w-full md:mt-22 md:w-full md:text-center cursor-pointer lg:mt-0 lg:w-auto lg:text-left"
                         @click="$emit('show-mango-products')"
                         >
                         AVAILABLE PRODUCTS FOR MANGOES
@@ -61,7 +61,7 @@
                     <div>
                         <button
                         v-if="hoveredProduct.name === 'RICE'"
-                        class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center cursor-pointer lg:mt-0 lg:w-auto lg:text-left"
+                        class="font-bold text-white mt-6 w-full md:mt-30 md:w-full md:text-center cursor-pointer lg:mt-4 lg:w-auto lg:text-left"
                         @click="$emit('show-rice-products')"
                         >
                         AVAILABLE PRODUCTS FOR RICE
@@ -70,7 +70,7 @@
                     <div>
                         <button
                         v-if="hoveredProduct.name === 'VEGETABLES'"
-                        class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center cursor-pointer lg:mt-0 lg:w-auto lg:text-left"
+                        class="font-bold text-white mt-6 w-full md:mt-52 md:w-full md:text-center cursor-pointer lg:mt-6 lg:w-auto lg:text-left"
                         @click="$emit('show-vegetable-products')"
                         >
                         AVAILABLE PRODUCTS FOR VEGETABLES
@@ -79,7 +79,7 @@
                     <div>
                         <button
                         v-if="hoveredProduct.name === 'SUGARCANE'"
-                        class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center cursor-pointer lg:mt-0 lg:w-auto lg:text-left"
+                        class="font-bold text-white mt-6 w-full md:mt-22 md:w-full md:text-center cursor-pointer lg:mt-0 lg:w-auto lg:text-left"
                         @click="$emit('show-sugarcane-products')"
                         >
                         AVAILABLE PRODUCTS FOR SUGARCANE
@@ -88,7 +88,7 @@
                     <div>
                         <button
                         v-if="hoveredProduct.name === 'OTHER CROPS'"
-                        class="font-bold text-white mt-20 w-full md:mt-22 md:w-full md:text-center cursor-pointer lg:mt-0 lg:w-auto lg:text-left"
+                        class="font-bold text-white mt-6 w-full md:mt-22 md:w-full md:text-center cursor-pointer lg:mt-0 lg:w-auto lg:text-left"
                         @click="$emit('show-othercrop-products')"
                         >
                         AVAILABLE PRODUCTS FOR OTHER CROPS

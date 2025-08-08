@@ -37,7 +37,7 @@ class InquiryCareerController extends Controller
                 'email' => 'required|email|email:rfc,dns',
                 'position' => 'required|string|max:255',
                 'message' => 'nullable|string',
-                'resume_file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+                'resume_file' => 'nullable|file|mimes:pdf,doc,docx|max:15360',
             ]);
 
             // Handle file upload if present

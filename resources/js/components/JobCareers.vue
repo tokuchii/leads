@@ -1,7 +1,7 @@
 <template>
     <div>
-        <SeeMoreCareers v-if="showRadiologistApplication" ref="radiologistApplication" :jobs="jobs" @close="showRadiologistApplication = false" @apply="openApplication" />
-        <ApplicationFormCareers v-else-if="showAccountingApplication" :job="selectedJob" @close="showAccountingApplication = false" />
+        <SeeMoreCareers v-if="showSeeMoreCareers" ref="seeMoreCareers" :jobs="allJobs" @close="showSeeMoreCareers = false" @apply="openApplication" />
+        <ApplicationFormCareers v-else-if="showApplicationForm" :job="selectedJob" @close="showApplicationForm = false" />
         <template v-else>
             <!-- Upper image/overlay/CAREERS section -->
             <div class="job-careers relative w-full">
@@ -67,7 +67,7 @@
                                 </button>
                             </div>
                             <!-- See More Careers Link -->
-                            <div v-if="jobs.length > 2" class="text-center mt-4">
+                            <div v-if="allJobs.length > 2" class="text-center mt-4">
                                 <a href="#" @click.prevent="showAllCareers"
                                    class="text-[#006D36] hover:text-[#004E27] font-semibold text-lg underline transition-colors duration-200">
                                     See More Careers
@@ -94,13 +94,26 @@
                                     class="rounded-3xl bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none flex-1 transition-all duration-200"
                                     required ></textarea>
                                 <div>
-                                    <input id="resume-upload" type="file" class="hidden" @change="handleFileChange" required />
+                                    <input id="resume-upload" type="file" class="hidden" @change="handleFileChange" accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
                                     <label for="resume-upload"
-                                        class="inline-block rounded-full bg-[#F4F4F4] px-4 py-1 mb-10 text-gray-400 italic font-medium cursor-pointer hover:shadow-md transition-all duration-200">
+                                        class="inline-block rounded-full bg-[#F4F4F4] px-4 py-1 mb-2 text-gray-400 italic font-medium cursor-pointer hover:shadow-md transition-all duration-200">
                                         Add File Here*
                                     </label>
-                                    <span v-if="selectedFileName" class="block mt-2 text-sm text-gray-700">{{
-                                        selectedFileName }}</span>
+                                    <span class="block text-xs text-gray-500 not-italic">(PDF or DOCX, Max 15 MB)</span>
+                                    <p v-if="fileError" class="text-red-500 text-xs mb-6">{{ fileError }}</p>
+                                    <div v-if="selectedFileName" class="flex items-center gap-2 mt-2">
+                                        <span class="text-sm text-gray-700">{{ selectedFileName }}</span>
+                                        <button
+                                            type="button"
+                                            @click="removeFile"
+                                            class="text-red-500 hover:text-red-700 transition-colors duration-200"
+                                            title="Remove file"
+                                        >
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
                                 <button type="submit" :disabled="loading"
                                     class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-2 rounded-full text-lg shadow-md flex items-center justify-center">
@@ -138,10 +151,11 @@ export default {
     data() {
         return {
             jobs: [],
+            allJobs: [],
             selectedJob: null,
             selectedFileName: null,
-            showRadiologistApplication: false,
-            showAccountingApplication: false,
+            showSeeMoreCareers: false,
+            showApplicationForm: false,
             showSuccess: false,
             name: '',
             email: '',
@@ -149,6 +163,7 @@ export default {
             position: '',
             resumeFile: null,
             loading: false,
+            fileError: '',
         };
     },
     mounted() {
@@ -159,14 +174,47 @@ export default {
             try {
                 const response = await fetch('https://admin.leadsagri.site/api/careers');
                 const data = await response.json();
-                this.jobs = data;
+                // Keep full list and show only 2 random jobs
+                this.allJobs = Array.isArray(data) ? data : [];
+                const shuffled = [...this.allJobs].sort(() => 0.5 - Math.random());
+                this.jobs = shuffled.slice(0, 2);
             } catch (error) {
                 console.error('Failed to fetch jobs:', error);
             }
         },
         handleFileChange(event) {
             const file = event.target.files[0];
+            this.fileError = '';
+            const MAX_SIZE_BYTES = 15 * 1024 * 1024;
+            const allowedMimeTypes = [
+                'application/pdf',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            ];
+            const allowedExtensions = ['pdf', 'docx'];
             if (file) {
+                // Validate type by MIME and extension (fallback for some browsers)
+                const fileName = file.name || '';
+                const fileExt = fileName.split('.').pop().toLowerCase();
+                const isAllowedType = allowedMimeTypes.includes(file.type) || allowedExtensions.includes(fileExt);
+                if (!isAllowedType) {
+                    this.fileError = 'Invalid file type. Only PDF or DOCX are allowed.';
+                    this.selectedFileName = null;
+                    this.resumeFile = null;
+                    const fileInput = document.getElementById('resume-upload');
+                    if (fileInput) fileInput.value = '';
+                    return;
+                }
+                if (file.size > MAX_SIZE_BYTES) {
+                    this.fileError = 'File exceeds the 15 MB limit. Please choose a smaller file.';
+                    this.selectedFileName = null;
+                    this.resumeFile = null;
+                    // Reset the file input
+                    const fileInput = document.getElementById('resume-upload');
+                    if (fileInput) {
+                        fileInput.value = '';
+                    }
+                    return;
+                }
                 this.selectedFileName = file.name;
                 this.resumeFile = file;
             } else {
@@ -174,24 +222,56 @@ export default {
                 this.resumeFile = null;
             }
         },
-        openRadiologistApplication() {
-            this.showRadiologistApplication = true;
-            this.showAccountingApplication = false;
+        removeFile() {
+            this.selectedFileName = null;
+            this.resumeFile = null;
+            this.fileError = '';
+            // Reset the file input
+            const fileInput = document.getElementById('resume-upload');
+            if (fileInput) {
+                fileInput.value = '';
+            }
         },
-        openAccountingApplication() {
-            this.showAccountingApplication = true;
-            this.showRadiologistApplication = false;
+        openSeeMoreCareers() {
+            this.showSeeMoreCareers = true;
+            this.showApplicationForm = false;
+        },
+        openApplicationForm() {
+            this.showApplicationForm = true;
+            this.showSeeMoreCareers = false;
         },
         openApplication(job) {
             this.selectedJob = job;
             this.position = job.position;
-            this.showRadiologistApplication = false;
-            this.showAccountingApplication = true;
+            this.showSeeMoreCareers = false;
+            this.showApplicationForm = true;
         },
         async submitForm() {
             if (this.loading) return;
             this.loading = true;
             try {
+                // Guard: ensure file size is within limit
+                const MAX_SIZE_BYTES = 15 * 1024 * 1024;
+                const allowedMimeTypes = [
+                    'application/pdf',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ];
+                const allowedExtensions = ['pdf', 'docx'];
+                if (this.resumeFile) {
+                    const fileName = this.resumeFile.name || '';
+                    const fileExt = fileName.split('.').pop().toLowerCase();
+                    const isAllowedType = allowedMimeTypes.includes(this.resumeFile.type) || allowedExtensions.includes(fileExt);
+                    if (!isAllowedType) {
+                        this.fileError = 'Invalid file type. Only PDF or DOCX are allowed.';
+                        this.loading = false;
+                        return;
+                    }
+                }
+                if (this.resumeFile && this.resumeFile.size > MAX_SIZE_BYTES) {
+                    this.fileError = 'File exceeds the 15 MB limit. Please choose a smaller file.';
+                    this.loading = false;
+                    return;
+                }
                 const formData = new FormData();
                 formData.append('full_name', this.name);
                 formData.append('email', this.email);
@@ -247,11 +327,11 @@ export default {
             }
         },
         showAllCareers() {
-            this.showRadiologistApplication = true;
-            this.showAccountingApplication = false;
-            // Pass all job data to the RadiologistApplication component
+            this.showSeeMoreCareers = true;
+            this.showApplicationForm = false;
+            // Pass all job data to the SeeMoreCareers component
             this.$nextTick(() => {
-                this.$refs.radiologistApplication.setJobs(this.jobs);
+                this.$refs.seeMoreCareers.setJobs(this.allJobs);
             });
         }
     },

@@ -13,7 +13,7 @@
             <!-- Contact Form Section -->
             <div class="w-full lg:w-1/2">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mt-8 sm:mt-10 md:mt-12 mb-2 text-[#2E7D32] tracking-wider">SEND US AN INQUIRY</h2>
-                <p class="text-gray-600 text-sm mb-8 leading-relaxed">Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here Text here</p>
+                <p class="text-gray-600 text-sm mb-8 leading-relaxed text-[12px] md:text-[16px]">May katanungan ka ba, Ka-Leads? Mag-message lang sa aming team at babalikan namin ang inyong inquiry.</p>
                 <!-- The form and its logic will be handled in the parent -->
                 <slot></slot>
             </div>
@@ -24,4 +24,4 @@
 export default {
     name: 'ContactSection',
 };
-</script> 
+</script>
