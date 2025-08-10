@@ -635,7 +635,7 @@
 
     <div id="chat-modal" class="chat-modal">
         <div class="chat-modal-header">
-            <h4>Pandoy Chat</h4>
+            <h4>PandoyBot</h4>
             <button class="chat-modal-close"><i class="fas fa-times"></i></button>
         </div>
         <div class="chat-modal-body">
@@ -1054,7 +1054,12 @@
                     },
                     body: JSON.stringify({ message: userMsg, context: context })
                 })
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(`HTTP error! status: ${res.status}`);
+                    }
+                    return res.json();
+                })
                 .then(data => {
                     hideTypingIndicator();
                     chatInput.disabled = false;
@@ -1062,16 +1067,19 @@
                     chatInput.focus();
                     if (data.response) {
                         addMessage(data.response, true);
+                    } else if (data.error) {
+                        addMessage('Error: ' + data.error, true);
                     } else {
                         addMessage('Sorry, there was an error. Please try again later.', true);
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('Chat error:', error);
                     hideTypingIndicator();
                     chatInput.disabled = false;
                     sendBtn.disabled = false;
                     chatInput.focus();
-                    addMessage('Sorry, there was an error. Please try again later.', true);
+                    addMessage('Sorry, there was an error connecting to the chat service. Please try again later.', true);
                 });
             });
 
