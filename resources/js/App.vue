@@ -156,7 +156,7 @@
             <div v-if="selectedNewsArticle" key="newsarticle" class="main-container">
                 <div class="news-article flex flex-col items-center justify-center bg-[#006D36] px-4 md:px-8 lg:px-16 py-8 shadow-lg max-w-full lg:max-w-7xl mx-auto mt-30 mb-10">
                     <div class="w-full flex flex-col items-start mb-4">
-                        <span class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors hover:underline" @click="goToFeaturedNews">NEWS | ARTICLES</span>
+                        <span class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors underline" @click="goToFeaturedNews">NEWS | ARTICLES</span>
                     </div>
                     <img :src="selectedNewsArticle.featured_image_url || '/public/images/newsimg.png'" class="w-full max-w-xs sm:max-w-md md:max-w-xl lg:max-w-3xl h-auto mb-8 object-center no-hover-effect" />
                     <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">{{ selectedNewsArticle.title }}</h1>
@@ -433,7 +433,7 @@ export default {
                     icon: '/images/Rice.png',
                     background: '/images/rice1.png',
                     image: '/images/riceimg.png',
-                    text: '<b>Rice</b> is the staple food for a significant portion of Filipinos, making it a crucial part of the countrys food supply and economy. The Philippines is a major rice producer, but also a significant importer, relying on local production, <br> a buffer stock, and imports to meet demand. The rice industry faces challenges like climate change and the need for increased productivity to ensure food security.',
+                    text: '<b>Rice</b> is the staple food for a significant portion of Filipinos, making it a crucial part of the countrys food supply and economy. The Philippines is a major rice producer, but also a significant importer, relying on local production, a buffer stock, and imports to meet demand. The rice industry faces challenges like climate change and the need for increased productivity to ensure food security.',
                 },
                 {
                     name: 'MANGO',
@@ -447,7 +447,7 @@ export default {
                     icon: '/images/Vegetables.png',
                     background: '/images/vegetables1.png',
                     image: '/images/vegetablesimg.png',
-                    text: '<b>Vegetable</b> production in the country is mired by high incidence of pests and diseases, poor access to modern varieties and production inputs, inadequate farmer skills, and inefficient marketing and distribution losses which contributes to overall production losses. These constraints result in low yield and quality, and expensive production inputs resulting in high prices of vegetables. Moreover, due to concerns on health and environmental <br> pollutants that can affect the vegetable industry and absence of an available monitoring system for food safety, ',
+                    text: '<b>Vegetable</b> production in the country is mired by high incidence of pests and diseases, poor access to modern varieties and production inputs, inadequate farmer skills, and inefficient marketing and distribution losses which contributes to overall production losses. These constraints result in low yield and quality, and expensive production inputs resulting in high prices of vegetables. Moreover, due to concerns on health and environmental pollutants that can affect the vegetable industry and absence of an available monitoring system for food safety, ',
                 },
                 {
                     name: 'SUGARCANE',

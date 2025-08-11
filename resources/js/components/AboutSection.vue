@@ -21,7 +21,7 @@
                     <p class="text-[#2E7D32] text-lg mb-8 leading-relaxed">
                         Since 1997, Leads Agricultural Products Corp. (LAPC) has been the partner of Filipino farmers in sustaining their livelihood. For almost three decades now, Leads Agri has been nurturing the vision of a developed agricultural system with farmers at the forefront of its advocacies.
                     </p>
-                    <a href="#" @click.prevent="$emit('show-learn-more')" class="text-[#2E7D32] text-base font-medium hover:underline">LEARN MORE.</a>
+                    <a href="#" @click.prevent="$emit('show-learn-more')" class="text-[#2E7D32] text-base font-medium underline">LEARN MORE.</a>
                 </div>
             </div>
         </div>

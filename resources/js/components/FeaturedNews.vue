@@ -33,7 +33,7 @@
                         <p class="text-xs sm:text-sm md:text-base font-light text-green-900 mb-2 text-start uppercase" v-html="trimContent(news.content)"></p>
                         <button
                           @click="$emit('show-news-article', news)"
-                          class="text-[#D3AF37] text-xs sm:text-sm md:text-base font-medium hover:underline relative bg-transparent border-none cursor-pointer p-0"
+                          class="text-[#D3AF37] text-xs sm:text-sm md:text-base font-medium underline relative bg-transparent border-none cursor-pointer p-0"
                         >
                           READ MORE.
                         </button>
@@ -53,7 +53,7 @@
                         <p class="text-xs sm:text-sm md:text-base font-light text-green-900 mb-2 text-start uppercase" v-html="trimContent(news.content)"></p>
                         <button
                           @click="$emit('show-news-article', news)"
-                          class="text-[#D3AF37] text-xs sm:text-sm md:text-base font-medium hover:underline relative bg-transparent border-none cursor-pointer p-0"
+                          class="text-[#D3AF37] text-xs sm:text-sm md:text-base font-medium underline relative bg-transparent border-none cursor-pointer p-0"
                         >
                           READ MORE.
                         </button>

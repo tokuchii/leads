@@ -16,7 +16,7 @@
                             {{ trimContent(news.content) }}
                         </p>
                         <button @click="$emit('show-news-article', news)"
-                            class="news-learnmore-btn cursor-pointer self-start text-xs sm:text-sm md:text-base">LEARN
+                            class="news-learnmore-btn cursor-pointer self-start text-xs sm:text-sm md:text-base underline">LEARN
                             MORE.</button>
                     </div>
                 </div>
