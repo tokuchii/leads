@@ -41,7 +41,7 @@
                         <img
                             :src="hoveredProduct.image || hoveredProduct.icon"
                             :alt="hoveredProduct.name"
-							class="w-80 h-80 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] object-contain rounded-full -mt-22"
+							class="w-80 h-80 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] object-contain -mt-22"
                         />
                         <p
                             class="text-md md:text-lg text-white text-center w-full max-w-none md:mt-0 md:absolute md:top-[75%] md:left-1/2 md:transform md:-translate-x-1/2 px-4 md:px-34"
