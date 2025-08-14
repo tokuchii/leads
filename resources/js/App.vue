@@ -460,7 +460,7 @@ export default {
                     name: 'OTHER CROPS',
                     icon: '/images/Othercrops.png',
                     background: '/images/othercrops1.jpg',
-                    image: '/images/othercropsimg.jpg',
+                    image: '/images/othercropsimg.png',
                     text: '<b>Leads Agri</b> has been aimed to helping Filipino Farmers with the products and services they provide. We believe that every farmer deserves bountiful yields and we are willing to help them reach it.',
                 },
             ],
