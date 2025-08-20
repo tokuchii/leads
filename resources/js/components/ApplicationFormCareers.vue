@@ -59,27 +59,29 @@
                             <textarea placeholder="Enter your message" rows="4" v-model="message"
                                 @input="capitalizeMessageFirstLetter"
                                 class="rounded-2xl bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
-                                required ></textarea>
+                                required></textarea>
                             <div>
-                                <input id="resume-upload" type="file" class="hidden" @change="handleFileChange" accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
+                                <input id="resume-upload" type="file" class="hidden" @change="handleFileChange"
+                                    accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    required />
                                 <label for="resume-upload"
                                     class="inline-block rounded-full bg-[#F4F4F4] px-4 py-1 mb-2 text-gray-400 italic font-medium cursor-pointer hover:shadow-md transition-all duration-200">Add
                                     File Here*</label>
                                 <span class="block text-xs text-gray-500 not-italic">(PDF or DOCX, Max 15 MB)</span>
                                 <p v-if="fileError" class="text-red-500 text-xs mb-6">{{ fileError }}</p>
-                                    <div v-if="selectedFileName" class="flex items-center gap-2 mt-2">
-                                        <span class="text-sm text-gray-700">{{ selectedFileName }}</span>
-                                        <button
-                                            type="button"
-                                            @click="removeFile"
-                                            class="text-red-500 hover:text-red-700 transition-colors duration-200"
-                                            title="Remove file"
-                                        >
-                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
+                                <div v-if="selectedFileName" class="flex items-center gap-2 mt-2">
+                                    <span class="text-sm text-gray-700">{{ selectedFileName }}</span>
+                                    <button type="button" @click="removeFile"
+                                        class="text-red-500 hover:text-red-700 transition-colors duration-200"
+                                        title="Remove file">
+                                        <!-- Trash/Remove Icon -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 ml-4 md:ml-8" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                             <button type="submit" :disabled="loading"
                                 class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-2 rounded-full text-lg shadow-md flex items-center justify-center">

@@ -1,7 +1,9 @@
 <template>
     <div>
-        <SeeMoreCareers v-if="showSeeMoreCareers" ref="seeMoreCareers" :jobs="allJobs" @close="showSeeMoreCareers = false" @apply="openApplication" />
-        <ApplicationFormCareers v-else-if="showApplicationForm" :job="selectedJob" @close="showApplicationForm = false" />
+        <SeeMoreCareers v-if="showSeeMoreCareers" ref="seeMoreCareers" :jobs="allJobs"
+            @close="showSeeMoreCareers = false" @apply="openApplication" />
+        <ApplicationFormCareers v-else-if="showApplicationForm" :job="selectedJob"
+            @close="showApplicationForm = false" />
         <template v-else>
             <!-- Upper image/overlay/CAREERS section -->
             <div class="job-careers relative w-full">
@@ -48,11 +50,8 @@
                         class="w-full max-w-6xl flex flex-col md:flex-row justify-center gap-5 items-stretch px-6 md:px-0">
                         <!-- Left: Job Cards -->
                         <div class="flex flex-col gap-6 w-full md:w-1/2">
-                            <div
-                                v-for="job in jobs"
-                                :key="job.id"
-                                class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[400px] shadow-lg"
-                            >
+                            <div v-for="job in jobs" :key="job.id"
+                                class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[400px] shadow-lg">
                                 <div>
                                     <div class="text-white text-based mb-1">{{ job.employment_type }}</div>
                                     <div class="text-white text-2xl font-bold mb-2">{{ job.position }}</div>
@@ -61,15 +60,14 @@
                                 </div>
                                 <button
                                     class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-1 rounded text-lg shadow-md w-full"
-                                    @click="openApplication(job)"
-                                >
+                                    @click="openApplication(job)">
                                     APPLY NOW
                                 </button>
                             </div>
                             <!-- See More Careers Link -->
                             <div v-if="allJobs.length > 2" class="text-center mt-4">
                                 <a href="#" @click.prevent="showAllCareers"
-                                   class="text-[#006D36] hover:text-[#004E27] font-semibold text-lg underline transition-colors duration-200">
+                                    class="text-[#006D36] hover:text-[#004E27] font-semibold text-lg underline transition-colors duration-200">
                                     See More Careers
                                 </a>
                             </div>
@@ -92,9 +90,11 @@
                                 <textarea placeholder="Enter your message" rows="4" v-model="message"
                                     @input="capitalizeFirstLetter"
                                     class="rounded-3xl bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none flex-1 transition-all duration-200"
-                                    required ></textarea>
+                                    required></textarea>
                                 <div>
-                                    <input id="resume-upload" type="file" class="hidden" @change="handleFileChange" accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
+                                    <input id="resume-upload" type="file" class="hidden" @change="handleFileChange"
+                                        accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                        required />
                                     <label for="resume-upload"
                                         class="inline-block rounded-full bg-[#F4F4F4] px-4 py-1 mb-2 text-gray-400 italic font-medium cursor-pointer hover:shadow-md transition-all duration-200">
                                         Add File Here*
@@ -103,14 +103,14 @@
                                     <p v-if="fileError" class="text-red-500 text-xs mb-6">{{ fileError }}</p>
                                     <div v-if="selectedFileName" class="flex items-center gap-2 mt-2">
                                         <span class="text-sm text-gray-700">{{ selectedFileName }}</span>
-                                        <button
-                                            type="button"
-                                            @click="removeFile"
+                                        <button type="button" @click="removeFile"
                                             class="text-red-500 hover:text-red-700 transition-colors duration-200"
-                                            title="Remove file"
-                                        >
-                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                            title="Remove file">
+                                            <!-- Trash/Remove Icon -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 ml-4 md:ml-8" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                             </svg>
                                         </button>
                                     </div>
