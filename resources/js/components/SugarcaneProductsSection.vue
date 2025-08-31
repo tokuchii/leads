@@ -19,6 +19,9 @@
             </div>
             <!-- Tab Content -->
             <div class="relative" :class="[activeTabBg, 'pt-6 rounded-4xl']" style="min-height: 480px;">
+                <div v-if="activeTab === 'Herbicide' || activeTab === 'Biostimulant'" class="flex justify-center items-center text-white font-helvetica-heavy text-center text-2xl md:text-3xl pb-4 px-2">
+                    <h2>{{ tabs.find(t => t.alt === activeTab).type }}</h2>
+                </div>
                 <div class="bg-[#FFFFFF] rounded-4xl p-4 sm:p-8 lg:p-14 text-back shadow-xl" style="min-height: 600px;">
                     <!-- Herbicide Card Layout -->
                     <div v-if="activeTab === 'Herbicide' && sugarcaneHerbicideProducts.length" class="space-y-8">
@@ -129,12 +132,14 @@ export default {
                     src: '/images/Herbicide.png',
                     bg: 'bg-[#22AA4A]',
                     imgClass: 'w-12 h-14',
+                    type: 'HERBICIDE',
                 },
                 {
                     alt: 'Biostimulant',
                     src: '/images/Biostimulant.png',
                     bg: 'bg-[#822D7E]',
                     imgClass: 'w-16 h-14',
+                    type: 'BIOSTIMULANT / FERTILIZER',
                 },
             ],
             products: [],
@@ -204,5 +209,10 @@ export default {
 .sugarcane-bg-outer {
     /* You can adjust min-height as needed */
     min-height: 100vh;
+}
+
+.font-helvetica-heavy {
+    font-family: 'Helvetica Neue LT Std', sans-serif;
+    font-weight: 800;
 }
 </style>
