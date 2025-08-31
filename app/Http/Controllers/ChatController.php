@@ -252,7 +252,7 @@ CONTEXT;
                 return response()->json(['error' => 'Message is required'], 400);
             }
             // Improved system prompt to enforce context usage
-            $systemPrompt = "You are Pandoy, a LeadsAgri Bot, an AI assistant for LeadsAgri Venture.\n\nIf CONTEXT is provided, you must answer ONLY using the information in CONTEXT and information that you know about the CONTEXT.\nIf the answer is not found in CONTEXT, reply with: \n'🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads. Type “Menu” para bumalik sa main options o subukang i-type muli ang iyong katanungan.. Please contact LeadsAgri for more details.'\n\nIf the user's question asks for a list, or there are multiple relevant items in CONTEXT, always list ALL relevant items, not just one.\n\nBe professional, friendly, and concise in your responses.\n";
+            $systemPrompt = "You are Pandoy, a LeadsAgri Bot, an AI assistant for LeadsAgri Venture.\n\nIf CONTEXT is provided, you must answer ONLY using the information in CONTEXT and information that you know about the CONTEXT.\nIf the answer is not found in CONTEXT, reply with: \n'🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads. Please contact LeadsAgri for more details.'\n\nIf the user's question asks for a list, or there are multiple relevant items in CONTEXT, always list ALL relevant items, not just one.\n\nBe professional, friendly, and concise in your responses.\n";
             if (!empty($context)) {
                 $systemPrompt .= "\n\nCONTEXT:\n" . $context;
             }
@@ -281,6 +281,10 @@ CONTEXT;
             if ($response->successful()) {
                 try {
                     $botResponse = $response->json()['choices'][0]['message']['content'];
+                    
+                    // Add main menu button to technical support responses
+                    $botResponse .= '<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>';
+                    
                     return response()->json(['response' => $botResponse]);
                 } catch (\Exception $e) {
                     Log::error('Response parsing error: ' . $e->getMessage() . "\n" . $response->body());

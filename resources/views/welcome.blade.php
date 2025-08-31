@@ -621,6 +621,35 @@
         .chatbot-scroll-link:hover {
             color: #1B5E20 !important; /* Darker green on hover */
         }
+
+        /* Main Menu Button Styles */
+        .main-menu-btn {
+            background-color: #2E7D32;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-menu-btn:hover {
+            background-color: #388E3C;
+            transform: translateY(-2px);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-menu-btn:active {
+            transform: translateY(0);
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
     </style>
 
     <!-- Main styles -->
@@ -652,65 +681,80 @@
     </div>
 
     <script>
+        // Global variables
+        let conversationEnded = false;
+        let currentMenu = 'main'; // 'main' or 'product-info'
+        let chatGreeted = false;
+        let chatInput, sendBtn, chatBody, faqSection;
+
+        // Function to go back to main menu (global scope)
+        function goToMainMenu() {
+            currentMenu = 'main';
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addMessage("Magandang araw, Ka-LEADS! Paano kita matutulungan ngayon? Pili ka lang sa sumusunod: <br><br>1️⃣ Product Info 📦<br>2️⃣ Technical Support 👨‍🌾<br>3️⃣ Find a Dealer 📍<br>4️⃣ Farming Tips 🌱<br>5️⃣ Promos & Incentives 🎁<br>6️⃣ Talk to a Ka-Leads Expert ☎️<br><br>👉 I-type mo lang ang number o i-message kami para matutulungan ka!", true);
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
+            }, 400);
+        }
+
+        function showTypingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.id = 'typing-indicator';
+            indicator.classList.add('message', 'received');
+            indicator.style.backgroundColor = '#f1f0f0';
+            indicator.style.boxShadow = '0px 1px 2px rgba(0,0,0,0.1)';
+            indicator.style.borderRadius = '18px';
+            indicator.style.padding = '10px 15px';
+            indicator.style.marginBottom = '5px';
+            indicator.style.maxWidth = '80%';
+            indicator.style.alignSelf = 'flex-start';
+            indicator.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            chatBody.insertBefore(indicator, faqSection);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        // Function to add a message to the chat
+        function addMessage(content, isReceived = false) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            if (isReceived) {
+                messageElement.classList.add('received');
+                messageElement.innerHTML = content;
+            } else {
+                messageElement.textContent = content;
+            }
+            // Insert the message before the FAQ section so buttons stay at the bottom
+            chatBody.insertBefore(messageElement, faqSection);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const chatbotButton = document.getElementById('chatbot-button');
             const chatModal = document.getElementById('chat-modal');
             const closeModalButton = document.querySelector('.chat-modal-close');
-            const chatBody = document.querySelector('.chat-modal-body');
+            chatBody = document.querySelector('.chat-modal-body');
             const faqButtonsContainer = document.getElementById('faq-buttons');
-            const faqSection = document.getElementById('faq-section');
+            faqSection = document.getElementById('faq-section');
             const chatFooter = document.getElementById('chat-modal-footer');
-            const chatInput = document.getElementById('chat-input');
-            const sendBtn = document.getElementById('send-btn');
+            chatInput = document.getElementById('chat-input');
+            sendBtn = document.getElementById('send-btn');
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            let conversationEnded = false;
-            let currentMenu = 'main'; // 'main' or 'product-info'
-            let chatGreeted = false;
-
-            function showTypingIndicator() {
-                const indicator = document.createElement('div');
-                indicator.id = 'typing-indicator';
-                indicator.classList.add('message', 'received');
-                indicator.style.backgroundColor = '#f1f0f0';
-                indicator.style.boxShadow = '0px 1px 2px rgba(0,0,0,0.1)';
-                indicator.style.borderRadius = '18px';
-                indicator.style.padding = '10px 15px';
-                indicator.style.marginBottom = '5px';
-                indicator.style.maxWidth = '80%';
-                indicator.style.alignSelf = 'flex-start';
-                indicator.innerHTML = `
-                    <div class="typing-indicator">
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                    </div>
-                `;
-                chatBody.insertBefore(indicator, faqSection);
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }
-
-            function hideTypingIndicator() {
-                const indicator = document.getElementById('typing-indicator');
-                if (indicator) {
-                    indicator.remove();
-                }
-            }
-
-            // Function to add a message to the chat
-            function addMessage(content, isReceived = false) {
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message');
-                if (isReceived) {
-                    messageElement.classList.add('received');
-                    messageElement.innerHTML = content;
-                } else {
-                    messageElement.textContent = content;
-                }
-                // Insert the message before the FAQ section so buttons stay at the bottom
-                chatBody.insertBefore(messageElement, faqSection);
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }
 
             // Show AI chat input immediately
             function showAIChat() {
@@ -900,11 +944,12 @@
                                 `🛒 <b>${foundDealer.name}</b><br>` +
                                 `📞 ${foundDealer.phone}<br>` +
                                 `📍 ${foundDealer.address}<br>` +
-                                `🕒 Open: ${foundDealer.hours}`,
+                                `🕒 Open: ${foundDealer.hours}` +
+                                '<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>',
                                 true
                             );
                         } else {
-                            addMessage('🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads.<br><br>Type “Menu” para bumalik sa main options o subukang i-type muli ang iyong katanungan.', true);
+                            addMessage('🤔 Uy, hindi ko masyadong na-gets \'yan, Ka-Leads.<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>', true);
                         }
                         chatInput.disabled = false;
                         sendBtn.disabled = false;
@@ -949,12 +994,12 @@
                     ];
                     // Category number to info mapping
                     const productCategoryResponses = {
-                        '1': "Hybrid Rice Seeds 🌾<br><br>TBA",
-                        '2': "Insecticides 🐛<br><br><b>Brofreya 20 SC</b>: A systemic insecticide that controls insect pests in rice and vegetable crops.<br><b>Pleo 10 EC</b>: A contact and stomach insecticide with novel chemical structure for the control of insect pests of cabbage and tobacco.<br><b>Rimon 10 EC</b>: An insect growth regulator, which acts as chitin inhibitor, thereby causing abnormal endocuticular deposition and abortive molting.<br><b>Aztron WDG</b>: A biological insecticide intended for the control of worms (insect larvae).<br><b>Benefit 20 SC</b>: A systemic insecticide that controls insect pests in rice and vegetable crops.<br><b>Starkle 20 SG</b>: An organic fungicide that targets black sigatoka on vegetable crops.<br><b>Lancer Gold 55 WG</b>: An organic fungicide that targets black sigatoka on vegetable crops.",
-                        '3': "Herbicides 🌿<br><br><b>Frontier 200 OD</b>: A post-emergent herbicide that targets weeds in rice plant to avoid crop-weed competition.<br><b>Frontier MAX</b>: A herbicide with the mixed efficiency of Frontier 200 OD and Leads Exit.<br><b>Mower 48 SL</b>: A post-emergent general foliar weed killer that controls the growth of weeds in various crops<br><b>Agil 100 EC</b>: This herbicide can avoid the growth of weeds in onions<br><b>Mower Ultra 514 SL</b>: A post-emergent general foliar weed killer that controls the growth of weeds in Glyphosate-tolerant corn<br><b>Top Ace 80 SC</b>: A systemic herbicide with Diuron that targets weeds<br><b>Top Ace MAX</b>: A herbicide with the mixed efficiency of Top Ace 80 SC and Leads Exit.<br><b>Karmex Gold</b>: A highly systemic herbicide against weeds on various crops.<br><b>Ignite 15 SL</b>: Non-selective herbicide with Glufosinate Ammonium that targets weeds",
-                        '4': "Fungicides 🍄<br><br><b>STK Regev</b>: The first hybrid fungicide in the country: it has the joint efficacy of systemic fungicide and tea tree oil that controls diseases on crops.<br><b>Timorex Gold</b>: With its tea tree oil ingredient, Timorex Gold has the power to defend and heal planted vegetable crops against black sigatoka and other diseases<br><b>Domark Pro</b>: A systemic fungicide that targets anthracnose and stem-end rot in mango trees.<br><b>Manager 80 WP</b>: Its active ingredient, Mancozeb, helps in giving crops a long-lasting resistance against fungus. It also has zinc and manganese for added protection.<br><b>Armore 70 WP</b>: Being a systemic fungicide, Armor 70 WP seeps through the roots of the plant for longer effectivity.<br><b>Leadonil 500 SC</b>: A broad spectrum agricultural fungicide effective against a wide range of diseases in field, fruit and vegetable crops.",
-                        '5': "Fertilizers 💧<br><br><b>iSmart Ceres</b>: A biostimulant that helps in the growth of crops, while also avoiding transplanting shock and abiotic stress due to extreme heat, flooding, and drought.<br><b>iSmart Boom Flower-n</b>: iSmart Boom Flower Improves flower initiation, improves fruit retention and assimilation, and increases fruit size, weight and quality.<br><b>iSmart Nano Urea</b>: This fertilizer helps bring Nitrogen to the plant on a nano sized level that allows for better absorption with reduced chances of wash off.<br><b>Kawa 422</b>: Kawa 422 is an organic fertilizer that's a good alternative to chicken manure as it's more cost-effective to use, and more eco-friendly.<br><b>MegaBooster</b>: MegaBooster is a water soluble foliar fertilizer that meets the high nutrient requirements of your crops during fruit development and ripening.<br><b>Tecamin Max</b>: A foliar biostimulant with amino acids that enhances qualities of vegetables by fighting abiotic stress",
-                        '6': "Molluscicides 🐌<br><br><b>Niclos M Plus</b>: As a molluscicide, Niclos M Plus contains Niclosamide in wettable power formulation."
+                        '1': 'Hybrid Rice Seeds 🌾<br><br>TBA<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>',
+                        '2': 'Insecticides 🐛<br><br><b>Brofreya 20 SC</b>: A systemic insecticide that controls insect pests in rice and vegetable crops.<br><b>Pleo 10 EC</b>: A contact and stomach insecticide with novel chemical structure for the control of insect pests of cabbage and tobacco.<br><b>Rimon 10 EC</b>: An insect growth regulator, which acts as chitin inhibitor, thereby causing abnormal endocuticular deposition and abortive molting.<br><b>Aztron WDG</b>: A biological insecticide intended for the control of worms (insect larvae).<br><b>Benefit 20 SC</b>: A systemic insecticide that controls insect pests in rice and vegetable crops.<br><b>Starkle 20 SG</b>: An organic fungicide that targets black sigatoka on vegetable crops.<br><b>Lancer Gold 55 WG</b>: An organic fungicide that targets black sigatoka on vegetable crops.<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>',
+                        '3': 'Herbicides 🌿<br><br><b>Frontier 200 OD</b>: A post-emergent herbicide that targets weeds in rice plant to avoid crop-weed competition.<br><b>Frontier MAX</b>: A herbicide with the mixed efficiency of Frontier 200 OD and Leads Exit.<br><b>Mower 48 SL</b>: A post-emergent general foliar weed killer that controls the growth of weeds in various crops<br><b>Agil 100 EC</b>: This herbicide can avoid the growth of weeds in onions<br><b>Mower Ultra 514 SL</b>: A post-emergent general foliar weed killer that controls the growth of weeds in Glyphosate-tolerant corn<br><b>Top Ace 80 SC</b>: A systemic herbicide with Diuron that targets weeds<br><b>Top Ace MAX</b>: A herbicide with the mixed efficiency of Top Ace 80 SC and Leads Exit.<br><b>Karmex Gold</b>: A highly systemic herbicide against weeds on various crops.<br><b>Ignite 15 SL</b>: Non-selective herbicide with Glufosinate Ammonium that targets weeds<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>',
+                        '4': 'Fungicides 🍄<br><br><b>STK Regev</b>: The first hybrid fungicide in the country: it has the joint efficacy of systemic fungicide and tea tree oil that controls diseases on crops.<br><b>Timorex Gold</b>: With its tea tree oil ingredient, Timorex Gold has the power to defend and heal planted vegetable crops against black sigatoka and other diseases<br><b>Domark Pro</b>: A systemic fungicide that targets anthracnose and stem-end rot in mango trees.<br><b>Manager 80 WP</b>: Its active ingredient, Mancozeb, helps in giving crops a long-lasting resistance against fungus. It also has zinc and manganese for added protection.<br><b>Armore 70 WP</b>: Being a systemic fungicide, Armor 70 WP seeps through the roots of the plant for longer effectivity.<br><b>Leadonil 500 SC</b>: A broad spectrum agricultural fungicide effective against a wide range of diseases in field, fruit and vegetable crops.<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>',
+                        '5': 'Fertilizers 💧<br><br><b>iSmart Ceres</b>: A biostimulant that helps in the growth of crops, while also avoiding transplanting shock and abiotic stress due to extreme heat, flooding, and drought.<br><b>iSmart Boom Flower-n</b>: iSmart Boom Flower Improves flower initiation, improves fruit retention and assimilation, and increases fruit size, weight and quality.<br><b>iSmart Nano Urea</b>: This fertilizer helps bring Nitrogen to the plant on a nano sized level that allows for better absorption with reduced chances of wash off.<br><b>Kawa 422</b>: Kawa 422 is an organic fertilizer that\'s a good alternative to chicken manure as it\'s more cost-effective to use, and more eco-friendly.<br><b>MegaBooster</b>: MegaBooster is a water soluble foliar fertilizer that meets the high nutrient requirements of your crops during fruit development and ripening.<br><b>Tecamin Max</b>: A foliar biostimulant with amino acids that enhances qualities of vegetables by fighting abiotic stress<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>',
+                        '6': 'Molluscicides 🐌<br><br><b>Niclos M Plus</b>: As a molluscicide, Niclos M Plus contains Niclosamide in wettable power formulation.<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>'
                     };
                     // Try to match product name (case-insensitive, partial match)
                     const userMsgLower = userMsg.toLowerCase();
@@ -1014,7 +1059,8 @@
                                 '✅ 14–30 DAT: Insecticide like <b>Starkle 20SG</b><br>' +
                                 '✅ 30–45 DAT: Start fungicide like <b>Fuji One</b><br>' +
                                 '✅ 45–60 DAT: Follow up with <b>Galileo</b><br><br>' +
-                                '⏱️ Reminder: Stick to your schedule para consistent ang protection!'
+                                '⏱️ Reminder: Stick to your schedule para consistent ang protection!' +
+                                '<br><br>Type “MENU” para bumalik sa main options o subukang i-type muli ang iyong katanungan.'
                                 , true);
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
@@ -1080,7 +1126,7 @@
                     chatInput.disabled = false;
                     sendBtn.disabled = false;
                     chatInput.focus();
-                    addMessage('Sorry, there was an error connecting to the chat service. Please try again later.', true);
+                    addMessage('🤔 Uy, hindi ko masyadong na-gets \'yan, Ka-Leads.', true);
                 });
             });
 
@@ -1114,6 +1160,24 @@
             closeModalButton.onclick = function() {
                 chatModal.classList.remove('active');
                 chatbotButton.classList.remove('active');
+                
+                // Reset conversation state
+                conversationEnded = false;
+                currentMenu = 'main';
+                chatGreeted = false;
+                
+                // Clear chat messages
+                chatBody.innerHTML = '';
+                
+                // Re-add FAQ section
+                const newFaqSection = document.createElement('div');
+                newFaqSection.className = 'faq-section';
+                newFaqSection.id = 'faq-section';
+                newFaqSection.innerHTML = '<div class="faq-buttons" id="faq-buttons"></div>';
+                chatBody.appendChild(newFaqSection);
+                
+                // Reset FAQ section reference
+                faqSection = newFaqSection;
             };
         });
     </script>
