@@ -495,7 +495,7 @@ export default {
                     src: '/images/companyimg1.png',
                 },
                 {
-                    src: '/images/companyimg2.png',
+                    src: '/images/about_us_last_img.png',
                 },
             ],
             phoneLengthMap: {
