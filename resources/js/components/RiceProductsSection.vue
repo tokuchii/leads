@@ -286,7 +286,7 @@ export default {
                     src: '/images/Molluscicide.png',
                     bg: 'bg-[#36819C]',
                     imgClass: 'w-16 h-14',
-                    type: 'MOLLUSCIDE',
+                    type: 'MOLLUSCICIDE',
                 },
             ],
             products: [],
