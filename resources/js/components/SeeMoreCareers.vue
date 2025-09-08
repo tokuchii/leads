@@ -37,21 +37,21 @@
                 </p>
                 <!-- Careers Cards Grid -->
                 <div class="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-                    <div
-                        v-for="job in jobs"
-                        :key="job.id"
-                        class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[400px] shadow-lg"
-                    >
+                    <div v-for="job in jobs" :key="job.id"
+                        class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[400px] shadow-lg">
                         <div>
                             <div class="text-white text-based mb-1">{{ job.employment_type }}</div>
                             <div class="text-white text-2xl font-bold mb-2">{{ job.position }}</div>
-                            <div class="text-white text-based mb-1">{{ job.details }}</div>
+                            <div class="text-white text-based mb-1">Subsidiary: {{ job.details }}</div>
                             <div class="text-white text-based">Location: {{ job.location }}</div>
+                            <div class="text-white text-based font-semibold mb-1 pt-4">Job Description:</div>
+                            <p class="text-white text-[13px] mb-4">
+                                {{ job.job_description }}
+                            </p>
                         </div>
                         <button
                             class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-1 rounded text-lg shadow-md w-full"
-                            @click="$emit('apply', job)"
-                        >
+                            @click="$emit('apply', job)">
                             APPLY NOW
                         </button>
                     </div>

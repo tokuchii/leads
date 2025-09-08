@@ -33,11 +33,15 @@
                         <div>
                             <div class="text-based mb-2">{{ job.employment_type }}</div>
                             <div class="text-2xl font-bold mb-2">{{ job.position }}</div>
-                            <div class="text-based mb-2">{{ job.details }}</div>
+                            <div class="text-based mb-2">Subsidiary:  {{ job.details }}</div>
                             <div class="text-based mb-4">Location: {{ job.location }}</div>
-                            <div class="text-based font-semibold mb-1">Job Description:</div>
-                            <ul class="text-xs mb-4 list-disc pl-5 space-y-1">
-                                <li v-for="(word, index) in job.job_description.split(' ')" :key="index">
+                            <div class="text-based font-semibold mb-1 pt-4">Job Description:</div>
+                            <p class="text-[13px] mb-4">
+                                {{ job.job_description }}
+                            </p>
+                            <div class="text-based font-semibold mb-1 pt-4">Qualifications:</div>
+                            <ul class="text-[13px] mb-4 list-disc pl-5 space-y-1">
+                                <li v-for="(word, index) in job.qualifications.split(':')" :key="index">
                                     {{ word }}
                                 </li>
                             </ul>
