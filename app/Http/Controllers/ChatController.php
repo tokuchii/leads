@@ -252,12 +252,12 @@ CONTEXT;
                 return response()->json(['error' => 'Message is required'], 400);
             }
             // Improved system prompt to enforce context usage
-            $systemPrompt = "You are Pandoy, a LeadsAgri Bot, an AI assistant for LeadsAgri Venture.\n\nIf CONTEXT is provided, you must answer ONLY using the information in CONTEXT and information that you know about the CONTEXT.\nIf the answer is not found in CONTEXT, reply with: \n'🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads. Please contact LeadsAgri for more details.'\n\nIf the user's question asks for a list, or there are multiple relevant items in CONTEXT, always list ALL relevant items, not just one.\n\nBe professional, friendly, and concise in your responses.\n";
+            $systemPrompt = "You are Pandoy, a LeadsAgri Bot, an AI assistant for LeadsAgri Venture.\n\nIf CONTEXT is provided, you must answer ONLY in Tagalog and using the information in CONTEXT and information that you know about the CONTEXT.\nIf the answer is not found in CONTEXT, reply with: \n'🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads. Please contact LeadsAgri for more details.'\n\nIf the user's question asks for a list, or there are multiple relevant items in CONTEXT, always list ALL relevant items, not just one.\n\nBe professional, friendly, and concise in your responses.\n";
             if (!empty($context)) {
                 $systemPrompt .= "\n\nCONTEXT:\n" . $context;
             }
             $requestData = [
-                'model' => 'mistral-medium',
+                'model' => 'mistral-small-latest',
                 'messages' => [
                     ['role' => 'system', 'content' => $systemPrompt],
                     ['role' => 'user', 'content' => $userMessage]

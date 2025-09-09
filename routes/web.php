@@ -10,6 +10,7 @@ Route::post('/career-application', [InquiryCareerController::class, 'store'])->n
 Route::post('/chat', [ChatController::class, 'chat'])->name('chat');
 Route::get('/faq', [ChatController::class, 'getFAQ'])->name('faq');
 Route::get('/chat-test', [ChatController::class, 'test'])->name('chat.test');
+Route::post('/chat-test-fallback', [ChatController::class, 'testFallback'])->name('chat.test.fallback');
 
 Route::get('/{any}', function () {
     return view('welcome');
