@@ -54,7 +54,7 @@ class InquiryCareerController extends Controller
             // Send email
             try {
                 Mail::send([], [], function ($message) use ($validated) {
-                    $message->to('jhonalfietorzar0987@gmail.com')
+                    $message->to('careers@leadsagri.com')
                         ->subject('New Career Application from ' . $validated['full_name'])
                         ->html(
                             '<div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
