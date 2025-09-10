@@ -862,7 +862,7 @@
                         showTypingIndicator();
                         setTimeout(() => {
                             hideTypingIndicator();
-                            addMessage('Technical Support👨‍🌾<br><br>Anong klaseng assistance ang kailangan mo, Ka-LEADS?<br><br>1. Paggamit ng produkto  <br>2. Peste o sakit sa palay  <br>3. Schedule ng abono o spray  <br><br>I-type lang ang concern mo (hal. “Anong solusyon sa brown planthopper?” or “Kailan i-spray ang Frontier?”) at tutulungan ka ng aming customer service support sa iyong concern!', true);
+                            addMessage('Technical Support👨‍🌾<br><br>Anong klaseng assistance ang kailangan mo, Ka-LEADS?<br><br>1️⃣ Paggamit ng produkto <br>2️⃣ Peste o sakit sa palay  <br>3️⃣ Schedule ng abono o spray  <br><br>I-type lang ang concern mo (hal. “Anong solusyon sa brown planthopper?” or “Kailan i-spray ang Frontier?”) at tutulungan ka ng aming customer service support sa iyong concern!', true);
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
                             chatInput.focus();
@@ -874,7 +874,7 @@
                         showTypingIndicator();
                         setTimeout(() => {
                             hideTypingIndicator(); 
-                            addMessage('Talk to a Ka-Leads Expert☎️ <br><br>📞 Gusto mo bang makausap ang isang Leads Agri Technician o Sales Officer? <br>Pakisend lang ang: <br>✅ Pangalan mo <br>✅ Lokasyon mo <br>✅ Concern or tanong <br><br>I-coconnect kita agad, Ka-LEADS!', true);
+                            addMessage('Talk to a Ka-Leads Expert☎️ <br><br>📞 Gusto mo bang makausap ang isang Leads Agri Technician o Sales Officer? <br>Pakisend lang ang: <br>✅ Pangalan mo <br>✅ Lokasyon mo <br>✅ Concern or tanong <br><br>I-coconnect kita agad, Ka-LEADS! <br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>', true);
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
                             chatInput.focus();
@@ -882,8 +882,6 @@
                         return;
                     }
                 }
-
-                // Find a Dealer removed
 
                 // Product info logic
                 if (currentMenu === 'product-info') {
