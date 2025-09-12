@@ -164,7 +164,7 @@
 
                 </div>
             </div>
-            <div v-else-if="!showLearnMore && !showCareers && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts" key="main" class="main-container">
+            <div v-else-if="!showLearnMore && !showCareers && !showContactUs && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts" key="main" class="main-container">
                 <HeroSection />
 
                 <AboutSection @show-learn-more="handleShowLearnMore" />
@@ -313,6 +313,10 @@
                             {{ isSubmitting ? 'SUBMITTING...' : 'SUBMIT' }}
                         </button>
                     </form>
+                    <!-- Add this below the button -->
+                    <div class="mt-4">
+                        <DirectorySection @show-contact-us="handleShowContactUs" />
+                    </div>
                 </ContactSection>
                 <CareersSection @show-careers="handleShowCareers" />
             </div>
@@ -371,6 +375,9 @@
             <div v-else-if="showFeaturedNews" key="featurednews" class="main-container">
                 <FeaturedNews @show-news-article="handleShowNewsArticle" @close="handleCloseFeaturedNews" />
             </div>
+            <div v-else-if="showContactUs" key="contactus" class="main-container">
+                <ContactUs @show-news-article="handleShowContactUs" @close="handleCloseFeaturedNews" />
+            </div>
         </transition>
         <!-- Footer -->
         <footer class="bg-[#006633] py-4 w-full flex flex-col items-center justify-center">
@@ -398,6 +405,8 @@ import MangoProductsSection from './components/MangoProductsSection.vue';
 import VegetableProductsSection from './components/VegetableProductsSection.vue';
 import SugarcaneProductsSection from './components/SugarcaneProductsSection.vue';
 import OthercropProductsSection from './components/OthercropProductsSection.vue';
+import DirectorySection from './components/DirectorySection.vue';
+import ContactUs from './components/ContactUs.vue';
 export default {
     name: 'App',
     components: {
@@ -415,11 +424,14 @@ export default {
         VegetableProductsSection,
         SugarcaneProductsSection,
         OthercropProductsSection,
+        DirectorySection,
+        ContactUs,
     },
     data() {
         return {
             showLearnMore: false,
             showCareers: false,
+            showContactUs: false,
             showFeaturedNews: false,
             showRiceProducts: false,
             showMangoProducts: false,
@@ -1220,6 +1232,7 @@ export default {
     this.selectedNewsArticle = null;
     this.showLearnMore = false;
     this.showCareers = false;
+    this.showContactUs = false;
     this.showFeaturedNews = false;
     this.showRiceProducts = false;
     this.showMangoProducts = false;
@@ -1323,6 +1336,13 @@ export default {
         },
         handleCloseCareers() {
             this.showCareers = false;
+        },
+        handleShowContactUs() {
+            this.showContactUs = true;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        handleCloseContactUs() {
+            this.showContactUs = false;
         },
         handleShowFeaturedNews() {
             this.showFeaturedNews = true;
@@ -1434,6 +1454,7 @@ export default {
             this.showFeaturedNews = true;
             this.showLearnMore = false;
             this.showCareers = false;
+            this.showContactUs = false;
             this.showRiceProducts = false;
             this.showMangoProducts = false;
             this.showVegetableProducts = false;
@@ -1534,6 +1555,7 @@ export default {
             // Close all current product sections first
             this.showLearnMore = false;
             this.showCareers = false;
+            this.showContactUs = false;
             this.showFeaturedNews = false;
             this.showRiceProducts = false;
             this.showMangoProducts = false;
@@ -1577,6 +1599,7 @@ export default {
         $route() {
             this.showLearnMore = false;
             this.showCareers = false;
+            this.showContactUs = false;
             this.showFeaturedNews = false;
             this.showRiceProducts = false;
             this.showMangoProducts = false;

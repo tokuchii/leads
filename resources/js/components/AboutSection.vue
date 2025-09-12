@@ -31,4 +31,4 @@
 export default {
     name: 'AboutSection',
 };
-</script> 
+</script>
