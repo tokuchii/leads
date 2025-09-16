@@ -50,59 +50,68 @@
                         class="w-full max-w-6xl flex flex-col md:flex-row justify-center gap-5 items-stretch px-6 md:px-0">
                         <!-- Left: Job Cards -->
                         <div class="flex flex-col gap-6 w-full md:w-1/2">
-                            <div v-for="job in jobs" :key="job.id"
-                                class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[400px] shadow-lg">
-                                <div>
-                                    <div class="text-white text-based mb-1">{{ job.employment_type }}</div>
-                                    <div class="text-white text-2xl font-bold mb-2">{{ job.position }}</div>
-                                    <div class="text-white text-based mb-1">Subsidiary: {{ job.details }}</div>
-                                    <div class="text-white text-based">Location: {{ job.location }}</div>
-                                    <div class="text-white text-based font-semibold mb-1 pt-4">Job Description:</div>
-                                    <p class="text-white text-[13px] mb-4">
-                                        {{ job.job_description }}
-                                    </p>
+                            <BubbleLoader v-if="loadingJobs" />
+                            <template v-else>
+                                <div v-for="job in jobs" :key="job.id"
+                                    class="bg-[#003D1F] rounded-4xl p-6 flex flex-col justify-between min-h-[350px] shadow-lg">
+                                    <div>
+                                        <div class="text-white text-xs sm:text-sm md:text-base mb-1">{{
+                                            job.employment_type }}</div>
+                                        <div class="text-white text-lg sm:text-xl md:text-2xl font-bold mb-2">{{
+                                            job.position }}</div>
+                                        <div class="text-white text-xs sm:text-sm md:text-base mb-1">Subsidiary: {{
+                                            job.details }}</div>
+                                        <div class="text-white text-xs sm:text-sm md:text-base">Location: {{
+                                            job.location }}</div>
+                                        <div class="text-white text-xs sm:text-sm md:text-base font-semibold mb-1 pt-4">
+                                            Job Description:</div>
+                                        <p class="text-white text-[12px] sm:text-[13px] md:text-[13px] mb-4">{{
+                                            job.job_description }}</p>
+                                    </div>
+                                    <button
+                                        class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-1 sm:py-2 rounded text-base sm:text-lg md:text-lg shadow-md w-full"
+                                        @click="openApplication(job)">
+                                        APPLY NOW
+                                    </button>
                                 </div>
-                                <button
-                                    class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-1 rounded text-lg shadow-md w-full"
-                                    @click="openApplication(job)">
-                                    APPLY NOW
-                                </button>
-                            </div>
-                            <!-- See More Careers Link -->
-                            <div v-if="allJobs.length > 2" class="text-center mt-4">
-                                <a href="#" @click.prevent="showAllCareers"
-                                    class="text-[#006D36] hover:text-[#004E27] font-semibold text-lg underline transition-colors duration-200">
-                                    See More Careers
-                                </a>
-                            </div>
+
+                                <div v-if="allJobs.length > 2" class="text-center mt-4">
+                                    <a href="#" @click.prevent="showAllCareers"
+                                        class="text-[#006D36] hover:text-[#004E27] font-semibold text-sm sm:text-lg underline transition-colors duration-200">
+                                        See More Careers
+                                    </a>
+                                </div>
+                            </template>
                         </div>
                         <!-- Right: Application Form -->
                         <div
-                            class="w-full md:w-1/2 bg-white rounded-4xl shadow-2xl p-8 flex flex-col gap-4 min-w-[320px] max-w-lg mx-auto">
-                            <h3 class="text-2xl font-bold text-[#006D36] text-center mb-2">JOIN OUR TEAM</h3>
+                            class="w-full md:w-1/2 bg-white rounded-4xl shadow-2xl p-4 sm:p-6 md:p-8 flex flex-col gap-4 min-w-[280px] max-w-lg mx-auto">
+                            <h3 class="text-xl sm:text-2xl md:text-2xl font-bold text-[#006D36] text-center mb-2">JOIN
+                                OUR TEAM</h3>
                             <form class="flex flex-col gap-3 flex-1" @submit.prevent="submitForm">
                                 <input type="text" placeholder="Your Name*" v-model="name" @input="filterLetters"
-                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
+                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200 text-sm sm:text-base"
                                     required />
                                 <input type="email" placeholder="Your Email*" v-model="email"
-                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
+                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200 text-sm sm:text-base"
                                     required />
                                 <input type="text" placeholder="Your Position*" v-model="position"
                                     @input="capitalizePositionFirstLetter"
-                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200"
+                                    class="rounded-full bg-[#F4F4F4] placeholder:italic px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none transition-all duration-200 text-sm sm:text-base"
                                     required />
-                                <textarea placeholder="Enter your message" rows="4" v-model="message"
+                                <textarea placeholder="Enter your message" rows="3" v-model="message"
                                     @input="capitalizeFirstLetter"
-                                    class="rounded-3xl bg-[#F4F4F4] placeholder:italic px-4 py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none flex-1 transition-all duration-200"
+                                    class="rounded-3xl bg-[#F4F4F4] placeholder:italic px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 focus:shadow-md focus:outline-none focus:ring-0 resize-none flex-1 text-sm sm:text-base transition-all duration-200"
                                     required></textarea>
                                 <div>
                                     <input id="resume-upload" type="file" class="hidden" @change="handleFileChange"
                                         accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                         required />
                                     <label for="resume-upload"
-                                        class="inline-block rounded-full bg-[#F4F4F4] px-4 py-1 mb-2 text-gray-400 italic font-medium cursor-pointer hover:shadow-md transition-all duration-200">
+                                        class="inline-block rounded-full bg-[#F4F4F4] px-3 sm:px-4 py-1 sm:py-1.5 mb-2 text-gray-400 italic text-sm sm:text-base font-medium cursor-pointer hover:shadow-md transition-all duration-200">
                                         Add File Here*
                                     </label>
+
                                     <span class="block text-xs text-gray-500 not-italic">(PDF or DOCX, Max 15 MB)</span>
                                     <p v-if="fileError" class="text-red-500 text-xs mb-6">{{ fileError }}</p>
                                     <div v-if="selectedFileName" class="flex items-center gap-2 mt-2">
@@ -111,28 +120,31 @@
                                             class="text-red-500 hover:text-red-700 transition-colors duration-200"
                                             title="Remove file">
                                             <!-- Trash/Remove Icon -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 ml-4 md:ml-8" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 ml-4 md:ml-8"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                             </svg>
                                         </button>
                                     </div>
                                 </div>
                                 <button type="submit" :disabled="loading"
-                                    class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-2 rounded-full text-lg shadow-md flex items-center justify-center">
-                                    <span v-if="loading" class="flex items-center"><svg
-                                            class="animate-spin h-5 w-5 mr-2 text-white"
+                                    class="mt-2 bg-green-700 hover:bg-green-800 text-white font-bold py-2 sm:py-2.5 px-4 sm:px-6 rounded-full text-sm sm:text-lg shadow-md flex items-center justify-center">
+                                    <span v-if="loading" class="flex items-center">
+                                        <svg class="animate-spin h-5 w-5 mr-2 text-white"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                                 stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z">
                                             </path>
-                                        </svg>Sending...</span>
+                                        </svg>
+                                        Sending...
+                                    </span>
                                     <span v-else>
                                         SUBMIT APPLICATION
                                     </span>
                                 </button>
+
                             </form>
                         </div>
                     </div>
@@ -145,12 +157,15 @@
 import SeeMoreCareers from './SeeMoreCareers.vue';
 import ApplicationFormCareers from './ApplicationFormCareers.vue';
 import ApplicationSuccess from './ApplicationSuccess.vue';
+import BubbleLoader from './BubbleLoader.vue';
+
 export default {
     name: 'JobCareers',
     components: {
         SeeMoreCareers,
         ApplicationFormCareers,
         ApplicationSuccess,
+        BubbleLoader,
     },
     data() {
         return {
@@ -167,6 +182,7 @@ export default {
             position: '',
             resumeFile: null,
             loading: false,
+            loadingJobs: true,
             fileError: '',
         };
     },
@@ -184,6 +200,8 @@ export default {
                 this.jobs = shuffled.slice(0, 2);
             } catch (error) {
                 console.error('Failed to fetch jobs:', error);
+            } finally {
+                this.loadingJobs = false;
             }
         },
         handleFileChange(event) {

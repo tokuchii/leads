@@ -12,7 +12,11 @@
                 <p class="text-gray-700 text-sm md:text-base mb-5 leading-relaxed">
                     <strong>Leads Agri</strong> has aimed to continuously give people opportunities to grow and expand their skills. We have paved the way for people to becoming the best versions of themselves.
                 </p>
-                <button type="submit" @click.prevent="$emit('show-careers')" class="bg-green-700 hover:bg-green-800 text-[#FFF8B9] font-bold py-3 px-6 rounded-lg transition-colors cursor-pointer">CHECK OUR CAREERS HERE</button>
+                <button type="submit" @click.prevent="$emit('show-careers')"
+    class="bg-green-700 hover:bg-green-800 text-[#FFF8B9] font-bold py-2 sm:py-3 px-4 sm:px-6 rounded-lg text-sm sm:text-base transition-colors cursor-pointer">
+    CHECK OUR CAREERS HERE
+</button>
+
             </div>
         </div>
     </section>

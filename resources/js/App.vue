@@ -159,8 +159,14 @@
                         <span class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors underline" @click="goToFeaturedNews">NEWS | ARTICLES</span>
                     </div>
                     <img :src="selectedNewsArticle.featured_image_url || '/public/images/newsimg.png'" class="w-full max-w-xs sm:max-w-md md:max-w-xl lg:max-w-3xl h-auto mb-8 object-center no-hover-effect" />
-                    <h1 class="text-white text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">{{ selectedNewsArticle.title }}</h1>
-                    <div class="prose prose-sm sm:prose md:prose-lg text-white mb-6 w-full max-w-full break-words" v-html="formattedSelectedArticleContent"></div>
+                   <h1 class="text-base md:text-4xl font-bold mb-6 text-center text-white ">
+  {{ selectedNewsArticle.title }}
+</h1>
+
+<div class="prose prose-sm md:prose-lg mb-6 w-full max-w-full break-words text-white"
+     v-html="formattedSelectedArticleContent">
+</div>
+
 
                 </div>
             </div>

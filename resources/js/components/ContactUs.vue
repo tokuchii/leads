@@ -1,19 +1,25 @@
 <template>
     <div>
-        <!-- Upper image/overlay/Contact Us section -->
-        <div class="job-careers relative w-full">
-            <div class="relative">
-                <img src="/public/images/jobimg.png" alt="Contact Us Background"
-                    class="career-image w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] object-cover object-top z-0">
-                <div class="absolute inset-0 bg-[#004E27] opacity-60 z-10"></div>
-                <div class="absolute inset-0 flex items-center justify-center z-20">
-                    <h1
-                        class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-center font-helvetica-heavy drop-shadow-lg">
-                        Contact Us
-                    </h1>
-                </div>
-            </div>
-        </div>
+<!-- Upper image/overlay/Contact Us section -->
+<div class="job-careers relative w-full">
+  <div class="relative">
+    <img 
+      src="/public/images/jobimg.png" 
+      alt="Contact Us Background"
+      class="w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] object-cover object-top z-0"
+    >
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-[#004E27] opacity-60 z-10"></div>
+    <!-- Centered text -->
+    <div class="absolute inset-0 flex items-center justify-center z-20 px-4">
+      <h1
+        class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center font-helvetica-heavy drop-shadow-lg">
+        Contact Us
+      </h1>
+    </div>
+  </div>
+</div>
+
 
         <!-- Distributor Directory Section -->
         <div class="flex flex-col md:flex-row mt-10 gap-6 px-4 md:px-8 pb-16">

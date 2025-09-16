@@ -1132,3 +1132,33 @@ button,
 a {
   cursor: pointer !important;
 }
+/* Default size */
+.news-learnmore-btn {
+  font-size: 14px; /* or whatever your default is */
+}
+
+/* Shrink only on small screens (mobile) */
+@media (max-width: 640px) {
+  .news-learnmore-btn {
+    font-size: 10px; /* smaller font on mobile */
+  }
+}
+/* Shrink distributor card text on small screens only */
+@media (max-width: 640px) {
+  /* Business name */
+  .md\:w-3\/4 h2 {
+    font-size: 1rem; /* smaller on mobile */
+  }
+
+  /* Contact name, number, and address */
+  .md\:w-3\/4 span,
+  .md\:w-3\/4 a,
+  .md\:w-3\/4 button {
+    font-size: 0.75rem; /* smaller text on mobile */
+  }
+
+  /* Area code at top-right */
+  .md\:w-3\/4 .absolute.top-3.right-3 {
+    font-size: 0.7rem;
+  }
+}
