@@ -6,23 +6,31 @@
         <div class="absolute inset-0 bg-white opacity-78 z-10"></div>
         <!-- Actual content -->
         <div class="relative z-20 w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 mt-20 sm:mt-24 lg:mt-30">
-            <div class="flex justify-center items-center text-green-700 font-bold text-2xl pb-12">
-                <h2>PRODUCTS FOR VEGETABLES</h2>
-            </div>
+ <div class="flex justify-center items-center text-green-700 font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl pb-12 text-center">
+    <h2>PRODUCTS FOR VEGETABLES</h2>
+</div>
+
             <!-- Tabs -->
             <div class="flex justify-center gap-2 md:gap-8 lg:gap-12 px-6" style="margin-bottom: -1px;">
                 <button v-for="tab in tabs" :key="tab.alt"
                     :class="[tab.bg, 'w-17 h-18 sm:w-18 lg:w-20 md:h-20 rounded-t-full flex justify-center items-center cursor-pointer', { '': activeTab === tab.alt }]"
                     @click="setActiveTab(tab.alt)">
-                    <img :class="tab.imgClass" :src="tab.src" :alt="tab.alt" />
+                    <img :class="[
+                        'object-contain transition-all duration-300',
+                        'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16'
+                    ]" :src="tab.src" :alt="tab.alt" />
                 </button>
             </div>
             <!-- Tab Content -->
             <div class="relative" :class="[activeTabBg, 'pt-6 rounded-4xl']" style="min-height: 480px;">
-                <div v-if="activeTab === 'Herbicide' || activeTab === 'Fungicide' || activeTab === 'Biostimulant' || activeTab === 'Insecticide'" class="flex justify-center items-center text-white font-helvetica-heavy text-center text-2xl md:text-3xl pb-4 px-2">
-                    <h2>{{ tabs.find(t => t.alt === activeTab).type }}</h2>
+                <div v-if="activeTab === 'Herbicide' || activeTab === 'Fungicide' || activeTab === 'Biostimulant' || activeTab === 'Insecticide'"
+                    class="flex justify-center items-center text-white font-helvetica-heavy text-center text-2xl md:text-3xl pb-4 px-2">
+                    <h2>{{tabs.find(t => t.alt === activeTab).type}}</h2>
                 </div>
                 <div class="bg-[#FFFFFF] rounded-4xl p-4 sm:p-8 lg:p-14 text-back shadow-xl" style="min-height: 600px;">
+
+                    <BubbleLoader v-if="loading" />
+
                     <!-- Herbicide Card Layout -->
                     <div v-if="activeTab === 'Herbicide' && vegetablesHerbicideProducts.length" class="space-y-8">
                         <div v-for="product in vegetablesHerbicideProducts" :key="product.id"
@@ -57,7 +65,8 @@
                                     <span class="font-bold">Target Weeds/Crops</span>
                                     <div class="flex gap-4">
                                         <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx" class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
+                                            :key="colIdx"
+                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
                                             <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
                                         </ul>
                                     </div>
@@ -99,7 +108,8 @@
                                     <span class="font-bold">Target Weeds/Crops</span>
                                     <div class="flex gap-4">
                                         <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 7)"
-                                            :key="colIdx" class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
+                                            :key="colIdx"
+                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
                                             <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
                                         </ul>
                                     </div>
@@ -141,7 +151,8 @@
                                     <span class="font-bold">Target Weeds/Crops</span>
                                     <div class="flex gap-4">
                                         <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx" class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
+                                            :key="colIdx"
+                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
                                             <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
                                         </ul>
                                     </div>
@@ -183,7 +194,8 @@
                                     <span class="font-bold">Target Weeds/Crops</span>
                                     <div class="flex gap-4">
                                         <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx" class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
+                                            :key="colIdx"
+                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
                                             <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
                                         </ul>
                                     </div>
@@ -199,9 +211,13 @@
 
 <script>
 import axios from 'axios';
+import BubbleLoader from './BubbleLoader.vue';
 
 export default {
     name: 'vegetablesProductsSection',
+    components: {
+        BubbleLoader,
+    },
     props: {
         activeTab: {
             type: String,
@@ -241,6 +257,7 @@ export default {
                 },
             ],
             products: [],
+            loading: true,
         };
     },
     computed: {
@@ -279,7 +296,9 @@ export default {
                 this.products = response.data;
             } catch (error) {
                 console.error('Failed to fetch products:', error);
-            }
+            }   finally {
+                this.loading = false;
+            }  
         },
         formatTargetWeeds(val) {
             if (Array.isArray(val)) return val;
@@ -307,11 +326,12 @@ export default {
 
 <style scoped>
 .vegetables-bg-img {
-  background-image: url('/images/vegetablesimg.png');
-  background-attachment: fixed; /* Keeps image fixed on scroll */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    background-image: url('/images/vegetablesimg.png');
+    background-attachment: fixed;
+    /* Keeps image fixed on scroll */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .vegetables-bg-outer {

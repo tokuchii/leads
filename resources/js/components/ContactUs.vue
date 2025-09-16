@@ -1,24 +1,21 @@
 <template>
     <div>
-<!-- Upper image/overlay/Contact Us section -->
-<div class="job-careers relative w-full">
-  <div class="relative">
-    <img 
-      src="/public/images/jobimg.png" 
-      alt="Contact Us Background"
-      class="w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] object-cover object-top z-0"
-    >
-    <!-- Dark overlay -->
-    <div class="absolute inset-0 bg-[#004E27] opacity-60 z-10"></div>
-    <!-- Centered text -->
-    <div class="absolute inset-0 flex items-center justify-center z-20 px-4">
-      <h1
-        class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center font-helvetica-heavy drop-shadow-lg">
-        Contact Us
-      </h1>
-    </div>
-  </div>
-</div>
+        <!-- Upper image/overlay/Contact Us section -->
+        <div class="job-careers relative w-full">
+            <div class="relative">
+                <img src="/public/images/jobimg.png" alt="Contact Us Background"
+                    class="w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] object-cover object-top z-0">
+                <!-- Dark overlay -->
+                <div class="absolute inset-0 bg-[#004E27] opacity-60 z-10"></div>
+                <!-- Centered text -->
+                <div class="absolute inset-0 flex items-center justify-center z-20 px-4">
+                    <h1
+                        class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center font-helvetica-heavy drop-shadow-lg">
+                        Contact Us
+                    </h1>
+                </div>
+            </div>
+        </div>
 
 
         <!-- Distributor Directory Section -->
@@ -52,13 +49,10 @@
             <!-- Distributor Cards (Scrollable) -->
             <div class="md:w-3/4 w-full">
 
-                <div v-if="loading" class="flex justify-center items-center py-20">
-                    <div class="flex space-x-2">
-                        <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce"></div>
-                        <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.2s]"></div>
-                        <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.4s]"></div>
-                    </div>
+                <div v-if="loading" class="flex justify-center items-center mt-12 h-64">
+                    <BubbleLoader />
                 </div>
+
 
                 <transition name="card-fade" mode="out-in">
                     <div key="distributors"
@@ -132,9 +126,11 @@
 
 <script>
 import axios from "axios";
+import BubbleLoader from "./BubbleLoader.vue";
 
 export default {
     name: "ContactUs",
+    components: { BubbleLoader },
     data() {
         return {
             activeRegion: null, // which region is expanded

@@ -63,27 +63,23 @@
                          class="absolute left-1/2 -translate-x-1/2 bottom-[-16px] sm:bottom-[-24px] md:bottom-[-32px] w-full max-w-[200px] lg:max-w-[350px] xl:max-w-[350px] h-auto object-contain pointer-events-none z-20" />
                 </div>
             </div>
-<div v-else class="w-full flex justify-center items-center py-8">
-  <div class="flex space-x-2">
-    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce"></div>
-    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.2s]"></div>
-    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.4s]"></div>
-  </div>
-</div>
-
+            <BubbleLoader v-else-if="loading" />
         </div>
     </div>
 </template>
 <script>
 import axios from 'axios';
+import BubbleLoader from './BubbleLoader.vue';
 
 export default {
     name: 'FeaturedNews',
+    components: { BubbleLoader },
     data() {
         return {
             newsList: [],
             screenWidth: window.innerWidth,
             pollInterval: null,
+            loading: true,
         };
     },
     computed: {
@@ -114,6 +110,8 @@ export default {
                 this.newsList = response.data;
             } catch (error) {
                 console.error('Failed to fetch news:', error);
+            } finally {
+                this.loading = false;
             }
         },
         handleResize() {
