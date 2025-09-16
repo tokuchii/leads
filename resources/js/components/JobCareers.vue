@@ -106,7 +106,7 @@
                                 <div>
                                     <input id="resume-upload" type="file" class="hidden" @change="handleFileChange"
                                         accept=".pdf,application/pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                        required />
+                                        />
                                     <label for="resume-upload"
                                         class="inline-block rounded-full bg-[#F4F4F4] px-3 sm:px-4 py-1 sm:py-1.5 mb-2 text-gray-400 italic text-sm sm:text-base font-medium cursor-pointer hover:shadow-md transition-all duration-200">
                                         Add File Here*
@@ -270,6 +270,11 @@ export default {
         },
         async submitForm() {
             if (this.loading) return;
+                if (!this.resumeFile) {
+             this.fileError = 'Please upload a file before submitting.';
+            return; 
+             }
+            this.fileError = '';
             this.loading = true;
             try {
                 // Guard: ensure file size is within limit

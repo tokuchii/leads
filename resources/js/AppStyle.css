@@ -1136,7 +1136,6 @@ a {
 .news-learnmore-btn {
   font-size: 14px; /* or whatever your default is */
 }
-
 /* Shrink only on small screens (mobile) */
 @media (max-width: 640px) {
   .news-learnmore-btn {
