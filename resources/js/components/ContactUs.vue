@@ -45,6 +45,15 @@
 
             <!-- Distributor Cards (Scrollable) -->
             <div class="md:w-3/4 w-full">
+
+                <div v-if="loading" class="flex justify-center items-center py-20">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce"></div>
+                        <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.2s]"></div>
+                        <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.4s]"></div>
+                    </div>
+                </div> 
+                
                 <transition name="card-fade" mode="out-in">
                     <div key="distributors"
                         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto pr-2">
@@ -75,19 +84,20 @@
                             </div>
 
                             <!-- Contact Number -->
-<div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
-  <!-- Phone Icon -->
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 !text-black shrink-0" fill="none"
-    viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-      d="M3 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm12 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM3 17a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2zm12 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-  </svg>
+                            <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                                <!-- Phone Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 !text-black shrink-0" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm12 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM3 17a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2zm12 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                </svg>
 
-  <!-- Number -->
-  <a :href="`tel:${item.contact_no}`" class="underline !text-black hover:!text-green-600 transition-colors">
-    {{ item.contact_no }}
-  </a>
-</div>
+                                <!-- Number -->
+                                <a :href="`tel:${item.contact_no}`"
+                                    class="underline !text-black hover:!text-green-600 transition-colors">
+                                    {{ item.contact_no }}
+                                </a>
+                            </div>
 
 
                             <!-- Address -->
@@ -123,7 +133,8 @@ export default {
         return {
             activeRegion: null, // which region is expanded
             selectedDistributors: [],
-            distributors: {}
+            distributors: {},
+            loading: true
         };
     },
     created() {
@@ -142,6 +153,8 @@ export default {
                 }
             } catch (error) {
                 console.error("Failed to fetch distributors:", error);
+            } finally {
+                this.loading = false;
             }
         },
         selectPlace(region, place, list) {
