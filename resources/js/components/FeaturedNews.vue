@@ -63,9 +63,14 @@
                          class="absolute left-1/2 -translate-x-1/2 bottom-[-16px] sm:bottom-[-24px] md:bottom-[-32px] w-full max-w-[200px] lg:max-w-[350px] xl:max-w-[350px] h-auto object-contain pointer-events-none z-20" />
                 </div>
             </div>
-            <div v-else class="w-full text-center text-gray-500 py-8">
-                <p>No news found.</p>
-            </div>
+<div v-else class="w-full flex justify-center items-center py-8">
+  <div class="flex space-x-2">
+    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce"></div>
+    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.2s]"></div>
+    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.4s]"></div>
+  </div>
+</div>
+
         </div>
     </div>
 </template>

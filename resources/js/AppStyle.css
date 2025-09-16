@@ -1128,3 +1128,7 @@ button {
     transition: none !important;
     box-shadow: 0 8px 40px 0 rgba(0,0,0,0.32), 0 3px 12px 0 rgba(0,0,0,0.25);
 }
+button,
+a {
+  cursor: pointer !important;
+}

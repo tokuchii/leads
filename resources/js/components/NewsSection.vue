@@ -4,6 +4,16 @@
         <div class="container mx-auto px-12 mt-22">
             <h2 class="text-3xl sm:text-5xl md:text-5xl lg:text-5xl font-extrabold mb-20 text-center text-[#2E7D32]"
                 style="letter-spacing: 2px;">FEATURED NEWS</h2>
+
+     <!-- Loader while fetching -->
+            <div v-if="loading" class="flex justify-center items-center py-16">
+                <div class="flex space-x-2">
+                    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce"></div>
+                    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.2s]"></div>
+                    <div class="w-3 h-3 bg-green-600 rounded-full animate-bounce [animation-delay:-0.4s]"></div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 <div v-for="news in newsList.slice(0, 3)" :key="news.id"
                     class="bg-[#2E7D32] rounded-2xl overflow-hidden shadow-lg flex flex-col h-full">
@@ -38,6 +48,7 @@ export default {
     data() {
         return {
             newsList: [],
+            loading: true,
             pollInterval: null,
         };
     },
@@ -53,6 +64,8 @@ export default {
                 this.newsList = response.data;
             } catch (error) {
                 console.error('Failed to fetch news:', error);
+            } finally {
+                this.loading = false;
             }
         },
         trimContent(content) {
