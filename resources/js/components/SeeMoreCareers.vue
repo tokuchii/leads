@@ -4,7 +4,7 @@
         <div class="job-careers relative w-full">
             <div class="relative">
                 <img src="/public/images/jobimg.png" alt="Career Background"
-                    class="career-image w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] object-cover object-top z-0">
+                    class="w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] 2xl:h-[400px] object-cover object-top z-0">
                 <div class="absolute inset-0 bg-[#004E27] opacity-55 z-10"></div>
                 <div class="absolute inset-0 flex items-center justify-center z-20">
                     <h1

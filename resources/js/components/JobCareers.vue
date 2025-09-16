@@ -7,21 +7,21 @@
         <template v-else>
             <!-- Upper image/overlay/CAREERS section -->
             <div class="job-careers relative w-full">
-                <div class="relative">
-                    <!-- Responsive image height (increased) -->
-                    <img src="/public/images/jobimg.png" alt="Career Background"
-                        class="career-image w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] object-cover object-top z-0">
-                    <!-- Dark green overlay with 55% opacity, z-10 -->
-                    <div class="absolute inset-0 bg-[#004E27] opacity-55 z-10"></div>
-                    <!-- Responsive centered CAREERS text, z-20 -->
-                    <div class="absolute inset-0 flex items-center justify-center z-20">
-                        <h1
-                            class="text-white text-4xl sm:text-4xl md:text-4xl lg:text-6xl xl:text-6xl leading-tight text-center font-helvetica-heavy">
-                            CAREERS
-                        </h1>
-                    </div>
-                </div>
-            </div>
+    <div class="relative">
+        <!-- Responsive image -->
+        <img src="/public/images/jobimg.png" alt="Career Background"
+             class="w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] 2xl:h-[400px] object-cover object-top z-0">
+        <!-- Dark green overlay with 55% opacity -->
+        <div class="absolute inset-0 bg-[#004E27] opacity-55 z-10"></div>
+        <!-- Centered CAREERS text -->
+        <div class="absolute inset-0 flex items-center justify-center z-20 px-4">
+            <h1 class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl leading-tight text-center font-helvetica-heavy">
+                CAREERS
+            </h1>
+        </div>
+    </div>
+</div>
+
             <!-- Main Content: show ApplicationSuccess if showSuccess, else show job cards and form -->
             <div class="w-full min-h-[500px] bg-white flex flex-col items-center py-16">
                 <template v-if="showSuccess">

@@ -2,49 +2,51 @@
     <div>
         <!-- Upper image/overlay/Contact Us section -->
         <div class="job-careers relative w-full">
-            <div class="relative">
-                <img src="/public/images/jobimg.png" alt="Contact Us Background"
-                    class="w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] object-cover object-top z-0">
-                <!-- Dark overlay -->
-                <div class="absolute inset-0 bg-[#004E27] opacity-60 z-10"></div>
-                <!-- Centered text -->
-                <div class="absolute inset-0 flex items-center justify-center z-20 px-4">
-                    <h1
-                        class="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl leading-tight text-center font-helvetica-heavy drop-shadow-lg">
-                        Contact Us
-                    </h1>
-                </div>
-            </div>
+    <div class="relative">
+        <img src="/public/images/jobimg.png" alt="Contact Us Background"
+            class="w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] 2xl:h-[400px] object-cover object-top z-0">
+        <!-- Dark overlay -->
+        <div class="absolute inset-0 bg-[#004E27] opacity-60 z-10"></div>
+        <!-- Centered text -->
+        <div class="absolute inset-0 flex items-center justify-center z-20 px-4">
+            <h1
+                class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl leading-tight text-center font-helvetica-heavy">
+                CONTACT US
+            </h1>
         </div>
+    </div>
+</div>
+
 
 
         <!-- Distributor Directory Section -->
         <div class="flex flex-col md:flex-row mt-10 gap-6 px-4 md:px-8 pb-16">
 
             <!-- Sidebar Regions -->
-            <div class="md:w-1/4 w-full bg-white rounded-xl shadow p-4 space-y-4">
-                <h2 class="text-lg font-bold text-gray-700 border-b pb-2">Directories</h2>
+<div class="md:w-1/4 w-full bg-white rounded-xl shadow p-4 space-y-4 min-h-[400px]">
+    <h2 class="text-lg font-bold text-gray-700 border-b pb-2">Directories</h2>
 
-                <div v-for="region in orderedRegions" :key="region">
-                    <!-- Region Button -->
-                    <button @click="toggleRegion(region)"
-                        class="w-full text-left bg-green-700 hover:bg-green-800 transition text-white p-3 rounded-lg font-medium">
-                        {{ region }}
+    <div v-for="region in orderedRegions" :key="region">
+        <!-- Region Button -->
+        <button @click="toggleRegion(region)"
+            class="w-full text-left bg-green-700 hover:bg-green-800 transition text-white p-3 rounded-lg font-medium">
+            {{ region }}
+        </button>
+
+        <!-- Subfolders (accordion style) -->
+        <transition name="expand">
+            <div v-show="activeRegion === region" class="ml-2 mt-3 space-y-2 overflow-hidden">
+                <div v-for="(list, place) in distributors[region]" :key="place">
+                    <button @click="selectPlace(region, place, list)"
+                        class="w-full text-left bg-green-100 hover:bg-green-200 transition p-2 rounded-md text-gray-700 font-medium">
+                        {{ place }}
                     </button>
-
-                    <!-- Subfolders (accordion style) -->
-                    <transition name="expand">
-                        <div v-show="activeRegion === region" class="ml-2 mt-3 space-y-2 overflow-hidden">
-                            <div v-for="(list, place) in distributors[region]" :key="place">
-                                <button @click="selectPlace(region, place, list)"
-                                    class="w-full text-left bg-green-100 hover:bg-green-200 transition p-2 rounded-md text-gray-700 font-medium">
-                                    {{ place }}
-                                </button>
-                            </div>
-                        </div>
-                    </transition>
                 </div>
             </div>
+        </transition>
+    </div>
+</div>
+
 
             <!-- Distributor Cards (Scrollable) -->
             <div class="md:w-3/4 w-full">
