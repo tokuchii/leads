@@ -2,50 +2,92 @@
     <div>
         <!-- Upper image/overlay/Contact Us section -->
         <div class="job-careers relative w-full">
-    <div class="relative">
-        <img src="/public/images/jobimg.png" alt="Contact Us Background"
-            class="w-full h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] 2xl:h-[400px] object-cover object-top z-0">
-        <!-- Dark overlay -->
-        <div class="absolute inset-0 bg-[#004E27] opacity-60 z-10"></div>
-        <!-- Centered text -->
-        <div class="absolute inset-0 flex items-center justify-center z-20 px-4">
-            <h1
-                class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-6xl leading-tight text-center font-helvetica-heavy">
-                CONTACT US
-            </h1>
+            <div class="relative">
+                <img src="/public/images/ricepaddy.png" alt="Contact Us Background"
+                    class="w-full h-[280px] sm:h-[320px] md:h-[380px] lg:h-[420px] xl:h-[560px] 2xl:h-[500px] object-cover object-top z-0">
+                <!-- Dark overlay -->
+                <div class="absolute inset-0 bg-[#004E27] opacity-60 z-10"></div>
+            </div>
         </div>
-    </div>
-</div>
+
+        <!-- Three Boxes Section -->
+        <div class="relative -mt-18 md:-mt-32 z-30">
+            <div class="container mx-auto px-2 md:px-6 lg:px-24 xl:px-56 grid grid-cols-3 gap-2 md:gap-6">
+
+                <!-- Box 1 with white top -->
+                <div class="rounded-4xl bg-white w-full h-34 sm:h-34 md:h-56 lg:h-60 pt-2 md:pt-3 shadow-lg">
+                    <div class="bg-green-700 text-white rounded-4xl shadow-lg p-0 md:p-6 px-2 py-2 text-center flex flex-col items-center justify-center
+                        w-full h-34 sm:h-34 md:h-56 lg:h-60">
+                        <!-- Phone image -->
+                        <div class="rounded-full flex items-center justify-center mb-2 md:mb-4">
+                            <img src="/public/images/phone-circle1.png" alt="Phone Icon" class="w-8 md:w-14 h-8 md:h-14">
+                        </div>
+                        <h3 class="font-bold text-[8px] md:text-lg mb-2">PANDOY HOTLINE</h3>
+                        <p class="text-[8px] md:text-sm font-semibold leading-relaxed">(+63)9 917 <i>PANDOY</i><br>(+63)9 917 726369
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- Box 2 -->
+                <div class="rounded-4xl bg-white h-34 sm:h-34 md:h-56 lg:h-60 pt-2 md:pt-3 shadow-lg">
+                    <div class="bg-green-700 text-white rounded-4xl shadow-lg p-0 md:p-6 px-2 py-2 text-center flex flex-col items-center justify-center
+                w-full h-34 sm:h-34 md:h-56 lg:h-60">
+                        <!-- Email image -->
+                        <div class="rounded-full flex items-center justify-center mb-2 md:mb-4">
+                            <img src="/public/images/email-circles-1.png" alt="Phone Icon" class="w-8 md:w-14 h-8 md:h-14">
+                        </div>
+                        <h3 class="font-bold text-[8px] md:text-lg mb-2">SEND US AN EMAIL</h3>
+                        <p class="text-[8px] md:text-sm font-semibold leading-relaxed">info@leadsagri.com</p>
+                    </div>
+                </div>
+
+                <!-- Box 3 -->
+                <div class="rounded-4xl bg-white h-34 sm:h-34 md:h-56 lg:h-60 pt-2 md:pt-3 shadow-lg">
+                    <div class="bg-green-700 text-white rounded-4xl shadow-lg p-0 md:p-6 px-2 py-2 text-center flex flex-col items-center justify-center
+                w-full h-34 sm:h-34 md:h-56 lg:h-60">
+                        <!-- Location image -->
+                        <div class="rounded-full flex items-center justify-center mb-2 md:mb-4">
+                            <img src="/public/images/location-pins-circles-1.png" alt="Phone Icon" class="w-8 md:w-14 h-8 md:h-14">
+                        </div>
+                        <h3 class="font-bold text-[8px] md:text-lg mb-2">ADDRESS</h3>
+                        <p class="text-[8px] md:text-sm font-semibold leading-relaxed">Coral Building,<br>Southwoods City, Biñan
+                            Laguna</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
 
         <!-- Distributor Directory Section -->
-        <div class="flex flex-col md:flex-row mt-10 gap-6 px-4 md:px-8 pb-16">
+        <div class="flex flex-col md:flex-row mt-10 gap-6 px-4 md:px-8 pb-16 pt-6 md:pt-12">
 
             <!-- Sidebar Regions -->
-<div class="md:w-1/4 w-full bg-white rounded-xl shadow p-4 space-y-4 min-h-[400px]">
-    <h2 class="text-lg font-bold text-gray-700 border-b pb-2">Directories</h2>
+            <div class="md:w-1/4 w-full bg-white rounded-xl shadow p-4 space-y-4 min-h-[400px]">
+                <h2 class="text-lg font-bold text-gray-700 border-b pb-2">Directories</h2>
 
-    <div v-for="region in orderedRegions" :key="region">
-        <!-- Region Button -->
-        <button @click="toggleRegion(region)"
-            class="w-full text-left bg-green-700 hover:bg-green-800 transition text-white p-3 rounded-lg font-medium">
-            {{ region }}
-        </button>
-
-        <!-- Subfolders (accordion style) -->
-        <transition name="expand">
-            <div v-show="activeRegion === region" class="ml-2 mt-3 space-y-2 overflow-hidden">
-                <div v-for="(list, place) in distributors[region]" :key="place">
-                    <button @click="selectPlace(region, place, list)"
-                        class="w-full text-left bg-green-100 hover:bg-green-200 transition p-2 rounded-md text-gray-700 font-medium">
-                        {{ place }}
+                <div v-for="region in orderedRegions" :key="region">
+                    <!-- Region Button -->
+                    <button @click="toggleRegion(region)"
+                        class="w-full text-left bg-green-700 hover:bg-green-800 transition text-white p-3 rounded-lg font-medium">
+                        {{ region }}
                     </button>
+
+                    <!-- Subfolders (accordion style) -->
+                    <transition name="expand">
+                        <div v-show="activeRegion === region" class="ml-2 mt-3 space-y-2 overflow-hidden">
+                            <div v-for="(list, place) in distributors[region]" :key="place">
+                                <button @click="selectPlace(region, place, list)"
+                                    class="w-full text-left bg-green-100 hover:bg-green-200 transition p-2 rounded-md text-gray-700 font-medium">
+                                    {{ place }}
+                                </button>
+                            </div>
+                        </div>
+                    </transition>
                 </div>
             </div>
-        </transition>
-    </div>
-</div>
 
 
             <!-- Distributor Cards (Scrollable) -->
@@ -147,7 +189,7 @@ export default {
     methods: {
         async fetchDistributors() {
             try {
-                const response = await axios.get("http://127.0.0.1:8000/api/distributors");
+                const response = await axios.get("https://admin.leadsagri.site/api/distributors");
                 this.distributors = response.data;
 
                 // Default: Luzon expanded and its distributors loaded
