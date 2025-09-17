@@ -18,6 +18,8 @@
     },
     "dependencies": {
         "ionicons": "^8.0.13",
+        "simplebar": "^6.3.2",
+        "simplebar-vue": "^2.4.2",
         "sweetalert2": "^11.22.0",
         "vue-router": "^4.5.1"
     }
