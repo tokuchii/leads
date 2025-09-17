@@ -11,52 +11,51 @@
         </div>
 
         <!-- Three Boxes Section -->
-        <div class="relative -mt-18 md:-mt-32 z-30">
-            <div class="container mx-auto px-2 md:px-6 lg:px-24 xl:px-56 grid grid-cols-3 gap-2 md:gap-6">
+<div class="relative -mt-18 md:-mt-32 z-30">
+  <div class="container mx-auto px-2 md:px-6 lg:px-24 xl:px-56 grid grid-cols-3 gap-1 sm:gap-2 md:gap-6">
 
-                <!-- Box 1 with white top -->
-                <div class="rounded-4xl bg-white w-full h-34 sm:h-34 md:h-56 lg:h-60 pt-2 md:pt-3 shadow-lg">
-                    <div class="bg-green-700 text-white rounded-4xl shadow-lg p-0 md:p-6 px-2 py-2 text-center flex flex-col items-center justify-center
-                        w-full h-34 sm:h-34 md:h-56 lg:h-60">
-                        <!-- Phone image -->
-                        <div class="rounded-full flex items-center justify-center mb-2 md:mb-4">
-                            <img src="/public/images/phone-circle1.png" alt="Phone Icon" class="w-8 md:w-14 h-8 md:h-14">
-                        </div>
-                        <h3 class="font-bold text-[8px] md:text-lg mb-2">PANDOY HOTLINE</h3>
-                        <p class="text-[8px] md:text-sm font-semibold leading-relaxed">(+63)9 917 <i>PANDOY</i><br>(+63)9 917 726369
-                        </p>
-                    </div>
-                </div>
-
-
-                <!-- Box 2 -->
-                <div class="rounded-4xl bg-white h-34 sm:h-34 md:h-56 lg:h-60 pt-2 md:pt-3 shadow-lg">
-                    <div class="bg-green-700 text-white rounded-4xl shadow-lg p-0 md:p-6 px-2 py-2 text-center flex flex-col items-center justify-center
-                w-full h-34 sm:h-34 md:h-56 lg:h-60">
-                        <!-- Email image -->
-                        <div class="rounded-full flex items-center justify-center mb-2 md:mb-4">
-                            <img src="/public/images/email-circles-1.png" alt="Phone Icon" class="w-8 md:w-14 h-8 md:h-14">
-                        </div>
-                        <h3 class="font-bold text-[8px] md:text-lg mb-2">SEND US AN EMAIL</h3>
-                        <p class="text-[8px] md:text-sm font-semibold leading-relaxed">info@leadsagri.com</p>
-                    </div>
-                </div>
-
-                <!-- Box 3 -->
-                <div class="rounded-4xl bg-white h-34 sm:h-34 md:h-56 lg:h-60 pt-2 md:pt-3 shadow-lg">
-                    <div class="bg-green-700 text-white rounded-4xl shadow-lg p-0 md:p-6 px-2 py-2 text-center flex flex-col items-center justify-center
-                w-full h-34 sm:h-34 md:h-56 lg:h-60">
-                        <!-- Location image -->
-                        <div class="rounded-full flex items-center justify-center mb-2 md:mb-4">
-                            <img src="/public/images/location-pins-circles-1.png" alt="Phone Icon" class="w-8 md:w-14 h-8 md:h-14">
-                        </div>
-                        <h3 class="font-bold text-[8px] md:text-lg mb-2">ADDRESS</h3>
-                        <p class="text-[8px] md:text-sm font-semibold leading-relaxed">Coral Building,<br>Southwoods City, Biñan
-                            Laguna</p>
-                    </div>
-                </div>
-            </div>
+    <!-- Box 1 with white top -->
+    <div class="rounded-4xl bg-white w-full h-24 sm:h-34 md:h-56 lg:h-60 pt-1 md:pt-3 shadow-lg">
+      <div class="bg-green-700 text-white rounded-4xl shadow-lg p-1 md:p-6 text-center flex flex-col items-center justify-center
+                  w-full h-24 sm:h-34 md:h-56 lg:h-60">
+        <!-- Phone image -->
+        <div class="rounded-full flex items-center justify-center mb-1 md:mb-4">
+          <img src="/public/images/phone-circle1.png" alt="Phone Icon" class="w-5 sm:w-8 md:w-14 h-5 sm:h-8 md:h-14">
         </div>
+        <h3 class="font-bold text-[5px] sm:text-[8px] md:text-lg mb-1 md:mb-2">PANDOY HOTLINE</h3>
+        <p class="text-[5px] sm:text-[8px] md:text-sm font-semibold leading-relaxed">(+63)9 917 <i>PANDOY</i><br>(+63)9 917 726369</p>
+      </div>
+    </div>
+
+    <!-- Box 2 -->
+    <div class="rounded-4xl bg-white h-24 sm:h-34 md:h-56 lg:h-60 pt-1 md:pt-3 shadow-lg">
+      <div class="bg-green-700 text-white rounded-4xl shadow-lg p-1 md:p-6 text-center flex flex-col items-center justify-center
+                  w-full h-24 sm:h-34 md:h-56 lg:h-60">
+        <!-- Email image -->
+        <div class="rounded-full flex items-center justify-center mb-1 md:mb-4">
+          <img src="/public/images/email-circles-1.png" alt="Email Icon" class="w-5 sm:w-8 md:w-14 h-5 sm:h-8 md:h-14">
+        </div>
+        <h3 class="font-bold text-[5px] sm:text-[8px] md:text-lg mb-1 md:mb-2">SEND US AN EMAIL</h3>
+        <p class="text-[5px] sm:text-[8px] md:text-sm font-semibold leading-relaxed">info@leadsagri.com</p>
+      </div>
+    </div>
+
+    <!-- Box 3 -->
+    <div class="rounded-4xl bg-white h-24 sm:h-34 md:h-56 lg:h-60 pt-1 md:pt-3 shadow-lg">
+      <div class="bg-green-700 text-white rounded-4xl shadow-lg p-1 md:p-6 text-center flex flex-col items-center justify-center
+                  w-full h-24 sm:h-34 md:h-56 lg:h-60">
+        <!-- Location image -->
+        <div class="rounded-full flex items-center justify-center mb-1 md:mb-4">
+          <img src="/public/images/location-pins-circles-1.png" alt="Location Icon" class="w-5 sm:w-8 md:w-14 h-5 sm:h-8 md:h-14">
+        </div>
+        <h3 class="font-bold text-[5px] sm:text-[8px] md:text-lg mb-1 md:mb-2">ADDRESS</h3>
+        <p class="text-[5px] sm:text-[8px] md:text-sm font-semibold leading-relaxed">Coral Building,<br>Southwoods City, Biñan Laguna</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
 
 

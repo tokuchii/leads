@@ -9,26 +9,30 @@
             <div class="flex justify-center items-center text-green-700 font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl pb-12 text-center">
                 <h2>PRODUCTS FOR OTHER CROPS</h2>
             </div>
-            <!-- Tabs -->
-            <div class="flex justify-center gap-2 md:gap-8 lg:gap-12 px-6" style="margin-bottom: -1px;">
-                <button v-for="tab in tabs" :key="tab.alt"
-                    :class="[tab.bg, 'w-17 h-18 sm:w-18 lg:w-20 md:h-20 rounded-t-full flex justify-center items-center cursor-pointer', { '': activeTab === tab.alt }]"
-                    @click="setActiveTab(tab.alt)">
+             <!-- Tabs Container -->
+            <div class="flex justify-center gap-1 px-1 sm:gap-2 sm:px-2 md:gap-8 lg:gap-12 overflow-x-auto">
+                <button v-for="tab in tabs" :key="tab.alt" :class="[tab.bg,
+                    'flex-shrink-0 w-12 sm:w-14 md:w-18 lg:w-20 h-14 sm:h-18 md:h-20 rounded-t-full flex justify-center items-center cursor-pointer',
+                { '': activeTab === tab.alt }]" @click="setActiveTab(tab.alt)">
                     <img :class="[
                         'object-contain transition-all duration-300',
-                        'w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16'
+                        'w-6 sm:w-10 md:w-14 lg:w-16 h-6 sm:h-10 md:h-14 lg:h-16'
                     ]" :src="tab.src" :alt="tab.alt" />
                 </button>
             </div>
+
             <!-- Tab Content -->
-            <div class="relative" :class="[activeTabBg, 'pt-6 rounded-4xl']" style="min-height: 480px;">
-                <div v-if="activeTab === 'Herbicide' || activeTab === 'Fungicide' || activeTab === 'Insecticide'"
-                    class="flex justify-center items-center text-white font-helvetica-heavy text-center text-2xl md:text-3xl pb-4 px-2">
+            <div class="relative -mt-1" :class="[activeTabBg, 'pt-6 sm:pt-8 rounded-4xl']" style="min-height: 580px;">
+                <div v-if="['Herbicide', 'Fungicide', 'Biostimulant', 'Insecticide', 'Molluscicide'].includes(activeTab)"
+                    class="flex justify-center items-center text-white font-helvetica-heavy text-center text-sm sm:text-lg md:text-2xl pb-3 sm:pb-4 px-2">
                     <h2>{{tabs.find(t => t.alt === activeTab).type}}</h2>
                 </div>
-                <div class="bg-[#FFFFFF] rounded-4xl p-4 sm:p-8 lg:p-14 text-back shadow-xl" style="min-height: 600px;">
+                <div class="bg-[#FFFFFF] rounded-4xl p-2 sm:p-6 lg:p-14 text-back shadow-xl" style="min-height: 640px;">
 
                         <BubbleLoader v-if="loading" />
+
+         <div v-for="product in othercropsHerbicideProducts" :key="product.id"
+                        class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
 
                     <!-- Herbicide Card Layout -->
                     <div v-if="activeTab === 'Herbicide' && othercropsHerbicideProducts.length" class="space-y-8">
@@ -163,6 +167,7 @@
             </div>
         </div>
     </div>
+    </div>  
 </template>
 
 <script>
@@ -286,5 +291,33 @@ export default {
 .font-helvetica-heavy {
     font-family: 'Helvetica Neue LT Std', sans-serif;
     font-weight: 800;
+}
+
+/* Inside <style scoped> */
+@media (max-width: 360px) {
+    .product-card {
+        padding: 0.75rem !important;
+        /* reduce inner spacing */
+    }
+
+    .product-card img {
+        max-height: 120px !important;
+        /* shrink images */
+    }
+
+    .product-card .text-3xl {
+        font-size: 1.25rem !important;
+        /* shrink title */
+    }
+
+    .product-card p {
+        font-size: 0.75rem !important;
+        /* shrink description text */
+    }
+
+    .product-card ul {
+        font-size: 0.75rem !important;
+        /* shrink bullet text */
+    }
 }
 </style>
