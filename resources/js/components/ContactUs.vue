@@ -116,8 +116,6 @@
 
                                 <!-- Top Section -->
                                 <div class="mb-4">
-                                    <span class="absolute top-3 right-3 text-gray-400 italic text-sm">{{ item.area
-                                    }}</span>
                                     <div class="flex items-center mb-3">
                                         <h2 class="font-bold text-lg text-green-700">{{ item.business_name }}</h2>
                                     </div>
