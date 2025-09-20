@@ -700,6 +700,29 @@
             }, 400);
         }
 
+        // Function to go to contacts (global scope)
+        function goToContacts() {
+            // Close the chat modal
+            const chatModal = document.getElementById('chat-modal');
+            const chatbotButton = document.getElementById('chatbot-button');
+            chatModal.classList.remove('active');
+            chatbotButton.classList.remove('active');
+            
+            // Use the global scrollToSection function
+            if (window.scrollToSection) {
+                window.scrollToSection('contact');
+            } else {
+                // Fallback: scroll to contacts section directly
+                const contactsSection = document.getElementById('contact');
+                if (contactsSection) {
+                    contactsSection.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // If no contacts section found, scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }
+
         function showTypingIndicator() {
             const indicator = document.createElement('div');
             indicator.id = 'typing-indicator';
@@ -874,7 +897,11 @@
                         showTypingIndicator();
                         setTimeout(() => {
                             hideTypingIndicator(); 
-                            addMessage('Talk to a Ka-Leads Expert☎️ <br><br>📞 Gusto mo bang makausap ang isang Leads Agri Technician o Sales Officer? <br>Pakisend lang ang: <br>✅ Pangalan mo <br>✅ Lokasyon mo <br>✅ Concern or tanong <br><br>I-coconnect kita agad, Ka-LEADS! <br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>', true);
+                            addMessage('Talk to a Ka-Leads Expert☎️ <br><br>📞 Gusto mo bang makausap ang isang Leads Agri Technician o Sales Officer? <br>Pakisend lang ang: <br>✅ Pangalan mo <br>✅ Lokasyon mo <br>✅ Concern or tanong <br><br>I-coconnect kita agad, Ka-LEADS! <br><br><button class="main-menu-btn" onclick="goToContacts()">Go to Contacts</button>', true);
+                            // Add separate message for menu options
+                            setTimeout(() => {
+                                addMessage('Type "MENU" o pindutin ang MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>', true);
+                            }, 100);
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
                             chatInput.focus();

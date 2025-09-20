@@ -7,6 +7,7 @@ import News from '../components/NewsSection.vue'
 import Careers from '../components/CareersSection.vue'
 import JobCareers from '../components/JobCareers.vue'
 import FeaturedNews from '../components/FeaturedNews.vue'
+import ContactSection from '../components/ContactSection.vue'
 
 const routes = [
     {
@@ -48,6 +49,11 @@ const routes = [
         path: '/featured-news',
         name: 'featured-news',
         component: FeaturedNews
+    },
+    {
+        path: '/contact',
+        name: 'contact',
+        component: ContactSection
     }
 ]
 

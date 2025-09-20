@@ -11,3 +11,6 @@ window.scrollToSection = function(section) {
     app._instance.proxy.scrollToSection(section);
   }
 };
+
+// Make the Vue app instance globally accessible for the chatbot
+window.vueApp = app;
