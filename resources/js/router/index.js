@@ -54,7 +54,7 @@ const routes = [
         path: '/contact',
         name: 'contact',
         component: ContactSection
-    }
+    },
 ]
 
 const router = createRouter({

@@ -12,30 +12,36 @@
                 <!-- Search Container -->
                 <div id="search-container" class="search-container">
                     <div class="relative w-full">
-                        <input type="text" id="desktop-search" name="desktop-search" class="search-input" placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="handleSearchInput" @focus="showSearchResults = true">
-                        <button id="close-search" name="close-search" class="text-[#2E7D32] hover:text-[#1B5E20] transition-colors">
+                        <input type="text" id="desktop-search" name="desktop-search" class="search-input"
+                            placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="handleSearchInput"
+                            @focus="showSearchResults = true">
+                        <button id="close-search" name="close-search"
+                            class="text-[#2E7D32] hover:text-[#1B5E20] transition-colors">
                             <i class="fas fa-times"></i>
                         </button>
 
                         <!-- Search Results Dropdown -->
-                        <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading || (searchQuery.trim() && filteredSearchResults.length === 0))" class="search-results-dropdown">
+                        <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading || (searchQuery.trim() && filteredSearchResults.length === 0))"
+                            class="search-results-dropdown">
                             <div v-if="isSearchLoading" class="search-result-item">
                                 <div class="search-result-content">
                                     <span class="text-gray-500">Loading products...</span>
                                 </div>
                             </div>
-                            <div v-else-if="searchQuery.trim() && filteredSearchResults.length === 0" class="search-result-item">
+                            <div v-else-if="searchQuery.trim() && filteredSearchResults.length === 0"
+                                class="search-result-item">
                                 <div class="search-result-content">
                                     <span class="text-gray-500">No products found</span>
                                 </div>
                             </div>
                             <div v-else v-for="(result, index) in filteredSearchResults" :key="index"
-                                 class="search-result-item"
-                                 @click="handleSearchResultClick(result)">
+                                class="search-result-item" @click="handleSearchResultClick(result)">
                                 <div class="search-result-content">
-                                    <span class="search-result-category" v-html="highlightText(result.category, searchQuery)"></span>
+                                    <span class="search-result-category"
+                                        v-html="highlightText(result.category, searchQuery)"></span>
                                     <span class="search-result-separator">/</span>
-                                    <span class="search-result-type" v-html="highlightText(result.type, searchQuery)"></span>
+                                    <span class="search-result-type"
+                                        v-html="highlightText(result.type, searchQuery)"></span>
                                 </div>
                                 <div class="search-result-count">{{ result.count }} products</div>
                             </div>
@@ -47,9 +53,12 @@
                 <div class="desktop-nav items-center justify-between">
                     <div class="flex items-center justify-center w-full">
                         <!-- Navigation Links -->
-                        <div id="nav-items" class="flex items-center space-x-[500px] sm:space-x-[30px] md:space-x-[55px] lg:space-x-[80px] xl:space-x-[120px]">
-                            <span id="search-icon" class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base cursor-pointer">
-                                <i class="fas fa-search text-[#2E7D32] text-sm md:text-sm lg:text-base"style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);"></i>
+                        <div id="nav-items"
+                            class="flex items-center space-x-[500px] sm:space-x-[30px] md:space-x-[55px] lg:space-x-[80px] xl:space-x-[120px]">
+                            <span id="search-icon"
+                                class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base cursor-pointer">
+                                <i class="fas fa-search text-[#2E7D32] text-sm md:text-sm lg:text-base"
+                                    style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);"></i>
                             </span>
                             <a href="#about" @click.prevent="scrollToSection('about')"
                                 :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'about' }]"
@@ -59,7 +68,8 @@
                                 style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">PRODUCTS</a>
                             <a href="#home" @click.prevent="scrollToSection('home')"
                                 :class="['nav-link transition flex items-center', { 'active-link': activeSection === 'home' }]">
-                                <img src="/public/images/logo-green.png" alt="LeadsAgri Logo" class="h-10 w-auto md:h-8 lg:h-10" style="color: #1B5E20;" />
+                                <img src="/public/images/logo-green.png" alt="LeadsAgri Logo"
+                                    class="h-10 w-auto md:h-8 lg:h-10" style="color: #1B5E20;" />
                             </a>
                             <a href="#news" @click.prevent="scrollToSection('news')"
                                 :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'news' }]"
@@ -67,9 +77,12 @@
                             <a href="#careers" @click.prevent="scrollToSection('careers')"
                                 :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base ', { 'active-link': activeSection === 'careers' }]"
                                 style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">CAREERS</a>
-                            <span class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition" @click.prevent="scrollToSection('contact')"
-                                :class="{ 'active-link': activeSection === 'contact' }"style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">
-                                <i class="fas fa-phone text-[#2E7D32] text-sm md:text-sm lg:text-base cursor-pointer"></i>
+                            <span class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition"
+                                @click.prevent="scrollToSection('contact')"
+                                :class="{ 'active-link': activeSection === 'contact' }"
+                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">
+                                <i
+                                    class="fas fa-phone text-[#2E7D32] text-sm md:text-sm lg:text-base cursor-pointer"></i>
                             </span>
                         </div>
                     </div>
@@ -79,8 +92,9 @@
                 <div class="mobile-nav">
                     <div class="flex items-center justify-between">
                         <a href="#home" @click.prevent="scrollToSection('home')"
-                           class="transition cursor-pointer hover:opacity-80 flex items-center shrink-0">
-                            <img src="/public/images/logo-green.png" alt="LeadsAgri Logo" class="h-10 w-auto md:h-12 lg:h-14" style="color: #2E7D32;" />
+                            class="transition cursor-pointer hover:opacity-80 flex items-center shrink-0">
+                            <img src="/public/images/logo-green.png" alt="LeadsAgri Logo"
+                                class="h-10 w-auto md:h-12 lg:h-14" style="color: #2E7D32;" />
                         </a>
                         <button id="mobile-menu-button" class="text-[#2E7D32] focus:outline-none ml-2">
                             <i class="fas fa-bars text-xl md:text-xl lg:text-2xl"></i>
@@ -105,30 +119,36 @@
                                 <i class="fas fa-search text-lg text-[#2E7D32]"></i>
                             </span>
 
-                                <!-- Search Input -->
-                                <div id="mobile-search-container" class="hidden w-[101%]">
+                            <!-- Search Input -->
+                            <div id="mobile-search-container" class="hidden w-[101%]">
                                 <div class="relative">
-                                    <input type="text" id="mobile-search" name="mobile-search" class="w-full border-b-2 border-[#2E7D32] rounded-none text-[#2E7D32] placeholder-[#2E7D32] focus:outline-none bg-transparent" placeholder="Search..." autocomplete="off" v-model="searchQuery" @input="handleSearchInput" @focus="showSearchResults = true">
+                                    <input type="text" id="mobile-search" name="mobile-search"
+                                        class="w-full border-b-2 border-[#2E7D32] rounded-none text-[#2E7D32] placeholder-[#2E7D32] focus:outline-none bg-transparent"
+                                        placeholder="Search..." autocomplete="off" v-model="searchQuery"
+                                        @input="handleSearchInput" @focus="showSearchResults = true">
 
-                                                                        <!-- Mobile Search Results Dropdown -->
-                                    <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading || (searchQuery.trim() && filteredSearchResults.length === 0))" class="mobile-search-results-dropdown">
+                                    <!-- Mobile Search Results Dropdown -->
+                                    <div v-if="showSearchResults && (filteredSearchResults.length > 0 || isSearchLoading || (searchQuery.trim() && filteredSearchResults.length === 0))"
+                                        class="mobile-search-results-dropdown">
                                         <div v-if="isSearchLoading" class="search-result-item">
                                             <div class="search-result-content">
                                                 <span class="text-gray-500">Loading products...</span>
                                             </div>
                                         </div>
-                                        <div v-else-if="searchQuery.trim() && filteredSearchResults.length === 0" class="search-result-item">
+                                        <div v-else-if="searchQuery.trim() && filteredSearchResults.length === 0"
+                                            class="search-result-item">
                                             <div class="search-result-content">
                                                 <span class="text-gray-500">No products found</span>
                                             </div>
                                         </div>
                                         <div v-else v-for="(result, index) in filteredSearchResults" :key="index"
-                                             class="search-result-item"
-                                             @click="handleSearchResultClick(result)">
+                                            class="search-result-item" @click="handleSearchResultClick(result)">
                                             <div class="search-result-content">
-                                                <span class="search-result-category" v-html="highlightText(result.category, searchQuery)"></span>
+                                                <span class="search-result-category"
+                                                    v-html="highlightText(result.category, searchQuery)"></span>
                                                 <span class="search-result-separator">/</span>
-                                                <span class="search-result-type" v-html="highlightText(result.type, searchQuery)"></span>
+                                                <span class="search-result-type"
+                                                    v-html="highlightText(result.type, searchQuery)"></span>
                                             </div>
                                             <div class="search-result-count">{{ result.count }} products</div>
                                         </div>
@@ -144,100 +164,83 @@
                     </div>
                 </div>
                 <div class="mobile-menu-links">
-                    <a href="#about" @click.prevent="scrollToSection('about')" class="nav-link text-[#2E7D32] font-bold mobile-menu-link text-sm md:text-sm lg:text-lg">ABOUT US</a>
-                    <a href="#products" @click.prevent="scrollToSection('products')" class="nav-link text-[#2E7D32] font-bold mobile-menu-link text-sm md:text-sm lg:text-lg">PRODUCTS</a>
-                    <a href="#news" @click.prevent="scrollToSection('news')" class="nav-link text-[#2E7D32] font-bold mobile-menu-link text-sm md:text-sm lg:text-lg">NEWS</a>
-                    <a href="#careers" @click.prevent="scrollToSection('careers')" class="nav-link text-[#2E7D32] font-bold mobile-menu-link text-sm md:text-sm lg:text-lg">CAREERS</a>
+                    <a href="#about" @click.prevent="scrollToSection('about')"
+                        class="nav-link text-[#2E7D32] font-bold mobile-menu-link text-sm md:text-sm lg:text-lg">ABOUT
+                        US</a>
+                    <a href="#products" @click.prevent="scrollToSection('products')"
+                        class="nav-link text-[#2E7D32] font-bold mobile-menu-link text-sm md:text-sm lg:text-lg">PRODUCTS</a>
+                    <a href="#news" @click.prevent="scrollToSection('news')"
+                        class="nav-link text-[#2E7D32] font-bold mobile-menu-link text-sm md:text-sm lg:text-lg">NEWS</a>
+                    <a href="#careers" @click.prevent="scrollToSection('careers')"
+                        class="nav-link text-[#2E7D32] font-bold mobile-menu-link text-sm md:text-sm lg:text-lg">CAREERS</a>
                 </div>
             </div>
         </div>
 
         <transition name="fade" mode="out-in">
             <div v-if="selectedNewsArticle" key="newsarticle" class="main-container">
-                <div class="news-article flex flex-col items-center justify-center bg-[#006D36] px-4 md:px-8 lg:px-16 py-8 shadow-lg max-w-full lg:max-w-7xl mx-auto mt-30 mb-10">
+                <div
+                    class="news-article flex flex-col items-center justify-center bg-[#006D36] px-4 md:px-8 lg:px-16 py-8 shadow-lg max-w-full lg:max-w-7xl mx-auto mt-30 mb-10">
                     <div class="w-full flex flex-col items-start mb-4">
-                        <span class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors underline" @click="goToFeaturedNews">NEWS | ARTICLES</span>
+                        <span
+                            class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors underline"
+                            @click="goToFeaturedNews">NEWS | ARTICLES</span>
                     </div>
-                    <img :src="selectedNewsArticle.featured_image_url || '/public/images/newsimg.png'" class="w-full max-w-xs sm:max-w-md md:max-w-xl lg:max-w-3xl h-auto mb-8 object-center no-hover-effect" />
-                   <h1 class="text-base md:text-4xl font-bold mb-6 text-center text-white ">
-  {{ selectedNewsArticle.title }}
-</h1>
+                    <img :src="selectedNewsArticle.featured_image_url || '/public/images/newsimg.png'"
+                        class="w-full max-w-xs sm:max-w-md md:max-w-xl lg:max-w-3xl h-auto mb-8 object-center no-hover-effect" />
+                    <h1 class="text-base md:text-4xl font-bold mb-6 text-center text-white ">
+                        {{ selectedNewsArticle.title }}
+                    </h1>
 
-<div class="prose prose-sm md:prose-lg mb-6 w-full max-w-full break-words text-white"
-     v-html="formattedSelectedArticleContent">
-</div>
+                    <div class="prose prose-sm md:prose-lg mb-6 w-full max-w-full break-words text-white"
+                        v-html="formattedSelectedArticleContent">
+                    </div>
 
 
                 </div>
             </div>
-            <div v-else-if="!showLearnMore && !showCareers && !showContactUs && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts" key="main" class="main-container">
+            <div v-else-if="!showLearnMore && !showCareers && !showContactUs && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts"
+                key="main" class="main-container">
                 <HeroSection />
 
                 <AboutSection @show-learn-more="handleShowLearnMore" />
-                <ProductsSection
-                    :hoveredProduct="hoveredProduct"
-                    :productIcons="productIcons"
-                    @hover="handleHoverProduct"
-                    @reset-hover="handleResetHover"
-                    @product-click="handleHoverProduct"
-                    @show-rice-products="handleShowRiceProducts"
-                    @show-mango-products="handleShowMangoProducts"
+                <ProductsSection :hoveredProduct="hoveredProduct" :productIcons="productIcons"
+                    @hover="handleHoverProduct" @reset-hover="handleResetHover" @product-click="handleHoverProduct"
+                    @show-rice-products="handleShowRiceProducts" @show-mango-products="handleShowMangoProducts"
                     @show-vegetable-products="handleShowVegetableProducts"
                     @show-sugarcane-products="handleShowSugarcaneProducts"
-                    @show-othercrop-products="handleOthercropProducts"
-                />
-                <NewsSection
-                @show-featured-news="handleShowFeaturedNews"
-                @show-news-article="handleShowNewsArticle"
-                />
+                    @show-othercrop-products="handleOthercropProducts" />
+                <NewsSection @show-featured-news="handleShowFeaturedNews" @show-news-article="handleShowNewsArticle" />
                 <ContactSection>
                     <!-- The contact form and logic remain in App.vue, so slot is used -->
                     <form class="flex flex-col gap-4" @submit.prevent="submitInquiry">
                         <div>
-                            <label
-                                for="full_name"
-                                class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
-                                >Full Name</label
-                            >
-                            <input
-                                type="text"
-                                inputmode="text"
-                                id="full_name"
-                                v-model="formData.full_name"
+                            <label for="full_name" class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2">Full
+                                Name</label>
+                            <input type="text" inputmode="text" id="full_name" v-model="formData.full_name"
                                 name="full_name"
                                 class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
-                                :class="{'border-red-500': errorMessage && errorMessage.includes('full_name')}"
-                                @input="handleFullNameInput"
-                                placeholder="e.g., Juan Dela Cruz"
-                                required
-                            />
-                            <p v-if="errorMessage && errorMessage.includes('full_name')" class="text-red-500 text-sm mt-1">
+                                :class="{ 'border-red-500': errorMessage && errorMessage.includes('full_name') }"
+                                @input="handleFullNameInput" placeholder="e.g., Juan Dela Cruz" required />
+                            <p v-if="errorMessage && errorMessage.includes('full_name')"
+                                class="text-red-500 text-sm mt-1">
                                 {{ errorMessage }}
                             </p>
                         </div>
                         <div>
-                            <label
-                                for="contact_number"
-                                class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
-                                >Contact Number</label
-                            >
+                            <label for="contact_number"
+                                class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2">Contact Number</label>
                             <div class="flex gap-2 relative">
                                 <div class="relative">
-                                    <button
-                                        type="button"
-                                        @click="toggleCountryDropdown"
+                                    <button type="button" @click="toggleCountryDropdown"
                                         class="custom-select bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 w-full text-left flex items-center justify-between"
-                                        :class="{'border-red-500': errorMessage && errorMessage.includes('country_code')}"
-                                        >
+                                        :class="{ 'border-red-500': errorMessage && errorMessage.includes('country_code') }">
                                         <span v-if="selectedCountry" class="flex items-center gap-2">
                                             <span>{{ selectedCountry.code }}</span>
                                             <span>({{ selectedCountry.iso2 }})</span>
-                                            <img
-                                            :src="`https://flagcdn.com/w20/${selectedCountry.iso2.toLowerCase()}.png`"
-                                            :alt="selectedCountry.name"
-                                            class="inline-block w-4 h-3"
-                                            style="vertical-align: middle;"
-                                            />
+                                            <img :src="`https://flagcdn.com/w20/${selectedCountry.iso2.toLowerCase()}.png`"
+                                                :alt="selectedCountry.name" class="inline-block w-4 h-3"
+                                                style="vertical-align: middle;" />
                                         </span>
                                         <span v-else>Select Country</span>
                                         <i class="text-gray-500 ml-2"></i>
@@ -245,77 +248,51 @@
 
                                     <!-- Country Dropdown -->
                                     <div v-if="showCountryDropdown"
-                                         class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                                        <div v-for="country in countries"
-                                             :key="country.code"
-                                             @click="selectCountry(country)"
-                                             class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center">
+                                        class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                        <div v-for="country in countries" :key="country.code"
+                                            @click="selectCountry(country)"
+                                            class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center">
                                             <span class="flex-1">{{ country.code }} ({{ country.iso2 }})</span>
                                             <img :src="`https://flagcdn.com/w20/${country.iso2.toLowerCase()}.png`"
-                                                 :alt="country.name"
-                                                 class="w-4 h-3 ml-2">
+                                                :alt="country.name" class="w-4 h-3 ml-2">
                                         </div>
                                     </div>
                                 </div>
-                                <input
-                                    type="tel"
-                                    id="contact_number"
-                                    v-model="formData.contact_number"
+                                <input type="tel" id="contact_number" v-model="formData.contact_number"
                                     name="contact_number"
                                     class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
-                                    :class="{'border-red-500': errorMessage && errorMessage.includes('contact_number')}"
+                                    :class="{ 'border-red-500': errorMessage && errorMessage.includes('contact_number') }"
                                     :maxlength="getPhoneLength(formData.country_code)"
-                                    :placeholder="`Enter ${getPhoneLength(formData.country_code)} digits`"
-                                    required
-                                    @input="formData.contact_number = formData.contact_number.replace(/[^0-9]/g, '')"
-                                />
-                                <p v-if="errorMessage && errorMessage.includes('contact_number')" class="text-red-500 text-sm mt-1">
+                                    :placeholder="`Enter ${getPhoneLength(formData.country_code)} digits`" required
+                                    @input="formData.contact_number = formData.contact_number.replace(/[^0-9]/g, '')" />
+                                <p v-if="errorMessage && errorMessage.includes('contact_number')"
+                                    class="text-red-500 text-sm mt-1">
                                     {{ errorMessage }}
                                 </p>
                             </div>
                         </div>
                         <div>
-                            <label
-                                for="email"
-                                class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
-                                >Email</label
-                            >
-                            <input
-                                type="email"
-                                id="email"
-                                v-model="formData.email"
-                                name="email"
+                            <label for="email"
+                                class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2">Email</label>
+                            <input type="email" id="email" v-model="formData.email" name="email"
                                 class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
-                                :class="{'border-red-500': errorMessage && errorMessage.includes('email')}"
-                                placeholder="e.g., name@example.com"
-                                required
-                            />
+                                :class="{ 'border-red-500': errorMessage && errorMessage.includes('email') }"
+                                placeholder="e.g., name@example.com" required />
                             <p v-if="errorMessage && errorMessage.includes('email')" class="text-red-500 text-sm mt-1">
                                 {{ errorMessage }}
                             </p>
                         </div>
                         <div>
-                            <label
-                                for="message"
-                                class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2"
-                                >Tell us more</label
-                            >
-                            <textarea
-                                id="message"
-                                v-model="formData.message"
-                                name="message"
-                                rows="7"
+                            <label for="message" class="block text-[#2E7D32] font-bold text-base md:text-lg mb-2">Tell
+                                us more</label>
+                            <textarea id="message" v-model="formData.message" name="message" rows="7"
                                 class="w-full bg-gray-100 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400 resize-none"
-                                :class="{'border-red-500': errorMessage && errorMessage.includes('message')}"
-                                @input="handleMessageInput"
-                                placeholder="Let us know how we can assist you"
-                            ></textarea>
+                                :class="{ 'border-red-500': errorMessage && errorMessage.includes('message') }"
+                                @input="handleMessageInput" placeholder="Let us know how we can assist you"></textarea>
                         </div>
-                        <button
-                            type="submit"
+                        <button type="submit"
                             class="bg-[#2E7D32] hover:bg-[#1B5E20] text-[#FFF8B9] font-bold py-3 px-8 rounded-lg transition-colors self-end mb-20 cursor-pointer"
-                            :disabled="isSubmitting"
-                        >
+                            :disabled="isSubmitting">
                             {{ isSubmitting ? 'SUBMITTING...' : 'SUBMIT' }}
                         </button>
                     </form>
@@ -327,53 +304,31 @@
                 <CareersSection @show-careers="handleShowCareers" />
             </div>
             <div v-else-if="showLearnMore" key="learnmore" class="main-container">
-                <LearnMoreSection
-                    :activeTab="activeTab"
-                    :carouselCurrentSlide="carouselCurrentSlide"
-                    :carouselImages="carouselImages"
-                    @close="handleCloseLearnMore"
-                    @update:activeTab="handleTabChange"
-                    @carousel-touch-start="handleCarouselTouchStart"
-                    @carousel-touch-move="handleCarouselTouchMove"
-                    @carousel-touch-end="handleCarouselTouchEnd"
-                    @carousel-prev="previousCarouselSlide"
-                    @carousel-next="nextCarouselSlide"
-                />
+                <LearnMoreSection :activeTab="activeTab" :carouselCurrentSlide="carouselCurrentSlide"
+                    :carouselImages="carouselImages" @close="handleCloseLearnMore" @update:activeTab="handleTabChange"
+                    @carousel-touch-start="handleCarouselTouchStart" @carousel-touch-move="handleCarouselTouchMove"
+                    @carousel-touch-end="handleCarouselTouchEnd" @carousel-prev="previousCarouselSlide"
+                    @carousel-next="nextCarouselSlide" />
             </div>
             <div v-else-if="showRiceProducts" key="riceproducts" class="main-container">
-                <RiceProductsSection
-                    :activeTab="riceActiveTab"
-                    @close="handleCloseRiceProducts"
-                    @update:activeTab="handleRiceTabChange"
-                />
+                <RiceProductsSection :activeTab="riceActiveTab" @close="handleCloseRiceProducts"
+                    @update:activeTab="handleRiceTabChange" />
             </div>
             <div v-else-if="showMangoProducts" key="mangoproducts" class="main-container">
-                <MangoProductsSection
-                    :activeTab="mangoActiveTab"
-                    @update:activeTab="handleMangoTabChange"
-                    @close="handleCloseMangoProducts"
-                />
+                <MangoProductsSection :activeTab="mangoActiveTab" @update:activeTab="handleMangoTabChange"
+                    @close="handleCloseMangoProducts" />
             </div>
             <div v-else-if="showVegetableProducts" key="vegetableproducts" class="main-container">
-                <VegetableProductsSection
-                    :activeTab="vegetableActiveTab"
-                    @update:activeTab="handleVegetableTabChange"
-                    @close="handleCloseVegetableProducts"
-                />
+                <VegetableProductsSection :activeTab="vegetableActiveTab" @update:activeTab="handleVegetableTabChange"
+                    @close="handleCloseVegetableProducts" />
             </div>
             <div v-else-if="showSugarcaneProducts" key="sugarcaneproducts" class="main-container">
-                <SugarcaneProductsSection
-                    :activeTab="sugarcaneActiveTab"
-                    @update:activeTab="handleSugarcaneTabChange"
-                    @close="handleCloseSugarcaneProducts"
-                />
+                <SugarcaneProductsSection :activeTab="sugarcaneActiveTab" @update:activeTab="handleSugarcaneTabChange"
+                    @close="handleCloseSugarcaneProducts" />
             </div>
             <div v-else-if="showOthercropProducts" key="othercropproducts" class="main-container">
-                <OthercropProductsSection
-                    :activeTab="othercropActiveTab"
-                    @update:activeTab="handleOthercropTabChange"
-                    @close="handleCloseOthercropProducts"
-                />
+                <OthercropProductsSection :activeTab="othercropActiveTab" @update:activeTab="handleOthercropTabChange"
+                    @close="handleCloseOthercropProducts" />
             </div>
             <div v-else-if="showCareers" key="careers" class="main-container">
                 <JobCareers @close="handleCloseCareers" />
@@ -387,10 +342,10 @@
         </transition>
         <!-- Footer -->
         <footer class="bg-[#006633] py-4 w-full flex flex-col items-center justify-center">
-          <img src="/public/images/logo-white.png" alt="LeadsAgri Logo" class="h-8 mb-4" />
-          <p class="text-white text-sm text-center">
-            Copyright © 2025 Leads Agricultural Products Corporation
-          </p>
+            <img src="/public/images/logo-white.png" alt="LeadsAgri Logo" class="h-8 mb-4" />
+            <p class="text-white text-sm text-center">
+                Copyright © 2025 Leads Agricultural Products Corporation
+            </p>
         </footer>
     </div>
 </template>
@@ -863,8 +818,8 @@ export default {
             } else if (mobileSearchInput) {
                 mobileSearchInput.value = '';
             }
-               // Clear search results when closing
-               if (isVisible) {
+            // Clear search results when closing
+            if (isVisible) {
                 self.showSearchResults = false;
                 self.searchQuery = '';
             }
@@ -997,7 +952,7 @@ export default {
                         if (entry.intersectionRatio > 0.2) {
                             this.activeSection = sectionId;
                         }
-                    // Slightly higher threshold for careers for more natural activation
+                        // Slightly higher threshold for careers for more natural activation
                     } else if (sectionId === 'careers') {
                         if (entry.intersectionRatio > 0.3) {
                             this.activeSection = sectionId;
@@ -1046,7 +1001,7 @@ export default {
                                 this.activeSection = sectionId;
                             }
                         }
-                    // Slightly higher threshold for careers
+                        // Slightly higher threshold for careers
                     } else if (sectionId === 'careers') {
                         if (rect.top <= viewportMiddle && rect.bottom >= viewportMiddle) {
                             if (visibility > 0.3) {
@@ -1234,79 +1189,79 @@ export default {
             }
         },
         scrollToSection(sectionId) {
-    // Reset states
-    this.selectedNewsArticle = null;
-    this.showLearnMore = false;
-    this.showCareers = false;
-    this.showContactUs = false;
-    this.showFeaturedNews = false;
-    this.showRiceProducts = false;
-    this.showMangoProducts = false;
-    this.showVegetableProducts = false;
-    this.showSugarcaneProducts = false;
-    this.showOthercropProducts = false;
+            // Reset states
+            this.selectedNewsArticle = null;
+            this.showLearnMore = false;
+            this.showCareers = false;
+            this.showContactUs = false;
+            this.showFeaturedNews = false;
+            this.showRiceProducts = false;
+            this.showMangoProducts = false;
+            this.showVegetableProducts = false;
+            this.showSugarcaneProducts = false;
+            this.showOthercropProducts = false;
 
-    // Smooth scroll function
-    const tryScroll = (attempts = 0) => {
-        const section = document.getElementById(sectionId);
-        if (!section) {
-            if (attempts < 20) {
-                setTimeout(() => tryScroll(attempts + 1), 50);
-            }
-            return;
-        }
+            // Smooth scroll function
+            const tryScroll = (attempts = 0) => {
+                const section = document.getElementById(sectionId);
+                if (!section) {
+                    if (attempts < 20) {
+                        setTimeout(() => tryScroll(attempts + 1), 50);
+                    }
+                    return;
+                }
 
-        // Close mobile menu if active
-        const mobileMenu = document.getElementById('mobile-menu');
-        if (mobileMenu && mobileMenu.classList.contains('active')) {
-            mobileMenu.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
+                // Close mobile menu if active
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
 
-        // Determine scroll offset
-        let offset = 0;
-        if (sectionId === 'about') {
-            offset = 0;
-        } else if (sectionId === 'products') {
-            if (window.innerWidth >= 1025) {
-                offset = 190;
-            } else if (window.innerWidth <= 426) {
-                offset = 60;
-            }
-        }
+                // Determine scroll offset
+                let offset = 0;
+                if (sectionId === 'about') {
+                    offset = 0;
+                } else if (sectionId === 'products') {
+                    if (window.innerWidth >= 1025) {
+                        offset = 190;
+                    } else if (window.innerWidth <= 426) {
+                        offset = 60;
+                    }
+                }
 
-        // Get scroll positions
-        const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
-        const startPosition = window.pageYOffset;
-        const distance = sectionTop - startPosition;
-        const duration = 1000;
-        let start = null;
+                // Get scroll positions
+                const sectionTop = section.getBoundingClientRect().top + window.pageYOffset - offset;
+                const startPosition = window.pageYOffset;
+                const distance = sectionTop - startPosition;
+                const duration = 1000;
+                let start = null;
 
-        // Easing function
-        const easeInOutCubic = progress => {
-            return progress < 0.5
-                ? 4 * progress * progress * progress
-                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-        };
+                // Easing function
+                const easeInOutCubic = progress => {
+                    return progress < 0.5
+                        ? 4 * progress * progress * progress
+                        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                };
 
-        // Animation function
-        function animation(currentTime) {
-            if (start === null) start = currentTime;
-            const timeElapsed = currentTime - start;
-            const progress = Math.min(timeElapsed / duration, 1);
-            const newPosition = startPosition + (distance * easeInOutCubic(progress));
-            window.scrollTo(0, newPosition);
-            if (timeElapsed < duration) {
+                // Animation function
+                function animation(currentTime) {
+                    if (start === null) start = currentTime;
+                    const timeElapsed = currentTime - start;
+                    const progress = Math.min(timeElapsed / duration, 1);
+                    const newPosition = startPosition + (distance * easeInOutCubic(progress));
+                    window.scrollTo(0, newPosition);
+                    if (timeElapsed < duration) {
+                        requestAnimationFrame(animation);
+                    }
+                }
+
                 requestAnimationFrame(animation);
-            }
-        }
+            };
 
-        requestAnimationFrame(animation);
-    };
-
-    // Call scroll function
-    tryScroll();
-},
+            // Call scroll function
+            tryScroll();
+        },
 
         isDesktop() {
             return window.innerWidth >= 768;
@@ -1551,7 +1506,7 @@ export default {
             };
             return categoryMap[category] || 'rice';
         },
-                handleSearchResultClick(result) {
+        handleSearchResultClick(result) {
             this.searchQuery = `${result.category} / ${result.type}`;
             this.showSearchResults = false;
 

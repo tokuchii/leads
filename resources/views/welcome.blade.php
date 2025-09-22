@@ -701,27 +701,38 @@
         }
 
         // Function to go to contacts (global scope)
-        function goToContacts() {
-            // Close the chat modal
-            const chatModal = document.getElementById('chat-modal');
-            const chatbotButton = document.getElementById('chatbot-button');
-            chatModal.classList.remove('active');
-            chatbotButton.classList.remove('active');
-            
-            // Use the global scrollToSection function
-            if (window.scrollToSection) {
-                window.scrollToSection('contact');
+function goToContacts() {
+    // Close the chat modal
+    const chatModal = document.getElementById('chat-modal');
+    const chatbotButton = document.getElementById('chatbot-button');
+    chatModal.classList.remove('active');
+    chatbotButton.classList.remove('active');
+
+    // Small delay to ensure modal close transition finishes before scrolling
+    setTimeout(() => {
+        // Use the global scrollToSection function if available
+        if (typeof window.scrollToSection === "function") {
+            window.scrollToSection('contact');
+        } else {
+            const contactsSection = document.getElementById('contact');
+            if (contactsSection) {
+                // Mobile-safe smooth scrolling with offset fix
+                const headerOffset = 70; // adjust if you have a sticky navbar
+                const elementPosition = contactsSection.getBoundingClientRect().top + window.scrollY;
+                const offsetPosition = elementPosition - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
             } else {
-                // Fallback: scroll to contacts section directly
-                const contactsSection = document.getElementById('contact');
-                if (contactsSection) {
-                    contactsSection.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    // If no contacts section found, scroll to top
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
+                // Fallback: scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
+    }, 200); // delay for smoother UX on mobile
+}
+
 
         function showTypingIndicator() {
             const indicator = document.createElement('div');
@@ -896,7 +907,7 @@
                         currentMenu = 'leads-expert';
                         showTypingIndicator();
                         setTimeout(() => {
-                            hideTypingIndicator(); 
+                            hideTypingIndicator();
                             addMessage('Talk to a Ka-Leads Expert☎️ <br><br>📞 Gusto mo bang makausap ang isang Leads Agri Technician o Sales Officer? <br>Pakisend lang ang: <br>✅ Pangalan mo <br>✅ Lokasyon mo <br>✅ Concern or tanong <br><br>I-coconnect kita agad, Ka-LEADS! <br><br><button class="main-menu-btn" onclick="goToContacts()">Go to Contacts</button>', true);
                             // Add separate message for menu options
                             setTimeout(() => {
@@ -1080,22 +1091,22 @@
             closeModalButton.onclick = function() {
                 chatModal.classList.remove('active');
                 chatbotButton.classList.remove('active');
-                
+
                 // Reset conversation state
                 conversationEnded = false;
                 currentMenu = 'main';
                 chatGreeted = false;
-                
+
                 // Clear chat messages
                 chatBody.innerHTML = '';
-                
+
                 // Re-add FAQ section
                 const newFaqSection = document.createElement('div');
                 newFaqSection.className = 'faq-section';
                 newFaqSection.id = 'faq-section';
                 newFaqSection.innerHTML = '<div class="faq-buttons" id="faq-buttons"></div>';
                 chatBody.appendChild(newFaqSection);
-                
+
                 // Reset FAQ section reference
                 faqSection = newFaqSection;
             };
