@@ -701,23 +701,23 @@
         }
 
         // Function to go to contacts (global scope)
-function goToContacts() {
+        function goToContacts() {
     // Close the chat modal
     const chatModal = document.getElementById('chat-modal');
     const chatbotButton = document.getElementById('chatbot-button');
-    chatModal.classList.remove('active');
-    chatbotButton.classList.remove('active');
 
-    // Small delay to ensure modal close transition finishes before scrolling
+    chatModal?.classList.remove('active');
+    chatbotButton?.classList.remove('active');
+
+    // Small delay to allow transition to finish
     setTimeout(() => {
-        // Use the global scrollToSection function if available
         if (typeof window.scrollToSection === "function") {
+            // If you defined scrollToSection globally, use it
             window.scrollToSection('contact');
         } else {
             const contactsSection = document.getElementById('contact');
             if (contactsSection) {
-                // Mobile-safe smooth scrolling with offset fix
-                const headerOffset = 70; // adjust if you have a sticky navbar
+                const headerOffset = 70; // adjust for your sticky navbar
                 const elementPosition = contactsSection.getBoundingClientRect().top + window.scrollY;
                 const offsetPosition = elementPosition - headerOffset;
 
@@ -726,13 +726,12 @@ function goToContacts() {
                     behavior: 'smooth'
                 });
             } else {
-                // Fallback: scroll to top
+                // Fallback if #contact not found
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
-    }, 200); // delay for smoother UX on mobile
+    }, 200);
 }
-
 
         function showTypingIndicator() {
             const indicator = document.createElement('div');
