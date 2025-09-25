@@ -702,36 +702,20 @@
 
         // Function to go to contacts (global scope)
         function goToContacts() {
-    // Close the chat modal
     const chatModal = document.getElementById('chat-modal');
     const chatbotButton = document.getElementById('chatbot-button');
 
     chatModal?.classList.remove('active');
     chatbotButton?.classList.remove('active');
 
-    // Small delay to allow transition to finish
     setTimeout(() => {
-        if (typeof window.scrollToSection === "function") {
-            // If you defined scrollToSection globally, use it
-            window.scrollToSection('contact');
-        } else {
-            const contactsSection = document.getElementById('contact');
-            if (contactsSection) {
-                const headerOffset = 70; // adjust for your sticky navbar
-                const elementPosition = contactsSection.getBoundingClientRect().top + window.scrollY;
-                const offsetPosition = elementPosition - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            } else {
-                // Fallback if #contact not found
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+        const contactSection = document.getElementById("contact");
+        if (contactSection) {
+            contactSection.scrollIntoView({ behavior: "smooth" });
         }
-    }, 200);
+    }, 300);
 }
+
 
         function showTypingIndicator() {
             const indicator = document.createElement('div');
