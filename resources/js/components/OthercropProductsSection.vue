@@ -31,13 +31,10 @@
 
                         <BubbleLoader v-if="loading" />
 
-         <div v-for="product in othercropsHerbicideProducts" :key="product.id"
-                        class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
-
                     <!-- Herbicide Card Layout -->
                     <div v-if="activeTab === 'Herbicide' && othercropsHerbicideProducts.length" class="space-y-8">
                         <div v-for="product in othercropsHerbicideProducts" :key="product.id"
-                            class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+                            class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
                             <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
                                 <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
                                     class="object-contain h-full w-full mx-auto" />
@@ -80,7 +77,7 @@
                     <!-- Fungicide Card Layout -->
                     <div v-if="activeTab === 'Fungicide' && othercropsFungicideProducts.length" class="space-y-8">
                         <div v-for="product in othercropsFungicideProducts" :key="product.id"
-                            class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+                            class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
                             <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
                                 <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
                                     class="object-contain h-full w-full mx-auto" />
@@ -123,7 +120,7 @@
                     <!-- Insecticide Card Layout -->
                     <div v-if="activeTab === 'Insecticide' && othercropsInsecticideProducts.length" class="space-y-8">
                         <div v-for="product in othercropsInsecticideProducts" :key="product.id"
-                            class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+                            class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
                             <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
                                 <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
                                     class="object-contain h-full w-full mx-auto" />
@@ -167,7 +164,6 @@
             </div>
         </div>
     </div>
-    </div>  
 </template>
 
 <script>

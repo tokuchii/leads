@@ -6,10 +6,11 @@
         <div class="absolute inset-0 bg-white opacity-78 z-10"></div>
         <!-- Actual content -->
         <div class="relative z-20 w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 mt-20 sm:mt-24 lg:mt-30">
-            <div class="flex justify-center items-center text-green-700 font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl pb-12 text-center">
+            <div
+                class="flex justify-center items-center text-green-700 font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl pb-12 text-center">
                 <h2>PRODUCTS FOR MANGO</h2>
             </div>
-             <!-- Tabs Container -->
+            <!-- Tabs Container -->
             <div class="flex justify-center gap-1 px-1 sm:gap-2 sm:px-2 md:gap-8 lg:gap-12 overflow-x-auto">
                 <button v-for="tab in tabs" :key="tab.alt" :class="[tab.bg,
                     'flex-shrink-0 w-12 sm:w-14 md:w-18 lg:w-20 h-14 sm:h-18 md:h-20 rounded-t-full flex justify-center items-center cursor-pointer',
@@ -29,178 +30,176 @@
                 </div>
                 <div class="bg-[#FFFFFF] rounded-4xl p-2 sm:p-6 lg:p-14 text-back shadow-xl" style="min-height: 640px;">
 
-                     <BubbleLoader v-if="loading" />
+                    <BubbleLoader v-if="loading" />
 
-                    <div v-for="product in mangoHerbicideProducts" :key="product.id"
-                        class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
-
-                    <!-- Herbicide Card Layout -->
-                    <div v-if="activeTab === 'Herbicide' && mangoHerbicideProducts.length" class="space-y-8">
-                        <div v-for="product in mangoHerbicideProducts" :key="product.id"
-                            class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
-                            <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
-                                <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
-                                    class="object-contain h-full w-full mx-auto" />
-                            </div>
-                            <div class="flex-1 p-6 md:p-8">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                        <!-- Herbicide Card Layout -->
+                        <div v-if="activeTab === 'Herbicide' && mangoHerbicideProducts.length" class="space-y-8">
+                            <div v-for="product in mangoHerbicideProducts" :key="product.id"
+                                class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+                                <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
+                                    <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
+                                        class="object-contain h-full w-full mx-auto" />
                                 </div>
-                                <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2"
-                                    class="w-100 h-40 object-contain mb-2" />
-                                <div class="mb-2">
-                                    <span class="font-bold">Description</span>
-                                    <p class="text-gray-700 text-justify">{{ product.description }}</p>
-                                </div>
-                                <div class="mb-2">
-                                    <span class="font-bold">Features & Benefits</span>
-                                    <p class="text-gray-700 text-justify">{{ product.features }}</p>
-                                </div>
-                                <div class="mb-2">
-                                    <span class="font-bold">Dosage</span>
-                                    <p class="text-gray-700 whitespace-pre-line">
-                                        <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
-                                            {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
-                                        </span>
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="font-bold">Target Weeds/Crops</span>
-                                    <div class="flex gap-4">
-                                        <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx"
-                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
-                                            <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
-                                        </ul>
+                                <div class="flex-1 p-6 md:p-8">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                                    </div>
+                                    <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2"
+                                        class="w-100 h-40 object-contain mb-2" />
+                                    <div class="mb-2">
+                                        <span class="font-bold">Description</span>
+                                        <p class="text-gray-700 text-justify">{{ product.description }}</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="font-bold">Features & Benefits</span>
+                                        <p class="text-gray-700 text-justify">{{ product.features }}</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="font-bold">Dosage</span>
+                                        <p class="text-gray-700 whitespace-pre-line">
+                                            <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
+                                                {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold">Target Weeds/Crops</span>
+                                        <div class="flex gap-4">
+                                            <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
+                                                :key="colIdx"
+                                                class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
+                                                <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Fungicide Card Layout -->
-                    <div v-if="activeTab === 'Fungicide' && mangoFungicideProducts.length" class="space-y-8">
-                        <div v-for="product in mangoFungicideProducts" :key="product.id"
-                            class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
-                            <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
-                                <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
-                                    class="object-contain h-full w-full mx-auto" />
-                            </div>
-                            <div class="flex-1 p-6 md:p-8">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                        <!-- Fungicide Card Layout -->
+                        <div v-if="activeTab === 'Fungicide' && mangoFungicideProducts.length" class="space-y-8">
+                            <div v-for="product in mangoFungicideProducts" :key="product.id"
+                                class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+                                <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
+                                    <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
+                                        class="object-contain h-full w-full mx-auto" />
                                 </div>
-                                <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2"
-                                    class="w-100 h-40 object-contain mb-2" />
-                                <div class="mb-2">
-                                    <span class="font-bold">Description</span>
-                                    <p class="text-gray-700 text-justify">{{ product.description }}</p>
-                                </div>
-                                <div class="mb-2">
-                                    <span class="font-bold">Features & Benefits</span>
-                                    <p class="text-gray-700 text-justify">{{ product.features }}</p>
-                                </div>
-                                <div class="mb-2">
-                                    <span class="font-bold">Dosage</span>
-                                    <p class="text-gray-700 whitespace-pre-line">
-                                        <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
-                                            {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
-                                        </span>
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="font-bold">Target Weeds/Crops</span>
-                                    <div class="flex gap-4">
-                                        <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx"
-                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
-                                            <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
-                                        </ul>
+                                <div class="flex-1 p-6 md:p-8">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                                    </div>
+                                    <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2"
+                                        class="w-100 h-40 object-contain mb-2" />
+                                    <div class="mb-2">
+                                        <span class="font-bold">Description</span>
+                                        <p class="text-gray-700 text-justify">{{ product.description }}</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="font-bold">Features & Benefits</span>
+                                        <p class="text-gray-700 text-justify">{{ product.features }}</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="font-bold">Dosage</span>
+                                        <p class="text-gray-700 whitespace-pre-line">
+                                            <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
+                                                {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold">Target Weeds/Crops</span>
+                                        <div class="flex gap-4">
+                                            <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
+                                                :key="colIdx"
+                                                class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
+                                                <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Biostimulant Card Layout -->
-                    <div v-if="activeTab === 'Biostimulant' && mangoBiostimulantProducts.length" class="space-y-8">
-                        <div v-for="product in mangoBiostimulantProducts" :key="product.id"
-                            class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
-                            <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
-                                <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
-                                    class="object-contain h-full w-full mx-auto" />
-                            </div>
-                            <div class="flex-1 p-6 md:p-8">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                        <!-- Biostimulant Card Layout -->
+                        <div v-if="activeTab === 'Biostimulant' && mangoBiostimulantProducts.length" class="space-y-8">
+                            <div v-for="product in mangoBiostimulantProducts" :key="product.id"
+                                class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+                                <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
+                                    <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
+                                        class="object-contain h-full w-full mx-auto" />
                                 </div>
-                                <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2"
-                                    class="w-100 h-40 object-contain mb-2" />
-                                <div class="mb-2">
-                                    <span class="font-bold">Description</span>
-                                    <p class="text-gray-700 text-justify">{{ product.description }}</p>
-                                </div>
-                                <div class="mb-2">
-                                    <span class="font-bold">Features & Benefits</span>
-                                    <p class="text-gray-700 text-justify">{{ product.features }}</p>
-                                </div>
-                                <div class="mb-2">
-                                    <span class="font-bold">Dosage</span>
-                                    <p class="text-gray-700 whitespace-pre-line">
-                                        <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
-                                            {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
-                                        </span>
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="font-bold">Target Weeds/Crops</span>
-                                    <div class="flex gap-4">
-                                        <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx"
-                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
-                                            <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
-                                        </ul>
+                                <div class="flex-1 p-6 md:p-8">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                                    </div>
+                                    <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2"
+                                        class="w-100 h-40 object-contain mb-2" />
+                                    <div class="mb-2">
+                                        <span class="font-bold">Description</span>
+                                        <p class="text-gray-700 text-justify">{{ product.description }}</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="font-bold">Features & Benefits</span>
+                                        <p class="text-gray-700 text-justify">{{ product.features }}</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="font-bold">Dosage</span>
+                                        <p class="text-gray-700 whitespace-pre-line">
+                                            <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
+                                                {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold">Target Weeds/Crops</span>
+                                        <div class="flex gap-4">
+                                            <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
+                                                :key="colIdx"
+                                                class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
+                                                <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Insecticide Card Layout -->
-                    <div v-if="activeTab === 'Insecticide' && mangoInsecticideProducts.length" class="space-y-8">
-                        <div v-for="product in mangoInsecticideProducts" :key="product.id"
-                            class="flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
-                            <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
-                                <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
-                                    class="object-contain h-full w-full mx-auto" />
-                            </div>
-                            <div class="flex-1 p-6 md:p-8">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                        <!-- Insecticide Card Layout -->
+                        <div v-if="activeTab === 'Insecticide' && mangoInsecticideProducts.length" class="space-y-8">
+                            <div v-for="product in mangoInsecticideProducts" :key="product.id"
+                                class="product-card flex flex-col md:flex-row bg-white rounded-3xl overflow-hidden">
+                                <div class="flex-shrink-0 flex items-center justify-center md:w-80 pt-12">
+                                    <img v-if="product.image1_url" :src="product.image1_url" alt="Image 1"
+                                        class="object-contain h-full w-full mx-auto" />
                                 </div>
-                                <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2"
-                                    class="w-100 h-40 object-contain mb-2" />
-                                <div class="mb-2">
-                                    <span class="font-bold">Description</span>
-                                    <p class="text-gray-700 text-justify">{{ product.description }}</p>
-                                </div>
-                                <div class="mb-2">
-                                    <span class="font-bold">Features & Benefits</span>
-                                    <p class="text-gray-700 text-justify">{{ product.features }}</p>
-                                </div>
-                                <div class="mb-2">
-                                    <span class="font-bold">Dosage</span>
-                                    <p class="text-gray-700 whitespace-pre-line">
-                                        <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
-                                            {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
-                                        </span>
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="font-bold">Target Weeds/Crops</span>
-                                    <div class="flex gap-4">
-                                        <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx"
-                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
-                                            <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
-                                        </ul>
+                                <div class="flex-1 p-6 md:p-8">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-3xl font-extrabold text-green-700">{{ product.name }}</span>
+                                    </div>
+                                    <img v-if="product.image2_url" :src="product.image2_url" alt="Image 2"
+                                        class="w-100 h-40 object-contain mb-2" />
+                                    <div class="mb-2">
+                                        <span class="font-bold">Description</span>
+                                        <p class="text-gray-700 text-justify">{{ product.description }}</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="font-bold">Features & Benefits</span>
+                                        <p class="text-gray-700 text-justify">{{ product.features }}</p>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="font-bold">Dosage</span>
+                                        <p class="text-gray-700 whitespace-pre-line">
+                                            <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
+                                                {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="font-bold">Target Weeds/Crops</span>
+                                        <div class="flex gap-4">
+                                            <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
+                                                :key="colIdx"
+                                                class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
+                                                <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -209,8 +208,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    </div>  
 </template>
 
 <script>
@@ -300,9 +297,9 @@ export default {
                 this.products = response.data;
             } catch (error) {
                 console.error('Failed to fetch products:', error);
-            }  finally {
+            } finally {
                 this.loading = false;
-            }   
+            }
         },
         formatTargetWeeds(val) {
             if (Array.isArray(val)) return val;
