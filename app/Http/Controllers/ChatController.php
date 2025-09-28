@@ -10,6 +10,8 @@ class ChatController extends Controller
 {
     private $mistralApiKey;
     private $mistralApiUrl = 'https://api.mistral.ai/v1/chat/completions';
+    // Reasonable upper bound for appended context to control prompt tokens
+    private $maxContextChars = 2000;
 
     /**
      * Herbicide context for all chat requests.
@@ -58,7 +60,7 @@ HERBICIDE
 ⏳ Malawak ang timing ng aplikasyon
 👍 Puwede bilang early hanggang post-emergent: pumupuksa sa damo sa iba't-ibang yugto ng paglaki nito
 
-🌿 Weeds/Damo? Subukan ang *Ignite 15 SL!* — non-selective herbicide laban sa mga damong mahirap puksain at umaagaw sa nutrisyon ng mga tanim.
+🌿 Weeds/Damo? Subukan ang *Ignite 15 SL!* — non-selective herbicide laban sa mga damong mahirap puksain at umaagaw sa nutrition ng mga tanim.
 
 ✅ Maaaring gamitin bilang pamatay-damo sa cavendish bananas, rubber, oil palm, at bilang industrial weed control
 🏜️ Pwede sa sloping areas para maiwasan ang soil erosion
@@ -156,13 +158,6 @@ BIOSTIMULANT
 🌱 Pinapalakas ang panicle ng tanim laban sa fruit drop
 
 
-🌸 Gustong palaguin ang taniman? Subukan ang *Mega Booster!* — isang foliar fertilizer!
-
-💊 May Potassium na nagbibigay nutrisyon sa tanim
-💦 100% water-soluble: madaling haluin sa tubig
-🌱 Pinapalakas ang panicle ng tanim laban sa fruit drop
-
-
 INSECTICIDE
 🐛 Gustong mabawasan ang pesteng insekto sa taniman? Subukan ang *Benefit 20 SC!* — isang systemic insecticide laban sa rice bug at rice black bug!
 
@@ -229,6 +224,116 @@ CONTEXT;
     }
 
     /**
+     * Extract a labeled section from the full CONTEXT by heading label.
+     * Returns text from the heading line up to (but excluding) the next heading or end.
+     */
+    private function extractSectionByLabel(string $label): string
+    {
+        $pattern = '/(^|\n)\s*' . preg_quote($label, '/') . '\s*(?:\r?\n)([\s\S]*?)(?=\n\s*(HERBICIDE|FUNGICIDE|BIOSTIMULANT|INSECTICIDE|MOLLUSCICIDE)\s*\r?\n|\z)/i';
+        if (preg_match($pattern, $this->Context, $matches)) {
+            // Return the matched body (group 2). Prepend the label to keep section context clear.
+            $body = trim($matches[2] ?? '');
+            return $label . "\n" . $body;
+        }
+        return '';
+    }
+
+    /**
+     * Heuristically select the most relevant section(s) of CONTEXT based on user message.
+     * Falls back to a broader search if no specific section matches.
+    */
+    private function buildRelevantContext(string $userMessage): string
+    {
+        $text = mb_strtolower($userMessage);
+
+        $label = '';
+        // Very lightweight keyword routing; extend as needed
+        if (preg_match('/herbicide|action|residual|Diuron|soil|erosion|sloping|nutrition|foliar|sibuyas|umuulan|maisan|weed|weeds|damo|grass|cavendish|banana|rubber|oil|palm|industrial|rescue|dahon|gulay|application|glyph|pre-?emergent|post-?emergent/i', $userMessage)) {
+            $label = 'HERBICIDE';
+        } elseif (preg_match('/fungicide|purple|blotch|rust|mildew|gulayan|manganese|sakit|oil|rot|organic|blossom|blight|scab|streak|leaf|abono|palayan|mangga|fungal|amag|blight|mildew|anthracnose|bacterial/i', $userMessage)) {
+            $label = 'FUNGICIDE';
+        } elseif (preg_match('/biostimulant|potassium|panicle|fruit|drop|eco|friendly|organic|abiotic|sustansya|tagtuyot|chicken|manure|mag imbak|kalidad|amino acid|stress|shock|baha|nagpapabulas|vegetable|protien|tag-init|tag-ulan|malusog|nitrogen|fertilizer|pataba|booster|amino|urea/i', $userMessage)) {
+            $label = 'BIOSTIMULANT';
+        } elseif (preg_match('/insecticide|insect|insekto|moth|worm|peste|uod|moth|planthopper|bug|aphid/i', $userMessage)) {
+            $label = 'INSECTICIDE';
+        } elseif (preg_match('/molluscicide|snail|kuhol/i', $userMessage)) {
+            $label = 'MOLLUSCICIDE';
+        }
+
+        // Debug logging to help troubleshoot matching issues
+        Log::info('Context selection debug', [
+            'user_message' => $userMessage,
+            'selected_label' => $label,
+            'message_lower' => $text
+        ]);
+
+        // If we found a specific section, use it
+        if ($label !== '') {
+            $section = $this->extractSectionByLabel($label);
+            if ($section !== '') {
+                // Hard cap to keep prompt small
+                if (mb_strlen($section) > $this->maxContextChars) {
+                    $section = mb_substr($section, 0, $this->maxContextChars);
+                }
+                return $section;
+            }
+        }
+
+        // Fallback: search for any mention of keywords in the full context
+        $fallbackContext = $this->searchContextForKeywords($userMessage);
+        if ($fallbackContext !== '') {
+            return $fallbackContext;
+        }
+
+        // If still no match, return empty - Mistral will use its fallback response
+        return '';
+    }
+
+    /**
+     * Search the full context for any mention of keywords from the user message.
+     * Returns a small relevant snippet if found.
+     */
+    private function searchContextForKeywords(string $userMessage): string
+    {
+        $words = preg_split('/\s+/', mb_strtolower($userMessage));
+        $words = array_filter($words, function($word) {
+            return strlen($word) > 2; // Only consider words longer than 2 characters
+        });
+
+        if (empty($words)) {
+            return '';
+        }
+
+        $context = $this->Context;
+        $foundSnippets = [];
+
+        // Search for each word in the context
+        foreach ($words as $word) {
+            $pattern = '/[^\n]*' . preg_quote($word, '/') . '[^\n]*/i';
+            if (preg_match_all($pattern, $context, $matches)) {
+                foreach ($matches[0] as $match) {
+                    $foundSnippets[] = trim($match);
+                }
+            }
+        }
+
+        if (empty($foundSnippets)) {
+            return '';
+        }
+
+        // Remove duplicates and limit to reasonable size
+        $foundSnippets = array_unique($foundSnippets);
+        $result = implode("\n", array_slice($foundSnippets, 0, 5)); // Max 5 snippets
+
+        // Cap the result size
+        if (mb_strlen($result) > $this->maxContextChars) {
+            $result = mb_substr($result, 0, $this->maxContextChars);
+        }
+
+        return $result;
+    }
+
+    /**
      * Handles chat requests and returns Mistral AI responses based on herbicide context.
      *
      * @param Request $request
@@ -244,36 +349,50 @@ CONTEXT;
             }
 
             $userMessage = $request->input('message');
-            $context = $this->Context;
-            if (!empty($context) && strlen($context) > 15000) {
-                $context = substr($context, 0, 15000);
-            }
+            // Build a minimal relevant context instead of sending the whole corpus
+            $context = $this->buildRelevantContext($userMessage ?? '');
             if (empty($userMessage)) {
                 return response()->json(['error' => 'Message is required'], 400);
             }
-            // Improved system prompt to enforce context usage
-            $systemPrompt = "You are Pandoy, a LeadsAgri Bot, an AI assistant for LeadsAgri Venture.\n\nIf CONTEXT is provided, you must answer ONLY in Tagalog and using the information in CONTEXT and information that you know about the CONTEXT.\nIf the answer is not found in CONTEXT, reply with: \n'🤔 Uy, hindi ko masyadong na-gets ‘yan, Ka-Leads. Please contact LeadsAgri for more details.'\n\nIf the user's question asks for a list, or there are multiple relevant items in CONTEXT, always list ALL relevant items, not just one.\n\nBe professional, friendly, and concise in your responses.\n";
+            // Concise system prompt to minimize tokens
             if (!empty($context)) {
-                $systemPrompt .= "\n\nCONTEXT:\n" . $context;
+                $systemPrompt = "Ikaw si Pandoy, LeadsAgri Bot. Sagutin sa Tagalog, maikli at malinaw. Gamitin ang impormasyon sa CONTEXT para sagutin ang tanong. Sagutin lang ang tanong gamit ang CONTEXT. Huwag maglagay ng fallback message.\n";
+            } else {
+                $systemPrompt = "Ikaw si Pandoy, LeadsAgri Bot. Sagutin sa Tagalog, maikli at malinaw. Kung hindi mo alam ang sagot, sabihin: '🤔 Uy, hindi ko masyadong na-gets 'yan, Ka-Leads. Please contact LeadsAgri for more details.'\n";
             }
+            if (!empty($context)) {
+                $systemPrompt .= "\nCONTEXT:\n" . $context;
+            }
+            // Cap output tokens to a small, adequate size to save usage
+            $approxQuestionLen = mb_strlen($userMessage);
+            $maxTokens = 220; // default small cap
+            if ($approxQuestionLen < 120) {
+                $maxTokens = 160;
+            } elseif ($approxQuestionLen > 600) {
+                $maxTokens = 280; // slight increase for long questions
+            }
+
             $requestData = [
                 'model' => 'mistral-small-latest',
                 'messages' => [
                     ['role' => 'system', 'content' => $systemPrompt],
                     ['role' => 'user', 'content' => $userMessage]
                 ],
-                'temperature' => 0.7,
-                'max_tokens' => 800
+                'temperature' => 0.4, // lower randomness keeps responses shorter and on-point
+                'max_tokens' => $maxTokens
             ];
             Log::info('Sending request to Mistral API', [
                 'url' => $this->mistralApiUrl,
-                'request_data' => $requestData
+                // Avoid logging full prompt to keep logs small and protect tokens
+                'has_context' => !empty($context),
+                'context_label' => !empty($context) ? (preg_match('/^(HERBICIDE|FUNGICIDE|BIOSTIMULANT|INSECTICIDE|MOLLUSCICIDE)/', $context, $m) ? $m[1] : 'unknown') : null,
+                'max_tokens' => $maxTokens
             ]);
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->mistralApiKey,
                 'Content-Type' => 'application/json',
             ])->timeout(30)->post($this->mistralApiUrl, $requestData);
-            
+
             Log::info('Mistral API response', [
                 'status' => $response->status(),
                 'body' => $response->body()
@@ -281,10 +400,10 @@ CONTEXT;
             if ($response->successful()) {
                 try {
                     $botResponse = $response->json()['choices'][0]['message']['content'];
-                    
+
                     // Add main menu button to technical support responses
                     $botResponse .= '<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>';
-                    
+
                     return response()->json(['response' => $botResponse]);
                 } catch (\Exception $e) {
                     Log::error('Response parsing error: ' . $e->getMessage() . "\n" . $response->body());

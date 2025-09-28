@@ -879,7 +879,7 @@
                         showTypingIndicator();
                         setTimeout(() => {
                             hideTypingIndicator();
-                            addMessage('Technical Support👨‍🌾<br><br>Anong klaseng assistance ang kailangan mo, Ka-LEADS?<br><br>1️⃣ Paggamit ng produkto <br>2️⃣ Peste o sakit sa palay  <br>3️⃣ Schedule ng abono o spray  <br><br>I-type lang ang concern mo (hal. “Anong solusyon sa brown planthopper?” or “Kailan i-spray ang Frontier?”) at tutulungan ka ng aming customer service support sa iyong concern!', true);
+                            addMessage('Technical Support👨‍🌾<br><br>Anong klaseng assistance ang kailangan mo, Ka-LEADS?<br><br>Halimaba na pwedeng mga itanong:<br>- Paggamit ng produkto <br>- Peste o sakit sa palay  <br>- Schedule ng abono o spray  <br><br>I-type lang ang concern mo (hal. “Anong solusyon sa brown planthopper?” or “Kailan i-spray ang Frontier?”) at tutulungan ka ng aming customer service support sa iyong concern!', true);
                             chatInput.disabled = false;
                             sendBtn.disabled = false;
                             chatInput.focus();
