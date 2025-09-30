@@ -399,9 +399,21 @@ CONTEXT;
             ]);
             if ($response->successful()) {
                 try {
-                    $botResponse = $response->json()['choices'][0]['message']['content'];
+                    $json = $response->json();
+                    $choice = $json['choices'][0] ?? null;
 
-                    // Add main menu button to technical support responses
+                    if (!$choice) {
+                        return response()->json(['error' => 'Invalid AI response format.'], 500);
+                    }
+
+                    // Check if the response was cut off due to token limit
+                    if (isset($choice['finish_reason']) && $choice['finish_reason'] === 'length') {
+                        $botResponse = "😅 Opps naubos na ang kakayahan ni Pandoy sumagot. Subukan mong paikliin ang tanong o hatiin ito sa mas maliliit na parte.";
+                    } else {
+                        $botResponse = $choice['message']['content'];
+                    }
+
+                    // Add your Main Menu button
                     $botResponse .= '<br><br>Type "MENU" o pindutin and MAIN MENU button para bumalik sa main options<br><br><button class="main-menu-btn" onclick="goToMainMenu()">Main Menu</button>';
 
                     return response()->json(['response' => $botResponse]);
@@ -409,10 +421,6 @@ CONTEXT;
                     Log::error('Response parsing error: ' . $e->getMessage() . "\n" . $response->body());
                     return response()->json(['error' => 'Error parsing response from AI model.'], 500);
                 }
-            } else {
-                $errorMessage = 'Mistral API error: ' . $response->status() . ' - ' . $response->body();
-                Log::error($errorMessage);
-                return response()->json(['error' => 'Failed to get response from AI model: ' . $response->status()], 500);
             }
         } catch (\Exception $e) {
             $errorMessage = 'Chat error: ' . $e->getMessage() . "\n" . $e->getTraceAsString();
@@ -444,4 +452,4 @@ CONTEXT;
             'timestamp' => now()
         ]);
     }
-} 
+}
