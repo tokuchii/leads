@@ -107,7 +107,13 @@ export default {
         async fetchNews() {
             try {
                 const response = await axios.get('https://admin.leadsagri.site/api/news');
-                this.newsList = response.data;
+                // Ensure we have an array and sort by published date (newest first).
+                const data = Array.isArray(response.data) ? response.data : [];
+                this.newsList = data.sort((a, b) => {
+                    const da = new Date(a.published_at || a.created_at || 0).getTime();
+                    const db = new Date(b.published_at || b.created_at || 0).getTime();
+                    return db - da;
+                });
             } catch (error) {
                 console.error('Failed to fetch news:', error);
             } finally {
