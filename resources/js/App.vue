@@ -180,23 +180,55 @@
         <transition name="fade" mode="out-in">
             <div v-if="selectedNewsArticle" key="newsarticle" class="main-container">
                 <div
-                    class="news-article flex flex-col items-center justify-center bg-[#006D36] px-4 md:px-8 lg:px-16 py-8 shadow-lg max-w-full lg:max-w-7xl mx-auto mt-30 mb-10">
-                    <div class="w-full flex flex-col items-start mb-4">
+                    class="news-article relative flex flex-col items-center justify-center bg-[#006D36] px-4 md:px-8 lg:px-16 py-8 shadow-lg max-w-full lg:max-w-7xl mx-auto mt-30 mb-10">
+                    <div class="w-full flex items-center justify-between mb-8">
                         <span
-                            class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg mb-4 cursor-pointer hover:text-gray-200 transition-colors underline"
+                            class="text-white text-xs sm:text-sm md:text-base font-semibold tracking-widest px-4 py-2 rounded-lg cursor-pointer hover:text-gray-200 transition-colors underline"
                             @click="goToFeaturedNews">NEWS | ARTICLES</span>
+
+                        <div class="flex items-center gap-1 sm:gap-2 flex-wrap z-50">
+                            <button aria-label="Share on Facebook" @click="shareArticle('facebook')"
+                                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-white bg-transparent border border-white/20 hover:text-[#1877F2] transition-colors"
+                                title="Share on Facebook">
+                                <i class="fab fa-facebook-f text-xs sm:text-sm"></i>
+                            </button>
+                            <button aria-label="Share on Twitter" @click="shareArticle('twitter')"
+                                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-white bg-transparent border border-white/20 hover:text-[#1DA1F2] transition-colors"
+                                title="Share on Twitter">
+                                <i class="fab fa-twitter text-xs sm:text-sm"></i>
+                            </button>
+                            <button aria-label="Share on LinkedIn" @click="shareArticle('linkedin')"
+                                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-white bg-transparent border border-white/20 hover:text-[#0A66C2] transition-colors"
+                                title="Share on LinkedIn">
+                                <i class="fab fa-linkedin-in text-xs sm:text-sm"></i>
+                            </button>
+                            <button aria-label="Share on Instagram" @click="shareArticle('instagram')"
+                                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-white bg-transparent border border-white/20 hover:text-[#E4405F] transition-colors"
+                                title="Share on Instagram">
+                                <i class="fab fa-instagram text-xs sm:text-sm"></i>
+                            </button>
+                            <button aria-label="Share on WhatsApp" @click="shareArticle('whatsapp')"
+                                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-white bg-transparent border border-white/20 hover:text-[#25D366] transition-colors"
+                                title="Share on WhatsApp">
+                                <i class="fab fa-whatsapp text-xs sm:text-sm"></i>
+                            </button>
+                            <button aria-label="Copy article link" @click="shareArticle('copy')"
+                                class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-white bg-transparent border border-white/20 hover:text-gray-300 transition-colors"
+                                title="Copy link">
+                                <i class="fas fa-link text-xs sm:text-sm"></i>
+                            </button>
+                        </div>
                     </div>
                     <img :src="selectedNewsArticle.featured_image_url || '/public/images/newsimg.png'"
-                        class="w-full max-w-xs sm:max-w-md md:max-w-xl lg:max-w-3xl h-auto mb-8 object-center no-hover-effect" />
-                    <h1 class="text-base md:text-4xl font-bold mb-6 text-center text-white ">
+                        class="w-full max-w-xs sm:max-w-md md:max-w-xl lg:max-w-3xl h-auto mb-8 object-center no-hover-effect rounded-4xl" />
+                    <h1 class="text-base md:text-4xl font-bold mb-12 text-center text-white ">
                         {{ selectedNewsArticle.title }}
                     </h1>
 
+                    
                     <div class="prose prose-sm md:prose-lg mb-6 w-full max-w-full break-words text-white"
                         v-html="formattedSelectedArticleContent">
                     </div>
-
-
                 </div>
             </div>
             <div v-else-if="!showLearnMore && !showCareers && !showContactUs && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts"
@@ -1048,6 +1080,19 @@ export default {
         });
 
         document.addEventListener('click', this.handleClickOutsideProductSection);
+
+        // Handle browser back/forward navigation
+        window.addEventListener('popstate', () => {
+            const match = window.location.pathname.match(/^\/news\/(.+)$/);
+            if (match) {
+                this.handleNewsDeepLink();
+            } else {
+                this.selectedNewsArticle = null;
+            }
+        });
+
+        // On initial load, check if the URL contains a news article slug and open it
+        this.handleNewsDeepLink();
     },
     beforeDestroy() {
         document.removeEventListener('click', this.handleClickOutsideProductSection);
@@ -1200,6 +1245,9 @@ export default {
             this.showVegetableProducts = false;
             this.showSugarcaneProducts = false;
             this.showOthercropProducts = false;
+            if (window.location.pathname !== '/') {
+                window.history.pushState({}, '', '/');
+            }
 
             // Smooth scroll function
             const tryScroll = (attempts = 0) => {
@@ -1265,6 +1313,123 @@ export default {
 
         isDesktop() {
             return window.innerWidth >= 768;
+        },
+        // Build public URL for the currently selected article
+        getArticleUrl() {
+            if (!this.selectedNewsArticle) return window.location.href;
+            const id = this.selectedNewsArticle.id || '';
+            let slug = this.selectedNewsArticle.slug || '';
+            if (!slug && this.selectedNewsArticle.title) {
+                slug = (this.selectedNewsArticle.title || '').toString().toLowerCase()
+                    .replace(/[^\w\s-]/g, '')
+                    .trim()
+                    .replace(/\s+/g, '-');
+            }
+            const slugPart = slug ? `${encodeURIComponent(slug)}-${encodeURIComponent(id)}` : encodeURIComponent(id);
+            // Always use the production domain for shareable links so that
+            // social platforms (Facebook, etc.) can resolve the URL publicly.
+            const isLocal = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+            const base = isLocal ? 'https://leadsagri.com' : window.location.origin;
+            return `${base}/news/${slugPart}`;
+        },
+
+        // Share the selected article to various platforms
+        async shareArticle(platform) {
+            if (!this.selectedNewsArticle) return;
+            const url = this.getArticleUrl();
+            const title = this.selectedNewsArticle.title || '';
+            const text = `${title} - ` + url;
+
+            try {
+                let shareUrl = '';
+                switch (platform) {
+                    case 'facebook':
+                        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+                        break;
+                    case 'twitter':
+                        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+                        break;
+                    case 'linkedin':
+                        shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+                        break;
+                    case 'whatsapp':
+                        shareUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+                        break;
+                    case 'instagram':
+                        // Instagram doesn't provide a reliable web intent to pre-fill a post.
+                        // Prefer the Web Share API on supporting devices (mobile native share sheet may include Instagram),
+                        // otherwise copy the link and inform the user to paste it into their Instagram bio or story.
+                        if (navigator.share) {
+                            try {
+                                await navigator.share({
+                                    title: title,
+                                    text: text,
+                                    url: url
+                                });
+                                return;
+                            } catch (shareErr) {
+                                // If user cancels or share fails, fall through to fallback below
+                            }
+                        }
+
+                        // Fallback: copy link to clipboard and notify
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            await navigator.clipboard.writeText(url);
+                        } else {
+                            const temp = document.createElement('input');
+                            temp.value = url;
+                            document.body.appendChild(temp);
+                            temp.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(temp);
+                        }
+                        await Swal.fire({
+                            icon: 'info',
+                            title: 'Instagram sharing',
+                            text: 'Link copied to clipboard. Paste it into your Instagram bio or Story (note: Instagram feed posts do not support clickable external links).'
+                        });
+                        return;
+                    case 'copy':
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            await navigator.clipboard.writeText(url);
+                            await Swal.fire({
+                                icon: 'success',
+                                title: 'Link copied',
+                                text: 'Article link copied to clipboard.'
+                            });
+                            return;
+                        } else {
+                            // Fallback: create a temporary input
+                            const input = document.createElement('input');
+                            input.value = url;
+                            document.body.appendChild(input);
+                            input.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(input);
+                            await Swal.fire({
+                                icon: 'success',
+                                title: 'Link copied',
+                                text: 'Article link copied to clipboard.'
+                            });
+                            return;
+                        }
+                    default:
+                        return;
+                }
+
+                // Open share window for social sites
+                const w = 800; const h = 600;
+                const left = (screen.width / 2) - (w / 2);
+                const top = (screen.height / 2) - (h / 2);
+                window.open(shareUrl, '_blank', `toolbar=0,status=0,width=${w},height=${h},top=${top},left=${left}`);
+            } catch (err) {
+                console.error('Share error:', err);
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Unable to share',
+                    text: 'Could not share the article. Please try copying the link instead.'
+                });
+            }
         },
         handleProductClick(product) {
             // Scroll to the products section
@@ -1408,7 +1573,84 @@ export default {
         },
         handleShowNewsArticle(news) {
             this.selectedNewsArticle = news;
+            const id = news.id || '';
+            let slug = news.slug || '';
+            if (!slug && news.title) {
+                slug = (news.title || '').toString().toLowerCase()
+                    .replace(/[^\w\s-]/g, '')
+                    .trim()
+                    .replace(/\s+/g, '-');
+            }
+            const urlPart = slug ? `${encodeURIComponent(slug)}-${encodeURIComponent(id)}` : encodeURIComponent(id);
+            if (id || slug) {
+                window.history.pushState({ newsId: id }, '', `/news/${urlPart}`);
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        async handleNewsDeepLink() {
+            // Support URLs like /news/slug-with-dashes-123 or /news/slug-only or /news/123
+            const matchSlugId = window.location.pathname.match(/^\/news\/(.+)-(\d+)$/);
+            const matchSlugOnlyOrId = window.location.pathname.match(/^\/news\/([^\/]+)$/);
+            if (!matchSlugId && !matchSlugOnlyOrId) return;
+            let article = null;
+            try {
+                if (matchSlugId) {
+                    const slug = decodeURIComponent(matchSlugId[1]);
+                    const id = matchSlugId[2];
+                    // Try fetch by id endpoint first
+                    try {
+                        const respById = await fetch(`https://admin.leadsagri.site/api/news/${encodeURIComponent(id)}`);
+                        if (respById.ok) {
+                            article = await respById.json();
+                        }
+                    } catch (err) {
+                        console.warn('Fetch by id failed, falling back to list:', err);
+                    }
+
+                    // Fallback to fetching list and matching by id or slug
+                    if (!article) {
+                        const response = await fetch('https://admin.leadsagri.site/api/news');
+                        if (!response.ok) throw new Error('Failed to fetch news');
+                        const list = await response.json();
+                        article = Array.isArray(list)
+                            ? list.find(n => String(n.id) === String(id) || n.slug === slug) || null
+                            : null;
+                    }
+                } else if (matchSlugOnlyOrId) {
+                    const raw = decodeURIComponent(matchSlugOnlyOrId[1]);
+                    // Try fetch by id if raw is numeric
+                    if (/^\d+$/.test(raw)) {
+                        try {
+                            const resp = await fetch(`https://admin.leadsagri.site/api/news/${encodeURIComponent(raw)}`);
+                            if (resp.ok) {
+                                article = await resp.json();
+                            }
+                        } catch (err) {
+                            console.warn('Fetch by id failed, will fallback to list', err);
+                        }
+                    }
+
+                    if (!article) {
+                        // Fallback: search list by slug or id
+                        const response = await fetch('https://admin.leadsagri.site/api/news');
+                        if (!response.ok) throw new Error('Failed to fetch news');
+                        const list = await response.json();
+                        article = Array.isArray(list)
+                            ? list.find(n => n.slug === raw || String(n.id) === raw) || null
+                            : null;
+                    }
+                }
+
+                if (article) {
+                    this.selectedNewsArticle = article;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    window.history.replaceState({}, '', '/');
+                }
+            } catch (e) {
+                console.error('Failed to load article from URL:', e);
+                window.history.replaceState({}, '', '/');
+            }
         },
         goToFeaturedNews() {
             this.selectedNewsArticle = null;
@@ -1421,6 +1663,7 @@ export default {
             this.showVegetableProducts = false;
             this.showSugarcaneProducts = false;
             this.showOthercropProducts = false;
+            window.history.pushState({}, '', '/');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         formatMonthYear(dateString) {
@@ -1440,7 +1683,7 @@ export default {
                 }
                 const data = await response.json();
                 this.allProducts = data;
-                console.log('Products loaded for search:', data.length);
+                // console.log('Products loaded for search:', data.length);
             } catch (error) {
                 console.error('Failed to fetch products:', error);
                 // Fallback to empty array to prevent errors
