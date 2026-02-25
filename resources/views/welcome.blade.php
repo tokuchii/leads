@@ -5,13 +5,35 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Leads Agri</title>
+    <title>{{ isset($ogTitle) ? $ogTitle . ' | Leads Agri' : 'Leads Agri' }}</title>
     <link rel="icon" type="image/png" href="{{ asset('/images/logo-green.png') }}">
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="{{ $ogTitle ?? 'Leads Agri' }}">
+    <meta name="description" content="{{ $ogDescription ?? 'Latest news and updates from Leads Agri.' }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{{ isset($ogTitle) ? 'article' : 'website' }}">
+    <meta property="og:url" content="{{ $pageUrl ?? 'https://leadsagri.com' }}">
+    <meta property="og:title" content="{{ $ogTitle ?? 'Leads Agri' }}">
+    <meta property="og:description" content="{{ $ogDescription ?? 'Latest news and updates from Leads Agri.' }}">
+    <meta property="og:image" content="{{ $ogImage ?? asset('/images/logo-green.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Leads Agri">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ $pageUrl ?? 'https://leadsagri.com' }}">
+    <meta name="twitter:title" content="{{ $ogTitle ?? 'Leads Agri' }}">
+    <meta name="twitter:description" content="{{ $ogDescription ?? 'Latest news and updates from Leads Agri.' }}">
+    <meta name="twitter:image" content="{{ $ogImage ?? asset('/images/logo-green.png') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!-- Styles -->
     <style>
-        /* Font Awesome - Must be first */
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
 
         /* Font definitions */
         @font-face {
