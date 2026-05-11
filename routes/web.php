@@ -5,6 +5,9 @@ use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\InquiryCareerController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\NewsOgController;
+use App\Http\Controllers\VisitorController;
+
+Route::post('/track-visit', [VisitorController::class, 'track'])->name('track.visit');
 
 Route::post('/inquiry', [InquiryController::class, 'store'])->name('inquiry.store');
 Route::post('/career-application', [InquiryCareerController::class, 'store'])->name('career.store');

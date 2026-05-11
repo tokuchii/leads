@@ -1117,6 +1117,43 @@
             };
         });
     </script>
+
+    <!-- Visitor Tracking Beacon -->
+    <script>
+        (function() {
+            const STORAGE_KEY = 'leads_visitor_id';
+
+            function generateId() {
+                return 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 10);
+            }
+
+            let visitorId = localStorage.getItem(STORAGE_KEY);
+            let isNew = false;
+            if (!visitorId) {
+                visitorId = generateId();
+                localStorage.setItem(STORAGE_KEY, visitorId);
+                isNew = true;
+            }
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (!csrfToken) return;
+
+            fetch('/track-visit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken.getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    visitor_id: visitorId,
+                    page: window.location.pathname,
+                    referrer: document.referrer || null,
+                    is_new_visitor: isNew,
+                }),
+            }).catch(function() {});
+        })();
+    </script>
 </body>
 
 </html>
