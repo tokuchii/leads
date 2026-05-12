@@ -1,61 +1,172 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Leads Agri
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern Laravel-based web application for Leads Agri, featuring lead generation, career applications, AI-powered chat support, product information, and news management.
 
-## About Laravel
+## About
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Leads Agri is a comprehensive web platform built with Laravel and Vue.js that serves as the digital presence for an agricultural company. The application includes:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Lead Generation**: Contact forms and inquiry management
+- **Career Portal**: Job application submissions and management
+- **AI Chat Support**: Intelligent chatbot for customer inquiries
+- **Product Information**: Agricultural product catalog and details
+- **News Management**: Dynamic news articles with social media integration
+- **Responsive Design**: Mobile-first approach with modern UI/UX
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+- **Inquiry Management**: Handle customer inquiries and leads
+- **Career Applications**: Process job applications with resume uploads
+- **AI-Powered Chat**: Automated customer support with fallback options
+- **Product Catalog**: Information about agricultural products (insecticides, herbicides, fungicides, fertilizers, molluscicides)
+- **News Articles**: SEO-optimized articles with Open Graph meta tags
+- **Responsive Frontend**: Vue.js SPA with Tailwind CSS styling
+- **RESTful API**: Clean API endpoints for all functionalities
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Backend
+- **Laravel 12**: PHP web framework
+- **PHP 8.2+**: Server-side scripting
+- **MySQL/SQLite**: Database storage
+- **Composer**: PHP dependency management
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Frontend
+- **Vue.js 3**: Progressive JavaScript framework
+- **Vite**: Fast build tool and development server
+- **Tailwind CSS 4**: Utility-first CSS framework
+- **Axios**: HTTP client for API requests
+- **Vue Router**: Single-page application routing
 
-## Laravel Sponsors
+### Additional Libraries
+- **SweetAlert2**: Beautiful modal dialogs
+- **SimpleBar**: Custom scrollbars
+- **Ionicons**: Icon library
+- **Font Awesome**: Additional icon set
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Installation
 
-### Premium Partners
+### Prerequisites
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Before you begin, ensure you have the following installed:
+- **PHP 8.2 or higher**
+- **Composer** (PHP dependency manager)
+- **Node.js 18+ and npm**
+- **MySQL** or **SQLite** database
+- **Git** (optional, for cloning)
+
+### Step-by-Step Installation
+
+1. **Clone the repository** (if applicable):
+   ```bash
+   git clone <repository-url>
+   cd leads
+   ```
+
+2. **Install PHP dependencies**:
+   ```bash
+   composer install
+   ```
+
+3. **Install Node.js dependencies**:
+   ```bash
+   npm install
+   ```
+
+4. **Environment Configuration**:
+   ```bash
+   cp .env.example .env
+   ```
+   Update the `.env` file with your database credentials and other settings.
+
+5. **Generate Application Key**:
+   ```bash
+   php artisan key:generate
+   ```
+
+6. **Run Database Migrations**:
+   ```bash
+   php artisan migrate
+   ```
+
+7. **Build Frontend Assets**:
+   ```bash
+   npm run build
+   ```
+   Or for development:
+   ```bash
+   npm run dev
+   ```
+
+8. **Start the Development Server**:
+   ```bash
+   php artisan serve
+   ```
+
+   The application will be available at `http://localhost:8000`
+
+### Alternative: Using Laravel Sail (Docker)
+
+If you prefer Docker, Laravel Sail is configured:
+
+1. Install dependencies:
+   ```bash
+   composer install
+   npm install
+   ```
+
+2. Start Sail:
+   ```bash
+   ./vendor/bin/sail up
+   ```
+
+3. Run migrations:
+   ```bash
+   ./vendor/bin/sail artisan migrate
+   ```
+
+## Development
+
+### Available Commands
+
+- **Start development server**: `composer run dev`
+- **Run tests**: `composer run test`
+- **Code formatting**: `vendor/bin/pint`
+- **Build assets**: `npm run build`
+- **Watch assets**: `npm run dev`
+
+
+## Testing
+
+Run the test suite:
+
+```bash
+php artisan test
+```
+
+Or with coverage:
+
+```bash
+php artisan test --coverage
+```
+
+## Deployment
+
+1. Set up your production environment (PHP 8.2+, web server)
+2. Configure environment variables in `.env`
+3. Run database migrations
+4. Build production assets: `npm run build`
+5. Set proper file permissions
+6. Configure web server (Apache/Nginx) to serve `public/` directory
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and ensure code quality
+5. Submit a pull request
 
-## Code of Conduct
+## Support
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+For support or questions, please contact the development team.
