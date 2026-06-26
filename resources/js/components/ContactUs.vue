@@ -208,7 +208,7 @@ export default {
     },
             async fetchDistributors() {
         try {
-            const response = await axios.get("https://admin.leadsagri.site/api/distributors");
+            const response = await axios.get("https://admin.leadsagri.com/api/distributors");
             this.distributors = response.data;
 
             // Always load Luzon distributors for cards

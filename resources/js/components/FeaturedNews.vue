@@ -106,7 +106,7 @@ export default {
     methods: {
         async fetchNews() {
             try {
-                const response = await axios.get('https://admin.leadsagri.site/api/news');
+                const response = await axios.get('https://admin.leadsagri.com/api/news');
                 // Ensure we have an array and sort by published date (newest first).
                 const data = Array.isArray(response.data) ? response.data : [];
                 this.newsList = data.sort((a, b) => {

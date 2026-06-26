@@ -10,7 +10,7 @@ class NewsOgController extends Controller
     public function show(string $slug)
     {
         $article = null;
-        $apiBase = 'https://admin.leadsagri.site/api/news';
+        $apiBase = 'https://admin.leadsagri.com/api/news';
 
         // Extract numeric id from end of slug (e.g. "my-article-title-42")
         $targetId = null;
