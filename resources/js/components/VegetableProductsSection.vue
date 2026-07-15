@@ -295,7 +295,7 @@ export default {
         },
         async fetchProducts() {
             try {
-                const response = await axios.get('https://admin.leadsagri.com/api/products');
+                const response = await axios.get('/api/products');
                 this.products = response.data;
             } catch (error) {
                 console.error('Failed to fetch products:', error);

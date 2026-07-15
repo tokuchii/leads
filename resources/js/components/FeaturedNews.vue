@@ -21,7 +21,7 @@
                 <!-- Left Column -->
                 <div class="flex-1 flex flex-col gap-4 sm:gap-6 items-center lg:items-start min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
                     <div v-for="news in leftColumn" :key="news.id" class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl relative mb-0">
-                        <img :src="news.featured_image_url || '/public/images/newsimg.png'" alt="Story Image" class="w-full shadow-md rounded-tl-[20px] sm:rounded-tl-[30px] md:rounded-tl-[40px] rounded-br-[20px] sm:rounded-br-[30px] md:rounded-br-[40px] no-hover-effect" />
+                        <img :src="news.featured_image_url || '/public/images/newsimg.png'" alt="Story Image" class="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-cover shadow-md rounded-tl-[20px] sm:rounded-tl-[30px] md:rounded-tl-[40px] rounded-br-[20px] sm:rounded-br-[30px] md:rounded-br-[40px] no-hover-effect" />
                         <div class="absolute left-0 news-featured-img bg-green-800 text-white text-center py-1 sm:py-2 px-4 sm:px-7 bottom-8 sm:bottom-10 md:bottom-12 min-w-[250px] sm:min-w-[300px]">
                         <h2 class="text-sm sm:text-base md:text-lg lg:text-xl font-bold">{{ news.title }}</h2>
                         </div>
@@ -42,7 +42,7 @@
                 <!-- Right Column -->
                 <div class="flex-1 flex flex-col gap-4 sm:gap-6 relative items-center lg:items-start min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
                     <div v-for="news in rightColumn" :key="news.id" class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl relative mb-0">
-                        <img :src="news.featured_image_url || '/public/images/newsimg.png'" alt="Story Image" class="w-full shadow-md rounded-tl-[20px] sm:rounded-tl-[30px] md:rounded-tl-[40px] rounded-br-[20px] sm:rounded-br-[30px] md:rounded-br-[40px] no-hover-effect" />
+                        <img :src="news.featured_image_url || '/public/images/newsimg.png'" alt="Story Image" class="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-cover shadow-md rounded-tl-[20px] sm:rounded-tl-[30px] md:rounded-tl-[40px] rounded-br-[20px] sm:rounded-br-[30px] md:rounded-br-[40px] no-hover-effect" />
                         <div class="absolute left-0 news-featured-img bg-green-800 text-white text-center py-1 sm:py-2 px-2 sm:px-4 bottom-8 sm:bottom-10 md:bottom-12">
                             <h2 class="text-sm sm:text-base md:text-lg lg:text-xl font-bold">{{ news.title }}</h2>
                         </div>
@@ -106,7 +106,7 @@ export default {
     methods: {
         async fetchNews() {
             try {
-                const response = await axios.get('https://admin.leadsagri.com/api/news');
+                const response = await axios.get('/api/news');
                 // Ensure we have an array and sort by published date (newest first).
                 const data = Array.isArray(response.data) ? response.data : [];
                 this.newsList = data.sort((a, b) => {

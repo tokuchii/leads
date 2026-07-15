@@ -12,7 +12,7 @@
        class="bg-[#2E7D32] rounded-2xl overflow-hidden shadow-lg flex flex-col h-full">
 
     <img :src="news.featured_image_url || '/public/images/newsimg.png'" :alt="news.title"
-         class="w-11/12 h-32 sm:h-40 md:h-48 lg:h-48 object-cover rounded-2xl mx-auto mt-4">
+         class="w-11/12 h-24 sm:h-32 md:h-40 lg:h-40 object-cover rounded-2xl mx-auto mt-4">
 
     <div class="p-4 sm:p-6 flex flex-col flex-1">
       <h3 class="text-sm sm:text-base md:text-base font-bold mb-2 sm:mb-4 text-white uppercase">
@@ -61,7 +61,7 @@ export default {
     methods: {
         async fetchNews() {
             try {
-                const response = await axios.get('https://admin.leadsagri.com/api/news');
+                const response = await axios.get('/api/news');
                 // Ensure we have an array and sort by published date (newest first).
                 const data = Array.isArray(response.data) ? response.data : [];
                 this.newsList = data.sort((a, b) => {

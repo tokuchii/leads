@@ -1599,7 +1599,7 @@ export default {
                     const id = matchSlugId[2];
                     // Try fetch by id endpoint first
                     try {
-                        const respById = await fetch(`https://admin.leadsagri.com/api/news/${encodeURIComponent(id)}`);
+                        const respById = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/news/${encodeURIComponent(id)}`);
                         if (respById.ok) {
                             article = await respById.json();
                         }
@@ -1609,7 +1609,7 @@ export default {
 
                     // Fallback to fetching list and matching by id or slug
                     if (!article) {
-                        const response = await fetch('https://admin.leadsagri.com/api/news');
+                        const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/news`);
                         if (!response.ok) throw new Error('Failed to fetch news');
                         const list = await response.json();
                         article = Array.isArray(list)
@@ -1621,7 +1621,7 @@ export default {
                     // Try fetch by id if raw is numeric
                     if (/^\d+$/.test(raw)) {
                         try {
-                            const resp = await fetch(`https://admin.leadsagri.com/api/news/${encodeURIComponent(raw)}`);
+                            const resp = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/news/${encodeURIComponent(raw)}`);
                             if (resp.ok) {
                                 article = await resp.json();
                             }
@@ -1632,7 +1632,7 @@ export default {
 
                     if (!article) {
                         // Fallback: search list by slug or id
-                        const response = await fetch('https://admin.leadsagri.com/api/news');
+                        const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/news`);
                         if (!response.ok) throw new Error('Failed to fetch news');
                         const list = await response.json();
                         article = Array.isArray(list)
@@ -1677,7 +1677,7 @@ export default {
         async fetchAllProducts() {
             this.isSearchLoading = true;
             try {
-                const response = await fetch('https://admin.leadsagri.com/api/products');
+                const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/products`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

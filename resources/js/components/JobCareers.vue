@@ -192,7 +192,7 @@ export default {
     methods: {
         async fetchJobs() {
             try {
-                const response = await fetch('https://admin.leadsagri.com/api/careers');
+                const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/careers`);
                 const data = await response.json();
                 // Keep full list and show only 2 random jobs
                 this.allJobs = Array.isArray(data) ? data : [];
