@@ -55,21 +55,11 @@
                                 </div>
                                 <div class="mb-2">
                                     <span class="font-bold">Dosage</span>
-                                    <p class="text-gray-700 whitespace-pre-line">
-                                        <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
-                                            {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
-                                        </span>
-                                    </p>
+                                    <RichTextContent :content="product.dosage" class="text-gray-700 text-justify" />
                                 </div>
                                 <div>
                                     <span class="font-bold">Target Weeds/Crops</span>
-                                    <div class="flex gap-4">
-                                        <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx"
-                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
-                                            <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
-                                        </ul>
-                                    </div>
+                                    <RichTextContent :content="product.target" class="text-gray-700 text-[14px] md:text-[16px]" />
                                 </div>
                             </div>
                         </div>
@@ -98,21 +88,11 @@
                                 </div>
                                 <div class="mb-2">
                                     <span class="font-bold">Dosage</span>
-                                    <p class="text-gray-700 whitespace-pre-line">
-                                        <span v-for="(dose, idx) in formatDosage(product.dosage)" :key="idx">
-                                            {{ dose }}<br v-if="idx !== formatDosage(product.dosage).length - 1" />
-                                        </span>
-                                    </p>
+                                    <RichTextContent :content="product.dosage" class="text-gray-700 text-justify" />
                                 </div>
                                 <div>
                                     <span class="font-bold">Target Weeds/Crops</span>
-                                    <div class="flex gap-4">
-                                        <ul v-for="(chunk, colIdx) in chunkArray(formatTargetWeeds(product.target), 6)"
-                                            :key="colIdx"
-                                            class="list-disc list-outside text-gray-700 text-[14px] md:text-[16px] pl-4">
-                                            <li v-for="(weed, idx) in chunk" :key="idx">{{ weed }}</li>
-                                        </ul>
-                                    </div>
+                                    <RichTextContent :content="product.target" class="text-gray-700 text-[14px] md:text-[16px]" />
                                 </div>
                             </div>
                         </div>
@@ -126,11 +106,13 @@
 <script>
 import axios from 'axios';
 import BubbleLoader from './BubbleLoader.vue';
+import RichTextContent from './RichTextContent.vue';
 
 export default {
     name: 'SugarcaneProductsSection',
     components: {
         BubbleLoader,
+        RichTextContent,
     },
     props: {
         activeTab: {
@@ -189,23 +171,6 @@ export default {
             } finally {
                 this.loading = false;
             }
-        },
-        formatTargetWeeds(val) {
-            if (Array.isArray(val)) return val;
-            if (typeof val === 'string') return val.split(',').map(s => s.trim());
-            return [];
-        },
-        formatDosage(val) {
-            if (Array.isArray(val)) return val;
-            if (typeof val === 'string') return val.split(',').map(s => s.trim());
-            return [];
-        },
-        chunkArray(array, chunkSize) {
-            const result = [];
-            for (let i = 0; i < array.length; i += chunkSize) {
-                result.push(array.slice(i, i + chunkSize));
-            }
-            return result;
         },
     },
     mounted() {

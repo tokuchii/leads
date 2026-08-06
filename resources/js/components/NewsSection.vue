@@ -18,9 +18,11 @@
       <h3 class="text-sm sm:text-base md:text-base font-bold mb-2 sm:mb-4 text-white uppercase">
         {{ news.title }}
       </h3>
-      <p class="text-xs sm:text-sm md:text-base mb-4 flex-1 text-white news-description-clamp">
-        {{ trimContent(news.content) }}
-      </p>
+      <RichTextContent
+        :content="news.content"
+        :max-length="250"
+        class="text-xs sm:text-sm md:text-base mb-4 flex-1 text-white news-description-clamp break-words max-w-full min-w-0"
+      />
 <button @click="$emit('show-news-article', news)"
         class="news-learnmore-btn cursor-pointer self-start underline">
   LEARN MORE.
@@ -42,10 +44,11 @@
 <script>
 import axios from 'axios';
 import BubbleLoader from './BubbleLoader.vue';
+import RichTextContent from './RichTextContent.vue';
 
 export default {
     name: 'NewsSection',
-    components: { BubbleLoader },
+    components: { BubbleLoader, RichTextContent },
     data() {
         return {
             newsList: [],
@@ -74,11 +77,6 @@ export default {
             } finally {
                 this.loading = false;
             }
-        },
-        trimContent(content) {
-            if (!content) return '';
-            const maxLength = 250;
-            return content.length > maxLength ? content.slice(0, maxLength) + '...' : content;
         },
         goToArticle(id) {
             this.$router.push({ name: 'news-article', params: { id } });

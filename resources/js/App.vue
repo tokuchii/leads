@@ -226,9 +226,11 @@
                     </h1>
 
                     
-                    <div class="prose prose-sm md:prose-lg mb-6 w-full max-w-full break-words text-white"
-                        v-html="formattedSelectedArticleContent">
-                    </div>
+                    <RichTextContent
+                        :content="selectedNewsArticle.content"
+                        inherit-color
+                        class="prose prose-sm md:prose-lg mb-6 w-full max-w-full break-words text-white"
+                    />
                 </div>
             </div>
             <div v-else-if="!showLearnMore && !showCareers && !showContactUs && !showFeaturedNews && !showRiceProducts && !showMangoProducts && !showVegetableProducts && !showSugarcaneProducts && !showOthercropProducts"
@@ -398,6 +400,7 @@ import MangoProductsSection from './components/MangoProductsSection.vue';
 import VegetableProductsSection from './components/VegetableProductsSection.vue';
 import SugarcaneProductsSection from './components/SugarcaneProductsSection.vue';
 import OthercropProductsSection from './components/OthercropProductsSection.vue';
+import RichTextContent from './components/RichTextContent.vue';
 import DirectorySection from './components/DirectorySection.vue';
 import ContactUs from './components/ContactUs.vue';
 export default {
@@ -417,6 +420,7 @@ export default {
         VegetableProductsSection,
         SugarcaneProductsSection,
         OthercropProductsSection,
+        RichTextContent,
         DirectorySection,
         ContactUs,
     },
@@ -1811,16 +1815,6 @@ export default {
             this.showSugarcaneProducts = false;
             this.showOthercropProducts = false;
         }
-    },
-    computed: {
-        formattedSelectedArticleContent() {
-            if (!this.selectedNewsArticle || !this.selectedNewsArticle.content) return '';
-            // Replace every colon with two breaklines (remove the colon)
-            let content = this.selectedNewsArticle.content.replace(/:/g, '<br><br>');
-            // Make text inside double quotes bold, but hide the quotes
-            content = content.replace(/"([^"]+)"/g, '<b>$1</b>');
-            return content;
-        },
     },
 }
 </script>

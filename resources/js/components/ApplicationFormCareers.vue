@@ -40,10 +40,13 @@
                                 {{ job.job_description }}
                             </p>
                             <div class="text-based font-semibold mb-1 pt-4">Qualifications:</div>
-                            <ul class="text-[13px] mb-4 list-disc pl-5 space-y-1">
-                                <li v-for="(word, index) in job.qualifications.split(':')" :key="index">
-                                    {{ word }}
-                                </li>
+                            <div
+                                v-if="hasHtmlQualifications"
+                                class="qualifications-content ql-editor text-[13px] mb-4"
+                                v-html="job.qualifications"
+                            ></div>
+                            <ul v-else class="text-[13px] mb-4 list-disc pl-5 space-y-1">
+                                <li v-for="qual in qualificationsList" :key="qual">{{ qual }}</li>
                             </ul>
                         </div>
                     </div>
@@ -132,6 +135,28 @@ export default {
             loading: false,
             fileError: '',
         };
+    },
+    computed: {
+        hasHtmlQualifications() {
+            const qualifications = this.job.qualifications;
+            if (!qualifications) {
+                return false;
+            }
+            return /<[^>]+>/.test(qualifications);
+        },
+        qualificationsList() {
+            if (Array.isArray(this.job.qualifications_list) && this.job.qualifications_list.length) {
+                return this.job.qualifications_list;
+            }
+            if (!this.job.qualifications || this.hasHtmlQualifications) {
+                return [];
+            }
+            const lines = this.job.qualifications.split('\n').filter(line => line.trim());
+            if (lines.length > 1) {
+                return lines;
+            }
+            return this.job.qualifications.split(':').map(item => item.trim()).filter(item => item);
+        },
     },
     methods: {
         capitalizeNameFirstLetter() {
@@ -255,3 +280,92 @@ export default {
     },
 };
 </script>
+<style scoped>
+.qualifications-content {
+    color: inherit;
+    word-break: break-word;
+}
+
+.qualifications-content :deep(*) {
+    color: inherit;
+}
+
+/* Bold, Italic, Underline, Strikethrough */
+.qualifications-content :deep(strong),
+.qualifications-content :deep(b) {
+    font-weight: 700;
+}
+
+.qualifications-content :deep(em),
+.qualifications-content :deep(i) {
+    font-style: italic;
+}
+
+.qualifications-content :deep(u) {
+    text-decoration: underline;
+}
+
+.qualifications-content :deep(s),
+.qualifications-content :deep(strike),
+.qualifications-content :deep(del) {
+    text-decoration: line-through;
+}
+
+/* Text alignment */
+.qualifications-content :deep(.ql-align-center),
+.qualifications-content :deep([style*="text-align: center"]) {
+    text-align: center;
+}
+
+.qualifications-content :deep(.ql-align-right),
+.qualifications-content :deep([style*="text-align: right"]) {
+    text-align: right;
+}
+
+.qualifications-content :deep(.ql-align-justify),
+.qualifications-content :deep([style*="text-align: justify"]) {
+    text-align: justify;
+}
+
+/* Bullet and numbered lists */
+.qualifications-content :deep(ul),
+.qualifications-content :deep(ol) {
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.qualifications-content :deep(ul) {
+    list-style-type: disc;
+}
+
+.qualifications-content :deep(ol) {
+    list-style-type: decimal;
+}
+
+.qualifications-content :deep(li[data-list="bullet"]) {
+    list-style-type: disc;
+}
+
+.qualifications-content :deep(li[data-list="ordered"]) {
+    list-style-type: decimal;
+}
+
+.qualifications-content :deep(li) {
+    margin-bottom: 0.25rem;
+    display: list-item;
+}
+
+.qualifications-content :deep(.ql-ui) {
+    display: none;
+}
+
+.qualifications-content :deep(p) {
+    margin-bottom: 0.5rem;
+}
+
+.qualifications-content :deep(p:last-child),
+.qualifications-content :deep(ul:last-child),
+.qualifications-content :deep(ol:last-child) {
+    margin-bottom: 0;
+}
+</style>

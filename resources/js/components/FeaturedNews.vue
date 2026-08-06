@@ -1,5 +1,5 @@
 <template>
-    <div class="featured-news relative w-full mt-26 px-8 py-8">
+    <div class="featured-news relative w-full mt-26 px-8 py-8 overflow-x-hidden">
         <div class="relative">
             <img
                 src="/public/images/newsimg.png"
@@ -19,8 +19,8 @@
         <div class="mt-8 px-4">
             <div v-if="newsList.length" class="flex flex-col lg:flex-row gap-8 lg:gap-24 w-full justify-center max-w-7xl mx-auto">
                 <!-- Left Column -->
-                <div class="flex-1 flex flex-col gap-4 sm:gap-6 items-center lg:items-start min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
-                    <div v-for="news in leftColumn" :key="news.id" class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl relative mb-0">
+                <div class="flex-1 flex flex-col gap-4 sm:gap-6 items-center lg:items-start min-w-0 min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
+                    <div v-for="news in leftColumn" :key="news.id" class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl min-w-0 overflow-hidden relative mb-0">
                         <img :src="news.featured_image_url || '/public/images/newsimg.png'" alt="Story Image" class="w-full shadow-md rounded-tl-[20px] sm:rounded-tl-[30px] md:rounded-tl-[40px] rounded-br-[20px] sm:rounded-br-[30px] md:rounded-br-[40px] no-hover-effect" />
                         <div class="absolute left-0 news-featured-img bg-green-800 text-white text-center py-1 sm:py-2 px-4 sm:px-7 bottom-8 sm:bottom-10 md:bottom-12 min-w-[250px] sm:min-w-[300px]">
                         <h2 class="text-sm sm:text-base md:text-lg lg:text-xl font-bold">{{ news.title }}</h2>
@@ -30,7 +30,11 @@
                             <span class="text-green-900 font-bold text-xs sm:text-sm md:text-base">{{ formatMonthYear(news.published_at) }}</span>
                             <div class="w-16 sm:w-20 md:w-25 h-0.5 mt-1 mb-2 sm:mb-4 rounded" style="background-color: #D3AF37;"></div>
                         </div>
-                        <p class="text-xs sm:text-sm md:text-base font-light text-green-900 mb-2 text-start uppercase" v-html="trimContent(news.content)"></p>
+                        <RichTextContent
+                            :content="news.content"
+                            :max-length="250"
+                            class="text-xs sm:text-sm md:text-base font-light text-green-900 mb-2 text-start uppercase break-words max-w-full"
+                        />
                         <button
                           @click="$emit('show-news-article', news)"
                           class="text-[#D3AF37] text-xs sm:text-sm md:text-base font-medium underline relative bg-transparent border-none cursor-pointer p-0"
@@ -40,8 +44,8 @@
                     </div>
                 </div>
                 <!-- Right Column -->
-                <div class="flex-1 flex flex-col gap-4 sm:gap-6 relative items-center lg:items-start min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
-                    <div v-for="news in rightColumn" :key="news.id" class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl relative mb-0">
+                <div class="flex-1 flex flex-col gap-4 sm:gap-6 relative items-center lg:items-start min-w-0 min-h-[300px] sm:min-h-[400px] md:min-h-[500px]">
+                    <div v-for="news in rightColumn" :key="news.id" class="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl min-w-0 overflow-hidden relative mb-0">
                         <img :src="news.featured_image_url || '/public/images/newsimg.png'" alt="Story Image" class="w-full shadow-md rounded-tl-[20px] sm:rounded-tl-[30px] md:rounded-tl-[40px] rounded-br-[20px] sm:rounded-br-[30px] md:rounded-br-[40px] no-hover-effect" />
                         <div class="absolute left-0 news-featured-img bg-green-800 text-white text-center py-1 sm:py-2 px-2 sm:px-4 bottom-8 sm:bottom-10 md:bottom-12">
                             <h2 class="text-sm sm:text-base md:text-lg lg:text-xl font-bold">{{ news.title }}</h2>
@@ -50,7 +54,11 @@
                             <span class="text-green-900 font-bold text-xs sm:text-sm md:text-base">{{ formatMonthYear(news.published_at) }}</span>
                             <div class="w-16 sm:w-20 md:w-25 h-0.5 mt-1 mb-2 sm:mb-4 rounded" style="background-color: #D3AF37;"></div>
                         </div>
-                        <p class="text-xs sm:text-sm md:text-base font-light text-green-900 mb-2 text-start uppercase" v-html="trimContent(news.content)"></p>
+                        <RichTextContent
+                            :content="news.content"
+                            :max-length="250"
+                            class="text-xs sm:text-sm md:text-base font-light text-green-900 mb-2 text-start uppercase break-words max-w-full"
+                        />
                         <button
                           @click="$emit('show-news-article', news)"
                           class="text-[#D3AF37] text-xs sm:text-sm md:text-base font-medium underline relative bg-transparent border-none cursor-pointer p-0"
@@ -70,10 +78,11 @@
 <script>
 import axios from 'axios';
 import BubbleLoader from './BubbleLoader.vue';
+import RichTextContent from './RichTextContent.vue';
 
 export default {
     name: 'FeaturedNews',
-    components: { BubbleLoader },
+    components: { BubbleLoader, RichTextContent },
     data() {
         return {
             newsList: [],
@@ -130,13 +139,6 @@ export default {
             const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
             const year = date.getFullYear();
             return `${month} ${year}`;
-        },
-        trimContent(content) {
-            if (!content) return '';
-            const maxLength = 250;
-            let trimmed = content.length > maxLength ? content.slice(0, maxLength) + '...' : content;
-            // Add a breakline after every colon
-            return trimmed.replace(/:/g, ':<br>');
         },
         goToArticle(id) {
             this.$router.push({ name: 'news-article', params: { id } });
