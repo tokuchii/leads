@@ -16,7 +16,7 @@
         <!-- Left Icons Container -->
         <div class="left-icons absolute left-50 top-1/2 transform -translate-y-1/2 z-10">
             <div class="social-icons">
-                <a href="https://www.facebook.com/leadsagri" class="social-icon" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.facebook.com/share/1BLowB8Mv8/?mibextid=wwXIfr" class="social-icon" target="_blank" rel="noopener noreferrer">
                     <i class="fab fa-facebook-f"></i>
                 </a>
                 <div class="connector-line"></div>
