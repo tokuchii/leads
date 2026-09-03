@@ -18,7 +18,7 @@
                 </p>
                 <div class="flex flex-row flex-nowrap justify-center items-center gap-0 mb-8">
                     <span class="inline-block">
-                        <a href="https://www.facebook.com/leadsagri" target="_blank" rel="noopener"
+                        <a href="https://www.facebook.com/share/1BLowB8Mv8/?mibextid=wwXIfr" target="_blank" rel="noopener"
                             class="text-[#006D36] text-3xl hover:text-[#FDB913] transition-colors align-middle">
                             <i class="fab fa-facebook"></i>
                         </a>
