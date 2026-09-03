@@ -1171,8 +1171,8 @@ export default {
                     return;
                 }
 
-                // Stricter email validation: must be in the format name@domain.com, domain must be gmail, yahoo, outlook, hotmail, or similar
-                const emailPattern = /^[A-Za-z0-9._%+-]+@(gmail|yahoo|outlook|hotmail|icloud|protonmail|zoho|aol|mail|gmx|yandex)\.[A-Za-z]{2,}$/i;
+                // Accept any standard email domain instead of limiting submissions to specific providers.
+                const emailPattern = /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/;
                 if (!emailPattern.test(this.formData.email)) {
                     this.errorMessage = 'Please enter a valid email address (e.g., name@gmail.com, name@yahoo.com).';
                     this.isSubmitting = false;
