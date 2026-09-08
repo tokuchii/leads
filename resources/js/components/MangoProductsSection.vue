@@ -60,7 +60,7 @@
                                     </div>
                                     <div>
                                         <span class="font-bold">Target Weeds/Crops</span>
-                                        <RichTextContent :content="product.target" class="text-gray-700 text-[14px] md:text-[16px]" />
+                                        <RichTextContent :content="product.target" multi-column class="text-gray-700 text-[10px] md:text-[12px]" />
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@
                                     </div>
                                     <div>
                                         <span class="font-bold">Target Weeds/Crops</span>
-                                        <RichTextContent :content="product.target" class="text-gray-700 text-[14px] md:text-[16px]" />
+                                        <RichTextContent :content="product.target" multi-column class="text-gray-700 text-[10px] md:text-[12px]" />
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@
                                     </div>
                                     <div>
                                         <span class="font-bold">Target Weeds/Crops</span>
-                                        <RichTextContent :content="product.target" class="text-gray-700 text-[14px] md:text-[16px]" />
+                                        <RichTextContent :content="product.target" multi-column class="text-gray-700 text-[10px] md:text-[12px]" />
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +159,7 @@
                                     </div>
                                     <div>
                                         <span class="font-bold">Target Weeds/Crops</span>
-                                        <RichTextContent :content="product.target" class="text-gray-700 text-[14px] md:text-[16px]" />
+                                        <RichTextContent :content="product.target" multi-column class="text-gray-700 text-[10px] md:text-[12px]" />
                                     </div>
                                 </div>
                             </div>

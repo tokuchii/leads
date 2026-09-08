@@ -4,7 +4,7 @@
         <div
             v-else-if="isHtml"
             class="rich-text-content ql-editor"
-            :class="{ 'inherit-color': inheritColor }"
+            :class="{ 'inherit-color': inheritColor, 'multi-column': shouldMultiColumn }"
             v-html="content"
         ></div>
         <ul
@@ -33,6 +33,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        multiColumn: {
+            type: Boolean,
+            default: false,
+        },
     },
     computed: {
         isHtml() {
@@ -43,6 +47,16 @@ export default {
         },
         isPreview() {
             return this.maxLength > 0;
+        },
+        listItemCount() {
+            if (!this.multiColumn || typeof this.content !== 'string') {
+                return 0;
+            }
+            const matches = this.content.match(/<li[\s>]/gi);
+            return matches ? matches.length : 0;
+        },
+        shouldMultiColumn() {
+            return this.multiColumn && this.listItemCount > 5;
         },
         previewText() {
             let text = '';
@@ -201,5 +215,33 @@ export default {
 .rich-text-content :deep(ul:last-child),
 .rich-text-content :deep(ol:last-child) {
     margin-bottom: 0;
+}
+
+/* Multi-column bullet layout (used for product Target Weeds/Crops) */
+.rich-text-content.multi-column :deep(ol),
+.rich-text-content.multi-column :deep(ul) {
+    columns: 3;
+    column-gap: 2rem;
+    list-style-position: inside;
+}
+
+.rich-text-content.multi-column :deep(li) {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+@media (max-width: 768px) {
+    .rich-text-content.multi-column :deep(ol),
+    .rich-text-content.multi-column :deep(ul) {
+        columns: 2;
+        column-gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .rich-text-content.multi-column :deep(ol),
+    .rich-text-content.multi-column :deep(ul) {
+        columns: 1;
+    }
 }
 </style>
