@@ -5,10 +5,10 @@
 
         <!-- Navigation -->
         <div class="fixed top-0 left-0 right-0 z-50">
-            <!-- White fade gradient effect -->
-            <div class="w-full left-0 h-30 bg-gradient-to-b from-white via-white/15 to-transparent"></div>
+            <!-- Solid white navbar background -->
+            <div class="w-full left-0 h-20 bg-white shadow-[0_2px_10px_rgba(0,0,0,0.08)]"></div>
             <!-- Navigation content -->
-            <nav class="container mx-auto px-6 py-12 absolute top-0 left-0 right-0">
+            <nav class="container mx-auto px-5 py-5 absolute top-0 left-0 right-0">
                 <!-- Search Container -->
                 <div id="search-container" class="search-container">
                     <div class="relative w-full">
@@ -58,14 +58,14 @@
                             <span id="search-icon"
                                 class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base cursor-pointer">
                                 <i class="fas fa-search text-[#2E7D32] text-sm md:text-sm lg:text-base"
-                                    style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);"></i>
+                                    ></i>
                             </span>
                             <a href="#about" @click.prevent="scrollToSection('about')"
                                 :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'about' }]"
-                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">ABOUT US</a>
+                                >ABOUT US</a>
                             <a href="#products" @click.prevent="scrollToSection('products')"
                                 :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'products' }]"
-                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">PRODUCTS</a>
+                                >PRODUCTS</a>
                             <a href="#home" @click.prevent="scrollToSection('home')"
                                 :class="['nav-link transition flex items-center', { 'active-link': activeSection === 'home' }]">
                                 <img src="/public/images/logo-green.png" alt="LeadsAgri Logo"
@@ -73,14 +73,14 @@
                             </a>
                             <a href="#news" @click.prevent="scrollToSection('news')"
                                 :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base', { 'active-link': activeSection === 'news' }]"
-                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">NEWS</a>
+                                >NEWS</a>
                             <a href="#careers" @click.prevent="scrollToSection('careers')"
                                 :class="['nav-link text-[#2E7D32] dark:text-[#2E7D32] transition font-bold text-sm md:text-sm lg:text-base ', { 'active-link': activeSection === 'careers' }]"
-                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">CAREERS</a>
+                                >CAREERS</a>
                             <span class="nav-link text-[#2E7D32] dark:text-[#2E7D32] transition"
                                 @click.prevent="scrollToSection('contact')"
                                 :class="{ 'active-link': activeSection === 'contact' }"
-                                style="text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);">
+                                >
                                 <i
                                     class="fas fa-phone text-[#2E7D32] text-sm md:text-sm lg:text-base cursor-pointer"></i>
                             </span>
@@ -328,11 +328,8 @@
                             {{ isSubmitting ? 'SUBMITTING...' : 'SUBMIT' }}
                         </button>
                     </form>
-                    <!-- Add this below the button -->
-                    <div class="mt-4">
-                        <DirectorySection @show-contact-us="handleShowContactUs" />
-                    </div>
                 </ContactSection>
+                <DirectorySection @show-contact-us="handleShowContactUs" />
                 <CareersSection @show-careers="handleShowCareers" />
             </div>
             <div v-else-if="showLearnMore" key="learnmore" class="main-container">
